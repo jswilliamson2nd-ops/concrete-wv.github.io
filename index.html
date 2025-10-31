@@ -5,108 +5,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ACI West Virginia Interest Group</title>
 
-  <!-- Favicon (make sure this file exists in /assets) -->
   <link rel="icon" href="assets/aciwv_logo_favicon_256x256.png" type="image/png" />
-
-  <!-- Basic styles tuned for GitHub Pages (no frameworks required) -->
   <style>
     :root {
       --bg: #0b1220;
-      --muted: #f2f5f9;
-      --accent: #2aa198;
-      --card: #101828;
       --border: #1f2a44;
       --text: #e6edf3;
       --text-dim: #b9c4d0;
+      --accent: #2aa198;
     }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
     body {
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      color: var(--text);
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       background: linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
+      color: var(--text);
       line-height: 1.6;
     }
-
-    .container { width: min(1100px, 92vw); margin: 0 auto; }
-
     header {
       border-bottom: 1px solid var(--border);
-      background: rgba(16, 24, 40, 0.6);
-      position: sticky; top: 0; backdrop-filter: blur(6px);
-      z-index: 20;
+      text-align: center;
+      padding: 20px 0;
     }
-    .nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
-    .nav img { height: 44px; width: auto; display: block; }
-    .nav a { color: var(--text); text-decoration: none; margin-left: 18px; opacity: .85; }
-    .nav a:hover { opacity: 1; }
-
-    .hero { padding: 56px 0 28px; text-align: center; }
-    .hero .brand { display: inline-flex; align-items: center; gap: 14px; }
-    .hero .brand img { height: 60px; width: auto; }
-    .hero h1 { font-size: clamp(28px, 5vw, 44px); margin: 14px 0 10px; }
-    .hero p { margin: 0 auto; max-width: 62ch; color: var(--text-dim); }
-
-    .grid { display: grid; gap: 18px; grid-template-columns: repeat(12, 1fr); margin: 36px 0 24px; }
-    .card { grid-column: span 12; border: 1px solid var(--border); background: var(--card); border-radius: 16px; padding: 20px; }
-    @media (min-width: 900px) {
-      .card.span-6 { grid-column: span 6; }
-      .card.span-4 { grid-column: span 4; }
-    }
-
-    h2 { margin: 0 0 8px; font-size: 22px; }
-    h3 { margin: 0 0 6px; font-size: 18px; color: var(--text); }
-    p, li { color: var(--text-dim); }
-    ul { margin: 8px 0 0 20px; }
-
-    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
-    .btn { display: inline-block; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); text-decoration: none; }
-    .btn.primary { background: var(--accent); color: #062522; border-color: transparent; font-weight: 600; }
+    header img { max-width: 320px; height: auto; max-height: 56px; }
+    .container { width: min(1100px, 92vw); margin: 0 auto; }
+    nav { margin-top: 10px; }
+    nav a { color: var(--text-dim); text-decoration: none; margin: 0 10px; }
+    nav a:hover { color: var(--accent); }
+    h1 { text-align: center; }
+    .hero { text-align: center; padding: 40px 0; }
+    .cta-row { display: flex; justify-content: center; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    .btn { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); text-decoration: none; }
+    .btn.primary { background: var(--accent); color: #062522; border: none; font-weight: 600; }
     .btn:hover { filter: brightness(1.05); }
-
-    footer { border-top: 1px solid var(--border); margin-top: 40px; padding: 22px 0; color: var(--text-dim); font-size: 14px; }
-    footer .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-    footer img { height: 28px; width: auto; opacity: .8; }
-
-    /* Utility */
-    .logo-row { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
-    .mono { font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; color: #9fb3c8; }
+    .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin: 40px 0; }
+    .card { border: 1px solid var(--border); border-radius: 16px; background: #101828; padding: 20px; }
+    footer { border-top: 1px solid var(--border); text-align: center; color: var(--text-dim); font-size: 14px; padding: 20px 0; }
   </style>
-
-  <!--
-    PATHING RULES for GitHub Pages
-    - Use relative paths like "assets/..." (no leading slash) so the site works at /<repo>/.
-    - Filenames are case-sensitive on the Pages server.
-    - If you ever use directories beginning with an underscore (e.g., _assets), add a root file named ".nojekyll".
-  -->
 </head>
 <body>
   <header>
-    <div class="container nav">
-      <!-- Header logo: prefer the dark-on-light header mark; swap to white if your header is lighter. -->
-      <a href="./" class="logo-row" aria-label="ACI West Virginia Home">
-        <img src="assets/aciwv_header_mark_1000x180.png" alt="ACI West Virginia" />
-      </a>
-      <nav>
-        <a href="#about">About</a>
-        <a href="#mission">Mission</a>
-        <a href="#join">Join</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </div>
-  </header>
+  <div class="container nav" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+    <!-- Single logo at the top-left. If possible, export to PNG/WebP and keep the same path/name. -->
+    <a href="./" class="logo" aria-label="ACI West Virginia Home" style="display:inline-flex;align-items:center;gap:12px;">
+      <img
+        src="assets/aciwv_logo_body.png"
+        alt="ACI West Virginia"
+        style="height:56px; width:auto; display:block;"
+        decoding="async"
+      />
+    </a>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#mission">Mission</a>
+      <a href="#join">Join</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
 
   <main class="container">
-    <section class="hero" id="top">
-      <div class="brand">
-        <img src="assets/aciwv_logo_white_square.png" alt="ACI WV logo" />
-        <img src="assets/aciwv_logo_body_800x800.png" alt="ACI WV wordmark" />
-      </div>
+    <section class="hero">
       <h1>ACI West Virginia Interest Group</h1>
       <p>
         Advancing concrete knowledge, quality, and innovation across West Virginia.
-        We are forming an ACI Interest Group now—with the long‑term goal of establishing a
-        fully recognized ACI Chapter in West Virginia.
+        We are forming an ACI Interest Group now—with the long‑term goal of establishing a fully recognized ACI Chapter in West Virginia.
       </p>
       <div class="cta-row">
         <a class="btn primary" href="#join">Register your interest</a>
@@ -115,79 +77,58 @@
     </section>
 
     <section class="grid" id="about">
-      <article class="card span-6">
-        <h2>What is an ACI Interest Group?</h2>
-        <p>
-          An ACI Interest Group is a local, volunteer‑led community recognized by ACI that
-          hosts technical sessions, networking, and outreach—often a stepping stone to an
-          official ACI Chapter.
-        </p>
-        <ul>
-          <li>Connect practitioners, students, and agencies</li>
-          <li>Share best practices and new standards</li>
-          <li>Support certification and workforce development</li>
-        </ul>
-      </article>
-      <article class="card span-6" id="mission">
-        <h2>Our near‑term mission</h2>
-        <ul>
-          <li>Build a contact list and steering committee</li>
-          <li>Plan a 2026 technical event series in WV</li>
-          <li>Coordinate with ACI on chapter requirements</li>
-        </ul>
-      </article>
-
-      <article class="card span-4" id="join">
-        <h2>Join the list</h2>
-        <p>
-          Add your name to get meeting invites and updates about the formation effort.
-        </p>
-        <!-- Replace the action with your real form endpoint (Google Form or other). -->
-        <form action="#" method="post" onsubmit="alert('Thanks! We\'ll be in touch.'); return false;">
-          <label for="name">Name</label><br />
-          <input id="name" name="name" required style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:#0d1528;color:var(--text)" />
-          <br /><br />
-          <label for="email">Email</label><br />
-          <input id="email" name="email" type="email" required style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:#0d1528;color:var(--text)" />
-          <br /><br />
-          <button class="btn primary" type="submit">Register interest</button>
-        </form>
-      </article>
-
-      <article class="card span-4" id="calendar">
-        <h2>Upcoming</h2>
-        <ul>
-          <li><span class="mono">Nov 2025</span> — Organizing call</li>
-          <li><span class="mono">Jan 2026</span> — Kickoff meetup (TBD)</li>
-          <li><span class="mono">Spring 2026</span> — Certification planning</li>
-        </ul>
-      </article>
-
-      <article class="card span-4" id="contact">
-        <h2>Contact</h2>
-        <p>
-          Questions or to help organize:
-          <a href="mailto:info@aciwv.org">info@aciwv.org</a>
-        </p>
-        <div class="logo-row">
-          <img src="assets/aciwv_header_mark_white.png" alt="ACI WV inverted header mark" />
-        </div>
-      </article>
-    </section>
+  <div class="card">
+    <h2>What is an ACI Interest Group?</h2>
+    <p>An ACI Interest Group is a local, volunteer-led community recognized by ACI that hosts technical sessions, networking, and outreach—often a stepping stone to an official ACI Chapter.</p>
+    <ul>
+      <li>Connect practitioners, students, and agencies</li>
+      <li>Share best practices and new standards</li>
+      <li>Support certification and workforce development</li>
+    </ul>
+  </div>
+  <div class="card" id="mission">
+    <h2>Our near-term mission</h2>
+    <ul>
+      <li>Build a contact list and steering committee</li>
+      <li>Plan a 2026 technical event series in WV</li>
+      <li>Coordinate with ACI on chapter requirements</li>
+    </ul>
+  </div>
+  <div class="card" id="join">
+    <h2>Join the list</h2>
+    <p>Use the embedded Google Form below or open it in a new tab.</p>
+    <p>
+      <a class="btn primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdNXE7KgbwwrQy2pCKtsOSIPuv9CpkpLBLgxH7sIG1SCgBkaQ/viewform" target="_blank" rel="noopener">Open form in new tab</a>
+    </p>
+    <!-- If Google blocks embedding the short link, replace the src with the form's "Embed HTML" URL that ends with /viewform?embedded=true -->
+    <div style="border:1px solid var(--border); border-radius:12px; overflow:hidden;">
+      <iframe
+        src="https://docs.google.com/forms/d/e/1FAIpQLSdNXE7KgbwwrQy2pCKtsOSIPuv9CpkpLBLgxH7sIG1SCgBkaQ/viewform?embedded=true"
+        style="width:100%; height:900px; border:0; background:#0b1220;"
+        loading="lazy"
+        referrerpolicy="no-referrer"
+        title="ACI WV — Join Form"
+      ></iframe>
+    </div>
+  </div>
+  <div class="card" id="calendar">
+    <h2>Upcoming</h2>
+    <ul>
+      <li>Nov 2025 — Organizing call</li>
+      <li>Jan 2026 — Kickoff meetup (TBD)</li>
+      <li>Spring 2026 — Certification planning</li>
+    </ul>
+  </div>
+  <div class="card" id="contact">
+    <h2>Contact</h2>
+    <p>Questions or to help organize: <a href="mailto:info@aciwv.org">info@aciwv.org</a></p>
+  </div>
+</section>
   </main>
 
   <footer>
-    <div class="container row">
-      <div>© <span id="y"></span> ACI West Virginia Interest Group</div>
-      <div class="logo-row">
-        <img src="assets/aciwv_logo_favicon_256x256.png" alt="ACI WV favicon" />
-      </div>
-    </div>
+    © <span id="y"></span> ACI West Virginia Interest Group
   </footer>
-
-  <script>
-    // Simple current year
-    document.getElementById('y').textContent = new Date().getFullYear();
-  </script>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
 </body>
 </html>
