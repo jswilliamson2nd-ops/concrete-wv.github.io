@@ -3,7 +3,7 @@
 This repository contains the **official website** for the *ACI West Virginia Interest Group*, a forming professional network dedicated to advancing concrete knowledge, quality, and innovation across the Mountain State.
 
 ## Live Site
-https://aciwv.github.io  
+https://concrete-wv.org 
 (Will later be mapped to https://www.aciwv.org)
 
 ## About
@@ -24,7 +24,7 @@ The **Get Involved** section of the website embeds our live signup form:
 https://forms.gle/QfaPUHFHfi9S4Zgc6
 
 ## Deployment via GitHub Pages
-1. Ensure repository name = **aciwv.github.io**
+1. Ensure repository name = **concrete-wv.org**
 2. In the repo: **Settings → Pages → Source → Deploy from branch**  
    - Select branch: `main`  
    - Folder: `/ (root)`
@@ -48,6 +48,6 @@ To use `www.aciwv.org`:
 The **ACI West Virginia Interest Group** is a volunteer-led organization currently in formation and **not yet an officially chartered ACI Chapter**. “American Concrete Institute” and “ACI” are registered trademarks of the American Concrete Institute and are used here with acknowledgment and respect.
 
 ### Maintainer
-**Project Lead:** Stu  
-info@aciwv.org  
+**Project Lead:** S. Williamson  
+info@concrete-wv.org  
 West Virginia, USA
