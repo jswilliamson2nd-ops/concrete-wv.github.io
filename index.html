@@ -1,141 +1,193 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ACI West Virginia Interest Group</title>
-  <meta name="description" content="ACI West Virginia Interest Group — building concrete connections across the Mountain State." />
 
-  <!-- Favicon (in /assets) -->
-  <link rel="icon" type="image/png" href="./assets/aciwv_logo_favicon_256x256.png?v=3" />
+  <!-- Favicon (make sure this file exists in /assets) -->
+  <link rel="icon" href="assets/aciwv_logo_favicon_256x256.png" type="image/png" />
 
-  <!-- Fonts & Styles -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
-
-  <script>
-    // Simple dark-mode toggle with localStorage
-    function setTheme(mode){
-      document.documentElement.dataset.theme = mode;
-      try { localStorage.setItem('theme', mode); } catch(e) {}
+  <!-- Basic styles tuned for GitHub Pages (no frameworks required) -->
+  <style>
+    :root {
+      --bg: #0b1220;
+      --muted: #f2f5f9;
+      --accent: #2aa198;
+      --card: #101828;
+      --border: #1f2a44;
+      --text: #e6edf3;
+      --text-dim: #b9c4d0;
     }
-    (function(){
-      const saved = (typeof localStorage !== 'undefined') ? localStorage.getItem('theme') : null;
-      if (saved) setTheme(saved);
-      else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
-      else setTheme('light');
-    })();
-  </script>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
+      line-height: 1.6;
+    }
+
+    .container { width: min(1100px, 92vw); margin: 0 auto; }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(16, 24, 40, 0.6);
+      position: sticky; top: 0; backdrop-filter: blur(6px);
+      z-index: 20;
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
+    .nav img { height: 44px; width: auto; display: block; }
+    .nav a { color: var(--text); text-decoration: none; margin-left: 18px; opacity: .85; }
+    .nav a:hover { opacity: 1; }
+
+    .hero { padding: 56px 0 28px; text-align: center; }
+    .hero .brand { display: inline-flex; align-items: center; gap: 14px; }
+    .hero .brand img { height: 60px; width: auto; }
+    .hero h1 { font-size: clamp(28px, 5vw, 44px); margin: 14px 0 10px; }
+    .hero p { margin: 0 auto; max-width: 62ch; color: var(--text-dim); }
+
+    .grid { display: grid; gap: 18px; grid-template-columns: repeat(12, 1fr); margin: 36px 0 24px; }
+    .card { grid-column: span 12; border: 1px solid var(--border); background: var(--card); border-radius: 16px; padding: 20px; }
+    @media (min-width: 900px) {
+      .card.span-6 { grid-column: span 6; }
+      .card.span-4 { grid-column: span 4; }
+    }
+
+    h2 { margin: 0 0 8px; font-size: 22px; }
+    h3 { margin: 0 0 6px; font-size: 18px; color: var(--text); }
+    p, li { color: var(--text-dim); }
+    ul { margin: 8px 0 0 20px; }
+
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    .btn { display: inline-block; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); text-decoration: none; }
+    .btn.primary { background: var(--accent); color: #062522; border-color: transparent; font-weight: 600; }
+    .btn:hover { filter: brightness(1.05); }
+
+    footer { border-top: 1px solid var(--border); margin-top: 40px; padding: 22px 0; color: var(--text-dim); font-size: 14px; }
+    footer .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    footer img { height: 28px; width: auto; opacity: .8; }
+
+    /* Utility */
+    .logo-row { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+    .mono { font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; color: #9fb3c8; }
+  </style>
+
+  <!--
+    PATHING RULES for GitHub Pages
+    - Use relative paths like "assets/..." (no leading slash) so the site works at /<repo>/.
+    - Filenames are case-sensitive on the Pages server.
+    - If you ever use directories beginning with an underscore (e.g., _assets), add a root file named ".nojekyll".
+  -->
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="brand">
-        <!-- Header logo from /assets, with white variant for dark mode -->
-        <picture class="brand-logo-wrap">
-          <source srcset="./assets/aciwv_header_mark_white.png?v=3" media="(prefers-color-scheme: dark)">
-          <img src="./assets/aciwv_header_mark_1000x180.png?v=3" alt="ACI WV logo" class="brand-logo" />
-        </picture>
-        <div class="brand-meta">
-          <h1>ACI West Virginia Interest Group</h1>
-          <p>Building Concrete Connections Across the Mountain State</p>
-        </div>
-      </div>
-      <nav class="nav">
+  <header>
+    <div class="container nav">
+      <!-- Header logo: prefer the dark-on-light header mark; swap to white if your header is lighter. -->
+      <a href="./" class="logo-row" aria-label="ACI West Virginia Home">
+        <img src="assets/aciwv_header_mark_1000x180.png" alt="ACI West Virginia" />
+      </a>
+      <nav>
         <a href="#about">About</a>
-        <a href="#mission">Mission &amp; Vision</a>
-        <a href="#get-involved">Get Involved</a>
+        <a href="#mission">Mission</a>
+        <a href="#join">Join</a>
         <a href="#contact">Contact</a>
-        <button class="toggle" onclick="setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark')">🌓</button>
       </nav>
     </div>
   </header>
 
-  <main>
-    <section id="about" class="section">
-      <div class="container">
-        <h2>About the ACI West Virginia Interest Group</h2>
-        <p>
-          The <strong>ACI West Virginia Interest Group</strong> is a forming professional network dedicated to advancing concrete knowledge and construction quality across the Mountain State.
-          Supported by local engineers, contractors, educators, and students, the group’s goal is to promote collaboration, expand ACI certification and training opportunities,
-          and strengthen the use of durable, sustainable concrete throughout West Virginia.
-        </p>
-        <p>
-          The group is currently organizing as an <strong>ACI Interest Group</strong>, the first step toward establishing a fully recognized
-          <strong>American Concrete Institute Chapter</strong> in the state by January 2028.
-        </p>
+  <main class="container">
+    <section class="hero" id="top">
+      <div class="brand">
+        <img src="assets/aciwv_logo_white_square.png" alt="ACI WV logo" />
+        <img src="assets/aciwv_logo_body_800x800.png" alt="ACI WV wordmark" />
+      </div>
+      <h1>ACI West Virginia Interest Group</h1>
+      <p>
+        Advancing concrete knowledge, quality, and innovation across West Virginia.
+        We are forming an ACI Interest Group now—with the long‑term goal of establishing a
+        fully recognized ACI Chapter in West Virginia.
+      </p>
+      <div class="cta-row">
+        <a class="btn primary" href="#join">Register your interest</a>
+        <a class="btn" href="#calendar">Upcoming dates</a>
       </div>
     </section>
 
-    <section id="mission" class="section alt">
-      <div class="container">
-        <div class="split">
-          <div>
-            <h2>Mission</h2>
-            <p>
-              To advance the concrete industry in West Virginia through education, collaboration, and professional development — promoting quality
-              design, construction, and durability for a safer, more sustainable built environment.
-            </p>
-          </div>
-          <div>
-            <h2>Vision</h2>
-            <p>
-              A West Virginia where concrete excellence is standard — where every structure, from bridges to buildings, reflects innovation, quality,
-              and craftsmanship inspired by the ACI community.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="get-involved" class="section">
-      <div class="container">
-        <h2>Get Involved</h2>
+    <section class="grid" id="about">
+      <article class="card span-6">
+        <h2>What is an ACI Interest Group?</h2>
         <p>
-          We’re gathering engineers, contractors, suppliers, and students who share a passion for advancing concrete excellence across the Mountain State.
-          Complete the form below to join the <strong>ACI West Virginia Interest Group</strong> and receive updates on meetings and events.
+          An ACI Interest Group is a local, volunteer‑led community recognized by ACI that
+          hosts technical sessions, networking, and outreach—often a stepping stone to an
+          official ACI Chapter.
         </p>
-        <div class="form-embed">
-          <iframe
-            src="https://forms.gle/QfaPUHFHfi9S4Zgc6"
-            width="100%"
-            height="1300"
-            style="border:0;"
-            loading="lazy"
-            title="ACI WV Signup Form">
-          </iframe>
-        </div>
-        <p class="form-alt">
-          Prefer a new tab? <a class="btn" href="https://forms.gle/QfaPUHFHfi9S4Zgc6" target="_blank" rel="noopener">Open the form</a>
-        </p>
-      </div>
-    </section>
+        <ul>
+          <li>Connect practitioners, students, and agencies</li>
+          <li>Share best practices and new standards</li>
+          <li>Support certification and workforce development</li>
+        </ul>
+      </article>
+      <article class="card span-6" id="mission">
+        <h2>Our near‑term mission</h2>
+        <ul>
+          <li>Build a contact list and steering committee</li>
+          <li>Plan a 2026 technical event series in WV</li>
+          <li>Coordinate with ACI on chapter requirements</li>
+        </ul>
+      </article>
 
-    <section id="contact" class="section alt">
-      <div class="container">
+      <article class="card span-4" id="join">
+        <h2>Join the list</h2>
+        <p>
+          Add your name to get meeting invites and updates about the formation effort.
+        </p>
+        <!-- Replace the action with your real form endpoint (Google Form or other). -->
+        <form action="#" method="post" onsubmit="alert('Thanks! We\'ll be in touch.'); return false;">
+          <label for="name">Name</label><br />
+          <input id="name" name="name" required style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:#0d1528;color:var(--text)" />
+          <br /><br />
+          <label for="email">Email</label><br />
+          <input id="email" name="email" type="email" required style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:#0d1528;color:var(--text)" />
+          <br /><br />
+          <button class="btn primary" type="submit">Register interest</button>
+        </form>
+      </article>
+
+      <article class="card span-4" id="calendar">
+        <h2>Upcoming</h2>
+        <ul>
+          <li><span class="mono">Nov 2025</span> — Organizing call</li>
+          <li><span class="mono">Jan 2026</span> — Kickoff meetup (TBD)</li>
+          <li><span class="mono">Spring 2026</span> — Certification planning</li>
+        </ul>
+      </article>
+
+      <article class="card span-4" id="contact">
         <h2>Contact</h2>
-        <p>Email: <a href="mailto:info@aciwv.org">info@aciwv.org</a></p>
-        <p class="disclaimer">
-          <em>The ACI West Virginia Interest Group is a volunteer-led organization currently in formation and not yet an officially chartered ACI Chapter.
-          “American Concrete Institute” and “ACI” are registered trademarks of the American Concrete Institute and are used here with acknowledgment and respect.</em>
+        <p>
+          Questions or to help organize:
+          <a href="mailto:info@aciwv.org">info@aciwv.org</a>
         </p>
-      </div>
+        <div class="logo-row">
+          <img src="assets/aciwv_header_mark_white.png" alt="ACI WV inverted header mark" />
+        </div>
+      </article>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-brand">
-        <!-- Footer mark from /assets, with white variant for dark mode -->
-        <picture>
-          <source srcset="./assets/aciwv_logo_white_square.png?v=3" media="(prefers-color-scheme: dark)">
-          <img src="./assets/aciwv_logo_body_800x800.png?v=3" alt="ACI WV mark" class="footer-mark"/>
-        </picture>
+  <footer>
+    <div class="container row">
+      <div>© <span id="y"></span> ACI West Virginia Interest Group</div>
+      <div class="logo-row">
+        <img src="assets/aciwv_logo_favicon_256x256.png" alt="ACI WV favicon" />
       </div>
-      <p>© 2025 ACI West Virginia Interest Group · All rights reserved.</p>
     </div>
   </footer>
+
+  <script>
+    // Simple current year
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
