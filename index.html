@@ -5,15 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ACI West Virginia Interest Group</title>
   <meta name="description" content="ACI West Virginia Interest Group — building concrete connections across the Mountain State." />
+  <link rel="icon" type="image/png" href="assets/aciwv_logo_favicon_256x256.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    function setTheme(mode){document.documentElement.dataset.theme=mode;try{localStorage.setItem('theme',mode);}catch(e){}}
+    (function(){const s=(typeof localStorage!=='undefined')?localStorage.getItem('theme'):null;
+      if(s) setTheme(s);
+      else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+      else setTheme('light');})();
+  </script>
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
       <div class="brand">
+        <picture class="brand-logo-wrap">
+          <source srcset="assets/aciwv_header_mark_white.png" media="(prefers-color-scheme: dark)">
+          <img src="assets/aciwv_header_mark_1000x180.png" alt="ACI WV logo" class="brand-logo" />
+        </picture>
         <div class="brand-meta">
           <h1>ACI West Virginia Interest Group</h1>
           <p>Building Concrete Connections Across the Mountain State</p>
@@ -24,6 +36,7 @@
         <a href="#mission">Mission &amp; Vision</a>
         <a href="#get-involved">Get Involved</a>
         <a href="#contact">Contact</a>
+        <button class="toggle" onclick="setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark')">🌓</button>
       </nav>
     </div>
   </header>
@@ -102,6 +115,12 @@
 
   <footer class="site-footer">
     <div class="container">
+      <div class="footer-brand">
+        <picture>
+          <source srcset="assets/aciwv_logo_white_square.png" media="(prefers-color-scheme: dark)">
+          <img src="assets/aciwv_logo_body_800x800.png" alt="ACI WV mark" class="footer-mark"/>
+        </picture>
+      </div>
       <p>© 2025 ACI West Virginia Interest Group · All rights reserved.</p>
     </div>
   </footer>
