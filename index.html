@@ -6,129 +6,309 @@
   <title>ACI West Virginia Interest Group</title>
 
   <link rel="icon" href="assets/aciwv_logo_favicon_256x256.png" type="image/png" />
+
+  <!-- SEO / social sharing -->
+  <meta name="description" content="ACI West Virginia Interest Group — building a statewide community to advance concrete knowledge, quality, and certification." />
+  <meta property="og:title" content="ACI West Virginia Interest Group" />
+  <meta property="og:description" content="Advancing concrete knowledge, quality, and certification across West Virginia." />
+  <!-- Replace YOUR_DOMAIN with your live domain when ready -->
+  <meta property="og:image" content="https://YOUR_DOMAIN/assets/aciwv_logo_white_square.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://YOUR_DOMAIN/" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Structured data (Organization). Add Event blocks as you schedule them. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "ACI West Virginia Interest Group",
+    "url": "https://YOUR_DOMAIN/",
+    "logo": "https://YOUR_DOMAIN/assets/aciwv_logo_white_square.png",
+    "email": "info@aciwv.org"
+  }
+  </script>
+
   <style>
-    :root {
+    :root{
       --bg: #0b1220;
-      --border: #1f2a44;
-      --text: #e6edf3;
-      --text-dim: #b9c4d0;
-      --accent: #2aa198;
+      --bg-2:#0f172a;
+      --border:#1f2a44;
+      --text:#e6edf3;
+      --text-dim:#b9c4d0;
+      --accent:#2aa198;
+      --card:#101828;
     }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
-      color: var(--text);
-      line-height: 1.6;
+    /* Base */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      color:var(--text);
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
-    header {
-      border-bottom: 1px solid var(--border);
-      text-align: center;
-      padding: 20px 0;
+    a{ color: var(--text); text-decoration: none; }
+    a:hover{ color: var(--accent); }
+    img{ max-width:100%; height:auto; }
+
+    /* Layout helpers */
+    .container{ width:min(1080px, 92vw); margin:0 auto; }
+    .grid{ display:grid; gap:18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin:40px 0; }
+    .card{
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:var(--card);
+      padding:20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.25);
     }
-    header img { max-width: 840px; height: auto; max-height: 160px; }
-    .container { width: min(1100px, 92vw); margin: 0 auto; }
-    nav { margin-top: 10px; }
-    nav a { color: var(--text-dim); text-decoration: none; margin: 0 10px; }
-    nav a:hover { color: var(--accent); }
-    h1 { text-align: center; }
-    .hero { text-align: center; padding: 40px 0; }
-    .cta-row { display: flex; justify-content: center; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
-    .btn { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); text-decoration: none; }
-    .btn.primary { background: var(--accent); color: #062522; border: none; font-weight: 600; }
-    .btn:hover { filter: brightness(1.05); }
-    .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin: 40px 0; }
-    .card { border: 1px solid var(--border); border-radius: 16px; background: #101828; padding: 20px; }
-    footer { border-top: 1px solid var(--border); text-align: center; color: var(--text-dim); font-size: 14px; padding: 20px 0; }
+    .muted{ color:var(--text-dim); }
+
+    /* Header / nav */
+    header{
+      position: sticky; top:0; z-index:50;
+      border-bottom:1px solid var(--border);
+      backdrop-filter: blur(6px);
+      background: rgba(11,18,32,0.7);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      padding:12px 0;
+    }
+    .logo-wrap{ display:inline-flex; align-items:center; gap:12px; }
+    nav{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    nav a{ color:var(--text-dim); padding:6px 2px; }
+    nav a.active{ color:var(--accent); font-weight:600; }
+    /* Turn our nav CTAs into buttons without breaking layout */
+    nav .btn{ padding:8px 12px; border-radius:10px; border:1px solid var(--border); }
+
+    /* Buttons */
+    .cta-row{ display:flex; justify-content:center; gap:12px; margin-top:20px; flex-wrap:wrap; }
+    .btn{
+      display:inline-block;
+      padding:10px 14px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      text-decoration:none;
+      transition: transform .06s ease, filter .12s ease;
+    }
+    .btn.primary{ background:var(--accent); color:#062522; border:none; font-weight:600; }
+    .btn:hover{ filter:brightness(1.05); transform: translateY(-1px); }
+
+    /* Hero */
+    .hero{ text-align:center; padding:40px 0; }
+    .hero p{ max-width:68ch; margin:0 auto; color:var(--text-dim); }
+
+    /* Footer */
+    footer{
+      border-top:1px solid var(--border);
+      text-align:center;
+      color:var(--text-dim);
+      font-size:14px;
+      padding:20px 0;
+    }
+    footer a{ color:var(--text-dim); }
+    footer a:hover{ color:var(--accent); }
+
+    /* Accessibility helpers */
+    :target{ scroll-margin-top: 96px; }
+    :focus-visible{ outline:3px solid var(--accent); outline-offset:2px; border-radius:6px; }
+    .sr-only{
+      position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;
+    }
+    .sr-only:focus{
+      left:16px; top:16px; width:auto; height:auto; background:#fff; color:#000;
+      padding:8px 12px; border-radius:8px; z-index:100;
+    }
+
+    /* Back to top */
+    #topbtn{
+      position:fixed; right:16px; bottom:16px; display:none;
+      background:transparent;
+    }
+
+    @media (max-width: 640px){
+      .nav{ padding:10px 0; }
+      .logo-img{ height:72px; }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+    }
   </style>
 </head>
 <body>
-  <header>
-  <div class="container nav" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
-    <!-- Single logo at the top-left. If possible, export to PNG/WebP and keep the same path/name. -->
-    <a href="./" class="logo" aria-label="ACI West Virginia Home" style="display:inline-flex;align-items:center;gap:12px;">
-      <img
-        src="assets/aciwv_logo_body.png"
-        alt="ACI West Virginia"
-        style="height:96px; width:auto; display:block;"
-        decoding="async"
-      />
-    </a>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#mission">Mission</a>
-      <a href="#join">Join</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </div>
-</header>
+  <!-- Skip link for keyboard users -->
+  <a href="#main" class="sr-only">Skip to content</a>
 
-  <main class="container">
-    <section class="hero">
+  <header>
+    <div class="container nav">
+      <!-- Logo with WebP + PNG fallback -->
+      <a href="./" class="logo-wrap" aria-label="ACI West Virginia Home">
+        <picture>
+          <source srcset="assets/aciwv_logo_body.webp" type="image/webp" />
+          <img class="logo-img" src="assets/aciwv_logo_body.png" alt="ACI West Virginia" height="96" width="auto" decoding="async" />
+        </picture>
+      </a>
+
+      <!-- Top navigation with Join + Verify CTAs -->
+      <nav aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#mission">Mission</a>
+        <a href="#join">Join</a>
+        <a href="#calendar">Dates</a>
+        <a href="#contact">Contact</a>
+        <a href="#verify" class="btn">Verify</a>
+        <a href="#join" class="btn primary" aria-label="Join the Interest List">Join</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <!-- Hero -->
+    <section class="hero" id="home">
       <h1>ACI West Virginia Interest Group (Forming)</h1>
       <p>
         Advancing concrete knowledge, quality, and innovation across West Virginia.
-        We’re building a volunteer‑led community to advance concrete knowledge, quality, and innovation across West Virginia—laying the groundwork for a fully recognized ACI Chapter.
+        We’re building a volunteer-led community to lay the groundwork for a fully recognized ACI Chapter.
       </p>
       <div class="cta-row">
-        <a class="btn primary" href="#join">Join the Interest List</a>
-        <a class="btn" href="#calendar">See Upcoming Dates</a>
+        <a class="btn primary" href="#join" aria-label="Jump to Join form">Join the Interest List</a>
+        <a class="btn" href="#calendar" aria-label="See upcoming dates">See Upcoming Dates</a>
+        <!-- Direct verification CTAs in hero -->
+        <a class="btn" href="https://www.concrete.org/certification/verifyacertification.aspx?d=Ask" target="_blank" rel="noopener" aria-label="Verify an ACI Certification (opens in a new tab)">Verify ACI Certification</a>
+        <a class="btn" href="https://webapps.transportation.wv.gov/materialsdir/#:~:text=Technician%20ID%3A%20Please%20enter%20a%20valid%20input.%20Click,button%20beside%20a%20Technician%20to%20select%20their%20name." target="_blank" rel="noopener" aria-label="Verify a WVDOH Certification (opens in a new tab)">Verify WVDOH Certification</a>
+        <a class="btn" href="https://webapps.transportation.wv.gov/TechnicianCertificationDirectory" target="_blank" rel="noopener" aria-label="Verify a WVDOH TRET Certification (opens in a new tab)">Verify WVDOH TRET</a>
       </div>
     </section>
 
+    <!-- Core content grid -->
     <section class="grid" id="about">
-  <div class="card">
-    <h2>What is an ACI Interest Group?</h2>
-    <p>An ACI Interest Group is a local, volunteer-led community recognized by ACI that hosts technical sessions, networking, and outreach—often a stepping stone to an official ACI Chapter.</p>
-    <ul>
-      <li>Connect practitioners, students, and agencies</li>
-      <li>Share best practices and new standards</li>
-      <li>Support certification and workforce development</li>
-    </ul>
-  </div>
-  <div class="card" id="mission">
-    <h2>Our near-term mission</h2>
-    <ul>
-      <li>Grow a statewide contact list and steering team</li>
-      <li>Host technical talks and site visits in 2026</li>
-      <li>Coordinate with ACI on chapter requirements and certification pathways</li>
-    </ul>
-  </div>
-  <div class="card" id="join">
-    <h2>Join the list</h2>
-    <p>Use the embedded Google Form below or open it in a new tab.</p>
-    <p>
-      <a class="btn primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdNXE7KgbwwrQy2pCKtsOSIPuv9CpkpLBLgxH7sIG1SCgBkaQ/viewform" target="_blank" rel="noopener">Open form in new tab</a>
-    </p>
-    <!-- If Google blocks embedding the short link, replace the src with the form's "Embed HTML" URL that ends with /viewform?embedded=true -->
-    <div style="border:1px solid var(--border); border-radius:12px; overflow:hidden;">
-      <iframe
-        src="https://docs.google.com/forms/d/e/1FAIpQLSdNXE7KgbwwrQy2pCKtsOSIPuv9CpkpLBLgxH7sIG1SCgBkaQ/viewform?embedded=true"
-        style="width:100%; height:900px; border:0; background:#0b1220;"
-        loading="lazy"
-        referrerpolicy="no-referrer"
-        title="ACI WV — Join Form"
-      ></iframe>
-    </div>
-  </div>
-  <div class="card" id="calendar">
-    <h2>Upcoming</h2>
-    <ul>
-      <li>Jan 2026 — Organizing online call</li>
-      <li>Feb 2026 — Kickoff meetup (TBD)</li>
-      <li>Spring 2026 — Certification planning</li>
-    </ul>
-  </div>
-  <div class="card" id="contact">
-    <h2>Contact</h2>
-    <p>Questions or to help organize: <a href="mailto:info@aciwv.org">info@aciwv.org</a></p>
-  </div>
-</section>
+      <div class="card">
+        <h2>What is an ACI Interest Group?</h2>
+        <p>An ACI Interest Group is a local, volunteer-led community recognized by ACI that hosts technical sessions, networking, and outreach—often a stepping stone to an official ACI Chapter.</p>
+        <ul>
+          <li>Connect practitioners, students, and agencies</li>
+          <li>Share best practices and new standards</li>
+          <li>Support certification and workforce development</li>
+        </ul>
+      </div>
+
+      <div class="card" id="mission">
+        <h2>Our near-term mission</h2>
+        <ul>
+          <li>Grow a statewide contact list and steering team</li>
+          <li>Host technical talks and site visits in 2026</li>
+          <li>Coordinate with ACI on chapter requirements and certification pathways</li>
+        </ul>
+      </div>
+
+      <!-- Who should join -->
+      <div class="card">
+        <h2>Who should join?</h2>
+        <p class="muted">Contractors, ready-mix, precast, DOT, testing labs, inspectors, designers, suppliers, students, and faculty—anyone shaping concrete in WV.</p>
+        <ul class="muted">
+          <li>Field &amp; lab technicians (ACI/WVDOH)</li>
+          <li>Public owners &amp; agencies</li>
+          <li>Consultants, designers, PMs</li>
+          <li>Producers and suppliers</li>
+          <li>Students &amp; educators</li>
+        </ul>
+      </div>
+
+      <!-- Combined verification card -->
+      <div class="card" id="verify">
+        <h2>Verify Certifications</h2>
+        <p>Quick links to official certification lookup tools.</p>
+        <div class="cta-row" style="justify-content:flex-start;">
+          <a class="btn primary" href="https://www.concrete.org/certification/verifyacertification.aspx?d=Ask" target="_blank" rel="noopener" aria-label="Verify an ACI Certification (opens in a new tab)">Verify ACI Certification</a>
+          <a class="btn" href="https://webapps.transportation.wv.gov/materialsdir/#:~:text=Technician%20ID%3A%20Please%20enter%20a%20valid%20input.%20Click,button%20beside%20a%20Technician%20to%20select%20their%20name." target="_blank" rel="noopener" aria-label="Verify a WVDOH Certification (opens in a new tab)">Verify WVDOH Certification</a>
+          <a class="btn" href="https://webapps.transportation.wv.gov/TechnicianCertificationDirectory" target="_blank" rel="noopener" aria-label="Verify a WVDOH TRET Certification (opens in a new tab)">Verify WVDOH TRET</a>
+        </div>
+        <p class="muted" style="margin-top:8px;">Tip: Have the technician’s name/city or ID ready for faster results.</p>
+      </div>
+
+      <!-- Join card with embedded Google Form -->
+      <div class="card" id="join">
+        <h2>Join the list</h2>
+        <p>Use the embedded Google Form below or open it in a new tab.</p>
+        <p>
+          <a class="btn primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdNXE7KgbwwrQy2pCKtsOSIPuv9CpkpLBLgxH7sIG1SCgBkaQ/viewform" target="_blank" rel="noopener">Open form in new tab</a>
+        </p>
+        <div style="border:1px solid var(--border); border-radius:12px; overflow:hidden;">
+          <iframe
+            src="https://docs.google.com/forms/d/e/1FAIpQLSdNXE7KgbwwrQy2pCKtsOSIPuv9CpkpLBLgxH7sIG1SCgBkaQ/viewform?embedded=true"
+            style="width:100%; height:900px; border:0; background:#0b1220;"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+            title="ACI WV — Join Form"
+          ></iframe>
+        </div>
+        <p class="muted" style="margin-top:8px;">Privacy: We’ll use your info only for ACI WV updates. Unsubscribe anytime.</p>
+      </div>
+
+      <!-- Upcoming -->
+      <div class="card" id="calendar">
+        <h2>Upcoming</h2>
+        <ul>
+          <li>Jan 2026 — Organizing online call
+            · <a href="data:text/calendar;charset=utf-8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ADTSTART:20260115T230000Z%0ADTEND:20260116T000000Z%0ASUMMARY:ACI%20WV%20Organizing%20Call%0ADESCRIPTION:First%20organizing%20call%20for%20ACI%20WV%0AEND:VEVENT%0AEND:VCALENDAR">ICS</a>
+            · <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=ACI+WV+Organizing+Call&dates=20260115T230000Z/20260116T000000Z&details=First+organizing+call+for+ACI+WV">Google</a>
+          </li>
+          <li>Feb 2026 — Kickoff meetup (TBD)</li>
+          <li>Spring 2026 — Certification planning</li>
+        </ul>
+        <p class="muted">Want to host a site visit or talk? <a href="#contact">Contact us</a>.</p>
+      </div>
+
+      <!-- Contact -->
+      <div class="card" id="contact">
+        <h2>Contact</h2>
+        <p>Questions or want to help organize? <a href="mailto:info@aciwv.org">info@aciwv.org</a></p>
+        <p class="muted">We’re aligning with ACI HQ on 2026 certification opportunities (e.g., Concrete Field Testing Tech Grade I).</p>
+      </div>
+    </section>
   </main>
 
+  <!-- Footer -->
   <footer>
-    © <span id="y"></span> ACI West Virginia Interest Group
+    © <span id="y"></span> ACI West Virginia Interest Group ·
+    <a href="#about">About</a> ·
+    <a href="#join">Join</a> ·
+    <a href="#verify">Verify</a> ·
+    <a href="#contact">Contact</a>
   </footer>
-  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+
+  <!-- Back to top -->
+  <button id="topbtn" class="btn" aria-label="Back to top">↑ Top</button>
+
+  <script>
+  // Year stamp
+  document.getElementById('y').textContent = new Date().getFullYear();
+
+  // Back-to-top show/hide
+  const topBtn = document.getElementById('topbtn');
+  addEventListener('scroll', () => { topBtn.style.display = scrollY > 600 ? 'block' : 'none'; });
+  topBtn.onclick = () => scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Active section highlighting in nav
+  const navLinks = Array.from(document.querySelectorAll('nav a')).filter(a => a.getAttribute('href')?.startsWith('#'));
+  const sections = navLinks
+    .map(a => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      const idx = sections.indexOf(e.target);
+      if (idx > -1) navLinks[idx].classList.toggle('active', e.isIntersecting);
+    });
+  }, { rootMargin: "-40% 0px -50% 0px", threshold: 0.01 });
+
+  sections.forEach(s => io.observe(s));
+  </script>
 </body>
 </html>
