@@ -9,7 +9,7 @@
   <link rel="canonical" href="https://concrete-wv.org/" />
 
   <!-- Preload the main logo for faster first paint -->
-  <link rel="preload" as="image" href="assets/aciwv_logo_body_800x800.png" imagesrcset="assets/aciwv_logo_body_800x800.png" />
+  <link rel="preload" as="image" href="assets/aciwv_logo_body.png?v=1" imagesrcset="assets/aciwv_logo_body.png?v=1" />
 
   <!-- SEO / social sharing -->
   <meta name="description" content="ACI West Virginia Interest Group — building a statewide community to advance concrete knowledge, quality, and certification." />
@@ -42,7 +42,6 @@
       --accent:#2aa198;
       --card:#101828;
     }
-    /* Base */
     * { box-sizing: border-box; }
     html, body { height: 100%; }
     body{
@@ -58,7 +57,6 @@
     a:hover{ color: var(--accent); }
     img{ max-width:100%; height:auto; display:block; }
 
-    /* Layout helpers */
     .container{ width:min(1080px, 92vw); margin:0 auto; }
     .grid{ display:grid; gap:18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin:40px 0; }
     .card{
@@ -70,7 +68,6 @@
     }
     .muted{ color:var(--text-dim); }
 
-    /* Header / nav */
     header{
       position: sticky; top:0; z-index:50;
       border-bottom:1px solid var(--border);
@@ -88,7 +85,6 @@
     nav a.active{ color:var(--accent); font-weight:600; }
     nav .btn{ padding:8px 12px; border-radius:10px; border:1px solid var(--border); }
 
-    /* Buttons */
     .cta-row{ display:flex; justify-content:center; gap:12px; margin-top:20px; flex-wrap:wrap; }
     .btn{
       display:inline-block;
@@ -101,11 +97,9 @@
     .btn.primary{ background:var(--accent); color:#062522; border:none; font-weight:600; }
     .btn:hover{ filter:brightness(1.05); transform: translateY(-1px); }
 
-    /* Hero */
     .hero{ text-align:center; padding:40px 0; }
     .hero p{ max-width:68ch; margin:0 auto; color:var(--text-dim); }
 
-    /* Footer */
     footer{
       border-top:1px solid var(--border);
       text-align:center;
@@ -116,7 +110,6 @@
     footer a{ color:var(--text-dim); }
     footer a:hover{ color:var(--accent); }
 
-    /* Accessibility helpers */
     :target{ scroll-margin-top: 120px; }
     :focus-visible{ outline:3px solid var(--accent); outline-offset:2px; border-radius:6px; }
     .sr-only{
@@ -127,14 +120,12 @@
       padding:8px 12px; border-radius:8px; z-index:100;
     }
 
-    /* Back to top */
     #topbtn{
       position:fixed; right:16px; bottom:16px; display:none;
       background:transparent;
       z-index:60;
     }
 
-    /* Logo sizing: doubled on desktop, still reasonable on mobile */
     .logo-img{ height:192px; }
     @media (max-width: 860px){
       .logo-img{ height:150px; }
@@ -144,26 +135,24 @@
       .logo-img{ height:120px; }
     }
 
-    /* Reduced motion */
     @media (prefers-reduced-motion: reduce){
       *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
     }
   </style>
 </head>
 <body>
-  <!-- Skip link for keyboard users -->
   <a href="#main" class="sr-only">Skip to content</a>
 
   <header>
     <div class="container nav">
-      <!-- Logo with WebP + PNG fallback; PNG filename matches /assets exactly -->
+      <!-- Logo: uses exact file you mentioned -->
       <a href="./" class="logo-wrap" aria-label="ACI West Virginia Home">
         <picture>
-          <!-- Optional: if you later export a WebP with the exact same name, this will be used automatically -->
-          <source srcset="assets/aciwv_logo_body_800x800.webp" type="image/webp" />
+          <!-- Optional: add assets/aciwv_logo_body.webp later with same name -->
+          <source srcset="assets/aciwv_logo_body.webp?v=1" type="image/webp" />
           <img
             class="logo-img"
-            src="assets/aciwv_logo_body_800x800.png"
+            src="assets/aciwv_logo_body.png?v=1"
             alt="ACI West Virginia"
             height="192"
             width="192"
@@ -173,7 +162,6 @@
         </picture>
       </a>
 
-      <!-- Top navigation with Join + Verify CTAs -->
       <nav aria-label="Primary">
         <a href="#about">About</a>
         <a href="#mission">Mission</a>
@@ -187,7 +175,6 @@
   </header>
 
   <main id="main" class="container">
-    <!-- Hero -->
     <section class="hero" id="home">
       <h1>ACI West Virginia Interest Group (Forming)</h1>
       <p>
@@ -197,14 +184,12 @@
       <div class="cta-row">
         <a class="btn primary" href="#join" aria-label="Jump to Join form">Join the Interest List</a>
         <a class="btn" href="#calendar" aria-label="See upcoming dates">See Upcoming Dates</a>
-        <!-- Direct verification CTAs in hero -->
         <a class="btn" href="https://www.concrete.org/certification/verifyacertification.aspx?d=Ask" target="_blank" rel="noopener" aria-label="Verify an ACI Certification (opens in a new tab)">Verify ACI Certification</a>
         <a class="btn" href="https://webapps.transportation.wv.gov/materialsdir/#:~:text=Technician%20ID%3A%20Please%20enter%20a%20valid%20input.%20Click,button%20beside%20a%20Technician%20to%20select%20their%20name." target="_blank" rel="noopener" aria-label="Verify a WVDOH Certification (opens in a new tab)">Verify WVDOH Certification</a>
         <a class="btn" href="https://webapps.transportation.wv.gov/TechnicianCertificationDirectory" target="_blank" rel="noopener" aria-label="Verify a WVDOH TRET Certification (opens in a new tab)">Verify WVDOH TRET</a>
       </div>
     </section>
 
-    <!-- Core content grid -->
     <section class="grid" id="about">
       <div class="card">
         <h2>What is an ACI Interest Group?</h2>
@@ -225,7 +210,6 @@
         </ul>
       </div>
 
-      <!-- Who should join -->
       <div class="card">
         <h2>Who should join?</h2>
         <p class="muted">Contractors, ready-mix, precast, DOT, testing labs, inspectors, designers, suppliers, students, and faculty—anyone shaping concrete in WV.</p>
@@ -238,7 +222,6 @@
         </ul>
       </div>
 
-      <!-- Combined verification card -->
       <div class="card" id="verify">
         <h2>Verify Certifications</h2>
         <p>Quick links to official certification lookup tools.</p>
@@ -250,7 +233,6 @@
         <p class="muted" style="margin-top:8px;">Tip: Have the technician’s name/city or ID ready for faster results.</p>
       </div>
 
-      <!-- Join card with embedded Google Form -->
       <div class="card" id="join">
         <h2>Join the list</h2>
         <p>Use the embedded Google Form below or open it in a new tab.</p>
@@ -269,7 +251,6 @@
         <p class="muted" style="margin-top:8px;">Privacy: We’ll use your info only for ACI WV updates. Unsubscribe anytime.</p>
       </div>
 
-      <!-- Upcoming -->
       <div class="card" id="calendar">
         <h2>Upcoming</h2>
         <ul>
@@ -283,7 +264,6 @@
         <p class="muted">Want to host a site visit or talk? <a href="#contact">Contact us</a>.</p>
       </div>
 
-      <!-- Contact -->
       <div class="card" id="contact">
         <h2>Contact</h2>
         <p>Questions or want to help organize? <a href="mailto:info@aciwv.org">info@aciwv.org</a></p>
@@ -292,7 +272,6 @@
     </section>
   </main>
 
-  <!-- Footer -->
   <footer>
     © <span id="y"></span> ACI West Virginia Interest Group ·
     <a href="#about">About</a> ·
@@ -301,10 +280,9 @@
     <a href="#contact">Contact</a>
   </footer>
 
-  <!-- Back to top -->
   <button id="topbtn" class="btn" aria-label="Back to top">↑ Top</button>
 
-  <!-- Site audio (muted by default; unmuted on first user gesture) -->
+  <!-- Site audio -->
   <audio id="site-audio" preload="auto" loop muted playsinline>
     <source src="assets/wv-song.mp3" type="audio/mpeg" />
     <source src="assets/wv-song.wav" type="audio/wav" />
@@ -332,33 +310,25 @@
 
   // Active section highlighting in nav
   const navLinks = Array.from(document.querySelectorAll('nav a')).filter(a => a.getAttribute('href')?.startsWith('#'));
-  const sections = navLinks
-    .map(a => document.querySelector(a.getAttribute('href')))
-    .filter(Boolean);
-
+  const sections = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       const idx = sections.indexOf(e.target);
       if (idx > -1) navLinks[idx].classList.toggle('active', e.isIntersecting);
     });
   }, { rootMargin: "-40% 0px -50% 0px", threshold: 0.01 });
-
   sections.forEach(s => io.observe(s));
 
-  // ----- Audio controls with optional polish -----
+  // ----- Audio controls -----
   (() => {
     const audio = document.getElementById('site-audio');
     const btn = document.getElementById('audio-ctl');
     const KEY = 'aciwv_audio_pref_v1';
-
-    // Start a bit quieter
     audio.volume = 0.6;
 
-    // Try to autoplay muted on load (allowed in modern browsers)
     document.addEventListener('DOMContentLoaded', async () => {
       try {
-        await audio.play(); // plays while muted
-        const pref = localStorage.getItem(KEY);
+        await audio.play(); // muted autoplay
         btn.textContent = '🔊 Unmute';
         btn.setAttribute('aria-label', 'Unmute audio');
       } catch {
@@ -367,7 +337,6 @@
       }
     });
 
-    // First user interaction anywhere: unmute & play
     const activate = async () => {
       try {
         audio.muted = false;
@@ -384,7 +353,6 @@
     window.addEventListener('touchstart', activate, { once: true });
     window.addEventListener('keydown', activate, { once: true });
 
-    // Button toggles play/pause
     btn.addEventListener('click', async (e) => {
       e.stopPropagation();
       if (audio.paused) {
@@ -403,17 +371,14 @@
       }
     });
 
-    // Pause when tab not visible; resume if user wanted it playing
     document.addEventListener('visibilitychange', async () => {
       if (document.hidden) {
         audio.pause();
-      } else {
-        if (localStorage.getItem(KEY) === 'playing') {
-          try {
-            await audio.play();
-            btn.textContent = audio.muted ? '🔊 Unmute' : '⏸ Pause';
-          } catch {}
-        }
+      } else if (localStorage.getItem(KEY) === 'playing') {
+        try {
+          await audio.play();
+          btn.textContent = audio.muted ? '🔊 Unmute' : '⏸ Pause';
+        } catch {}
       }
     });
   })();
