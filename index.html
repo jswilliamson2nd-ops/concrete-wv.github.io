@@ -6,15 +6,18 @@
   <title>ACI West Virginia Interest Group</title>
 
   <link rel="icon" href="assets/aciwv_logo_favicon_256x256.png" type="image/png" />
-  <link rel="canonical" href="https://wv-concrete.org/" />
+  <link rel="canonical" href="https://concrete-wv.org/" />
+
+  <!-- Preload the main logo for faster first paint -->
+  <link rel="preload" as="image" href="assets/aciwv_logo_body_800x800.png" imagesrcset="assets/aciwv_logo_body_800x800.png" />
 
   <!-- SEO / social sharing -->
   <meta name="description" content="ACI West Virginia Interest Group — building a statewide community to advance concrete knowledge, quality, and certification." />
   <meta property="og:title" content="ACI West Virginia Interest Group" />
   <meta property="og:description" content="Advancing concrete knowledge, quality, and certification across West Virginia." />
-  <meta property="og:image" content="https://wv-concrete.org/assets/aciwv_logo_white_square.png" />
+  <meta property="og:image" content="https://concrete-wv.org/assets/aciwv_logo_white_square.png" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://wv-concrete.org/" />
+  <meta property="og:url" content="https://concrete-wv.org/" />
   <meta name="twitter:card" content="summary_large_image" />
 
   <!-- Structured data (Organization). Add Event blocks as you schedule them. -->
@@ -23,8 +26,8 @@
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "ACI West Virginia Interest Group",
-    "url": "https://wv-concrete.org/",
-    "logo": "https://wv-concrete.org/assets/aciwv_logo_white_square.png",
+    "url": "https://concrete-wv.org/",
+    "logo": "https://concrete-wv.org/assets/aciwv_logo_white_square.png",
     "email": "info@aciwv.org"
   }
   </script>
@@ -153,11 +156,20 @@
 
   <header>
     <div class="container nav">
-      <!-- Logo with WebP + PNG fallback -->
+      <!-- Logo with WebP + PNG fallback; PNG filename matches /assets exactly -->
       <a href="./" class="logo-wrap" aria-label="ACI West Virginia Home">
         <picture>
-          <source srcset="assets/aciwv_logo_body.webp" type="image/webp" />
-          <img class="logo-img" src="assets/aciwv_logo_body.png" alt="ACI West Virginia" height="192" width="auto" decoding="async" />
+          <!-- Optional: if you later export a WebP with the exact same name, this will be used automatically -->
+          <source srcset="assets/aciwv_logo_body_800x800.webp" type="image/webp" />
+          <img
+            class="logo-img"
+            src="assets/aciwv_logo_body_800x800.png"
+            alt="ACI West Virginia"
+            height="192"
+            width="192"
+            decoding="async"
+            onerror="this.onerror=null;this.src='assets/aciwv_header_mark_1000x180.png';"
+          />
         </picture>
       </a>
 
@@ -347,7 +359,7 @@
       try {
         await audio.play(); // plays while muted
         const pref = localStorage.getItem(KEY);
-        btn.textContent = (pref === 'playing') ? '🔊 Unmute' : '🔊 Unmute';
+        btn.textContent = '🔊 Unmute';
         btn.setAttribute('aria-label', 'Unmute audio');
       } catch {
         btn.textContent = '▶️ Play';
@@ -366,9 +378,7 @@
         window.removeEventListener('click', activate);
         window.removeEventListener('touchstart', activate);
         window.removeEventListener('keydown', activate);
-      } catch {
-        // If blocked, user can still click the button directly
-      }
+      } catch {}
     };
     window.addEventListener('click', activate, { once: true });
     window.addEventListener('touchstart', activate, { once: true });
