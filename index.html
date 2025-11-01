@@ -8,8 +8,8 @@
   <link rel="icon" href="assets/aciwv_logo_favicon_256x256.png" type="image/png" />
   <link rel="canonical" href="https://concrete-wv.org/" />
 
-  <!-- Preload the logo that lives in /assets -->
-  <link rel="preload" as="image" href="assets/aciwv_logo_body.png?v=3" imagesrcset="assets/aciwv_logo_body.png?v=3" />
+  <!-- Preload the logo in /assets -->
+  <link rel="preload" as="image" href="assets/aciwv_logo_body.png?v=4" imagesrcset="assets/aciwv_logo_body.png?v=4" />
 
   <!-- SEO / social -->
   <meta name="description" content="ACI West Virginia Interest Group — building a statewide community to advance concrete knowledge, quality, and certification." />
@@ -92,20 +92,17 @@
     <div class="container nav">
       <!-- Logo now points to /assets/aciwv_logo_body.png -->
       <a href="./" class="logo-wrap" aria-label="ACI West Virginia Home">
-        <picture>
-          <!-- Optional: if you add a matching WebP later, it will be used automatically -->
-          <source srcset="assets/aciwv_logo_body.webp?v=3" type="image/webp" />
-          <img
-            class="logo-img"
-            src="assets/aciwv_logo_body.png?v=3"
-            alt="ACI West Virginia"
-            height="192" width="192"
-            decoding="async"
-            onerror="this.onerror=null;this.src='assets/aciwv_header_mark_1000x180.png';"
-          />
-        </picture>
+        <img
+          class="logo-img"
+          src="assets/aciwv_logo_body.png?v=4"
+          alt="ACI West Virginia"
+          height="192" width="192"
+          decoding="async"
+          onerror="this.onerror=null;this.src='assets/aciwv_header_mark_1000x180.png';"
+        />
       </a>
 
+      <!-- Top navigation -->
       <nav aria-label="Primary">
         <a href="#about">About</a>
         <a href="#mission">Mission</a>
@@ -214,6 +211,7 @@
     <a href="#about">About</a> · <a href="#join">Join</a> · <a href="#verify">Verify</a> · <a href="#contact">Contact</a>
   </footer>
 
+  <!-- Back to top -->
   <button id="topbtn" class="btn" aria-label="Back to top">↑ Top</button>
 
   <!-- Audio: attempt unmuted autoplay; fall back to muted + nudge -->
