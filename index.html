@@ -8,6 +8,13 @@
   <link rel="icon" href="assets/aciwv_logo_favicon_256x256.png" type="image/png" />
   <link rel="canonical" href="https://concrete-wv.org/" />
 
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0b1220">
+  <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
   <!-- Preload the logo in /assets -->
   <link rel="preload" as="image" href="assets/aciwv_logo_body.png?v=5" />
 
@@ -26,96 +33,51 @@
   </script>
 
   <style>
-    :root{
-      --bg:#0b1220; --bg-2:#0f172a; --border:#1f2a44;
-      --text:#e6edf3; --text-dim:#b9c4d0; --accent:#2aa198; --card:#101828;
-      --shadow:0 6px 18px rgba(0,0,0,.25);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%); color:var(--text); line-height:1.6;
-      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-    }
-    a{color:var(--text); text-decoration:none}
-    a:hover{color:var(--accent)}
-    img{max-width:100%; height:auto; display:block}
-
-    .container{width:min(1080px,92vw); margin:0 auto}
-    .grid{display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); margin:40px 0}
-    .card{
-      border:1px solid var(--border); border-radius:16px; background:var(--card); padding:20px; box-shadow:var(--shadow);
-      opacity:0; transform:translateY(14px); animation: revealUp .6s ease forwards;
-    }
-    .grid .card:nth-child(1){ animation-delay:.06s }
-    .grid .card:nth-child(2){ animation-delay:.12s }
-    .grid .card:nth-child(3){ animation-delay:.18s }
-    .grid .card:nth-child(4){ animation-delay:.24s }
-    .grid .card:nth-child(5){ animation-delay:.30s }
-    .grid .card:nth-child(6){ animation-delay:.36s }
-
+    :root{ --bg:#0b1220; --bg-2:#0f172a; --border:#1f2a44; --text:#e6edf3; --text-dim:#b9c4d0; --accent:#2aa198; --card:#101828; --shadow:0 6px 18px rgba(0,0,0,.25) }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);color:var(--text);line-height:1.6}
+    a{color:var(--text);text-decoration:none} a:hover{color:var(--accent)}
+    img{max-width:100%;height:auto;display:block}
+    .container{width:min(1080px,92vw);margin:0 auto}
+    .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin:40px 0}
+    .card{border:1px solid var(--border);border-radius:16px;background:var(--card);padding:20px;box-shadow:var(--shadow);opacity:0;transform:translateY(14px);animation:revealUp .6s ease forwards}
+    .grid .card:nth-child(1){animation-delay:.06s}.grid .card:nth-child(2){animation-delay:.12s}.grid .card:nth-child(3){animation-delay:.18s}.grid .card:nth-child(4){animation-delay:.24s}.grid .card:nth-child(5){animation-delay:.30s}.grid .card:nth-child(6){animation-delay:.36s}
     .muted{color:var(--text-dim)}
-
-    header{
-      position:sticky; top:0; z-index:50; border-bottom:1px solid var(--border);
-      backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
-      background:rgba(11,18,32,.7);
-      opacity:0; transform:translateY(-8px);
-      animation: headerDrop .7s cubic-bezier(.2,.7,.2,1) .1s forwards;
-    }
-    .nav{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; padding:8px 0; flex-wrap:wrap}
-    .logo-wrap{display:inline-flex; align-items:flex-end; gap:12px; margin-left:-4px}
-    nav{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
-    nav a{color:var(--text-dim); padding:6px 2px}
-    nav a.active{color:var(--accent); font-weight:600}
-    nav .btn{padding:8px 12px; border-radius:10px; border:1px solid var(--border)}
-
-    .cta-row{display:flex; justify-content:center; gap:12px; margin-top:20px; flex-wrap:wrap}
-    .btn{display:inline-block; padding:10px 14px; border-radius:10px; border:1px solid var(--border); transition:transform .06s ease, filter .12s ease}
-    .btn.primary{background:var(--accent); color:#062522; border:none; font-weight:600}
-    .btn:hover{filter:brightness(1.05); transform:translateY(-1px)}
-
-    .hero{text-align:center; padding:40px 0}
-    .hero h1{letter-spacing:.2px; margin-bottom:8px; opacity:0; transform:translateY(10px); animation: revealUp .7s ease .15s forwards}
-    .hero p{max-width:68ch; margin:0 auto; color:var(--text-dim); opacity:0; transform:translateY(10px); animation: revealUp .7s ease .22s forwards}
-
-    footer{border-top:1px solid var(--border); text-align:center; color:var(--text-dim); font-size:14px; padding:20px 0}
+    header{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);background:rgba(11,18,32,.7);opacity:0;transform:translateY(-8px);animation:headerDrop .7s cubic-bezier(.2,.7,.2,1) .1s forwards}
+    .nav{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:8px 0;flex-wrap:wrap}
+    .logo-wrap{display:inline-flex;align-items:flex-end;gap:12px;margin-left:-4px}
+    nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    nav a{color:var(--text-dim);padding:6px 2px}
+    nav a.active{color:var(--accent);font-weight:600}
+    nav .btn{padding:8px 12px;border-radius:10px;border:1px solid var(--border)}
+    .cta-row{display:flex;justify-content:center;gap:12px;margin-top:20px;flex-wrap:wrap}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid var(--border);transition:transform .06s ease,filter .12s ease}
+    .btn.primary{background:var(--accent);color:#062522;border:none;font-weight:600}
+    .btn:hover{filter:brightness(1.05);transform:translateY(-1px)}
+    .hero{text-align:center;padding:40px 0}
+    .hero h1{letter-spacing:.2px;margin-bottom:8px;opacity:0;transform:translateY(10px);animation:revealUp .7s ease .15s forwards}
+    .hero p{max-width:68ch;margin:0 auto;color:var(--text-dim);opacity:0;transform:translateY(10px);animation:revealUp .7s ease .22s forwards}
+    footer{border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:14px;padding:20px 0}
     footer a{color:var(--text-dim)} footer a:hover{color:var(--accent)}
-
     :target{scroll-margin-top:120px}
-    :focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:6px}
-    .sr-only{position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden}
-    .sr-only:focus{left:16px; top:16px; width:auto; height:auto; background:#fff; color:#000; padding:8px 12px; border-radius:8px; z-index:100}
-
-    #topbtn{position:fixed; right:16px; bottom:16px; display:none; background:transparent; z-index:60}
-
-    .logo-img{
-      height:192px; opacity:0; transform:translateY(6px);
-      animation: revealUp .6s ease .12s forwards;
-      filter: drop-shadow(0 10px 24px rgba(0,0,0,.35));
-    }
+    :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+    .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+    .sr-only:focus{left:16px;top:16px;width:auto;height:auto;background:#fff;color:#000;padding:8px 12px;border-radius:8px;z-index:100}
+    #topbtn{position:fixed;right:16px;bottom:16px;display:none;background:transparent;z-index:60}
+    .logo-img{height:192px;opacity:0;transform:translateY(6px);animation:revealUp .6s ease .12s forwards;filter:drop-shadow(0 10px 24px rgba(0,0,0,.35))}
     @media (max-width:860px){.logo-img{height:150px}}
     @media (max-width:640px){.nav{padding:10px 0}.logo-img{height:120px}}
-
-    #now-playing{
-      position:fixed; left:50%; bottom:86px; transform:translateX(-50%);
-      padding:10px 14px; border-radius:12px; border:1px solid var(--border);
-      background:var(--card); color:var(--text); box-shadow:var(--shadow);
-      display:none; z-index:65; font-size:14px; opacity:0;
-    }
-    #now-playing.show{ display:block; animation: fadeIn .25s ease forwards }
-    #now-playing.hide{ animation: fadeOut .5s ease forwards }
-
-    @keyframes headerDrop{ to{ opacity:1; transform:translateY(0) } }
-    @keyframes revealUp{ to{ opacity:1; transform:translateY(0) } }
-    @keyframes fadeIn{ to{ opacity:1 } }
-    @keyframes fadeOut{ to{ opacity:0 } }
-
+    #now-playing{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);box-shadow:var(--shadow);display:none;z-index:65;font-size:14px;opacity:0}
+    #now-playing.show{display:block;animation:fadeIn .25s ease forwards}
+    #now-playing.hide{animation:fadeOut .5s ease forwards}
+    @keyframes headerDrop{to{opacity:1;transform:translateY(0)}}
+    @keyframes revealUp{to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{to{opacity:1}}
+    @keyframes fadeOut{to{opacity:0}}
     @media (prefers-reduced-motion:reduce){
-      *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important }
-      header, .logo-img, .card, .hero h1, .hero p { opacity:1 !important; transform:none !important }
-      #now-playing.show, #now-playing.hide { animation:none !important; opacity:1 }
+      *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+      header,.logo-img,.card,.hero h1,.hero p{opacity:1!important;transform:none!important}
+      #now-playing.show,#now-playing.hide{animation:none!important;opacity:1}
     }
   </style>
 </head>
@@ -255,16 +217,20 @@
   <div id="now-playing" role="status" aria-live="polite">🔊 Now Playing: WV Anthem</div>
 
   <script>
+    // Year + top button
     document.getElementById('y').textContent = new Date().getFullYear();
-
     const topBtn = document.getElementById('topbtn');
     addEventListener('scroll', () => { topBtn.style.display = scrollY > 600 ? 'block' : 'none'; });
     topBtn.onclick = () => scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Keep your existing audio control JS if you want the unmute button to toggle sound.
+    // Register service worker for PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(()=>{});
+    }
   </script>
 </body>
 </html>
+
 
 
 
