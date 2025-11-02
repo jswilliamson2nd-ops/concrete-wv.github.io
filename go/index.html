@@ -1,0 +1,35 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>WVDOH Info Router · ACI WV</title>
+<meta name="robots" content="noindex,follow">
+<meta http-equiv="refresh" content="3; url=/wvdoh.html">
+<link rel="canonical" href="https://concrete-wv.org/wvdoh.html">
+<meta name="description" content="WVDOH specs, construction manual, design directives, materials procedures, and approved sources — organized in one place.">
+<script>
+  // Keyword router: /go/?q=specs | manual | design | mps | apl
+  (function () {
+    const params = new URLSearchParams(location.search);
+    const q = (params.get('q') || '').toLowerCase().trim();
+    const map = {
+      specs: '/wvdoh.html#card-specs',
+      spec: '/wvdoh.html#card-specs',
+      specification: '/wvdoh.html#card-specs',
+      manual: '/wvdoh.html#card-const',
+      construction: '/wvdoh.html#card-const',
+      design: '/wvdoh.html#card-design',
+      directives: '/wvdoh.html#card-design',
+      mp: '/wvdoh.html#card-mp',
+      mps: '/wvdoh.html#card-mp',
+      materials: '/wvdoh.html#card-mp',
+      apl: '/wvdoh.html#card-approved',
+      approved: '/wvdoh.html#card-approved',
+      sources: '/wvdoh.html#card-approved'
+    };
+    if (map[q]) location.replace(map[q]);
+  })();
+</script>
+<body style="font-family:system-ui;margin:2rem;line-height:1.6;color:#e6edf3;background:#0b1220">
+  <h1 style="margin:0 0 .5rem">Routing to WVDOH Information Corner…</h1>
+  <p>If you’re not redirected, <a href="/wvdoh.html" style="color:#2aa198">click here</a>.</p>
+  <p style="opacity:.75;margin-top:1rem">Tip: you can use short links like <code>/go/specs</code>, <code>/go/manual</code>, <code>/go/design</code>, <code>/go/mps</code>, or <code>/go/apl</code>.</p>
+</body>
