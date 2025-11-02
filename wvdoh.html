@@ -8,6 +8,13 @@
   <link rel="icon" href="/assets/aciwv_logo_favicon_256x256.png" type="image/png" />
   <link rel="canonical" href="https://concrete-wv.org/wvdoh.html" />
   <meta name="theme-color" content="#0b1220" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
   <meta name="description" content="Central access to WVDOH references: Standard Specifications, Construction Manual, Design Directives, Materials Procedures, and Approved Sources." />
   <meta property="og:title" content="WVDOH Information Corner · ACI West Virginia Interest Group" />
   <meta property="og:description" content="One place for WVDOH spec books, construction manual, design directives, materials procedures, and approved sources." />
@@ -29,17 +36,15 @@
     .logo-img{height:60px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.35))}
     nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
     nav a{color:var(--text-dim);padding:6px 2px} nav a.active{color:var(--accent);font-weight:600}
-
-    .hero{text-align:center;padding:36px 0}
-    .hero h1{margin:0 0 8px}
-    .hero p{margin:0 auto;max-width:72ch;color:var(--text-dim)}
-
+    .hero{text-align:center;padding:30px 0 10px}
+    .hero h1{margin:0 0 6px}
+    .hero p{margin:0 auto 8px;max-width:72ch;color:var(--text-dim)}
     .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin:24px 0 46px}
     .card{border:1px solid var(--border);border-radius:16px;background:var(--card);padding:18px;box-shadow:var(--shadow)}
     .card h2,.card h3{margin:0 0 8px}
     .muted{color:var(--text-dim)}
     .links{display:grid;gap:10px}
-    .btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid var(--border);text-align:center}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid var(--border);text-align:center;cursor:pointer}
     .btn.primary{background:var(--accent);color:#062522;border:none;font-weight:600}
     .btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
     .note{font-size:13px;color:var(--text-dim);margin-top:8px}
@@ -71,6 +76,9 @@
     <section class="hero">
       <h1>WVDOH Information Corner</h1>
       <p>Central access to WVDOH references the field actually uses: <strong>Standard Specifications</strong>, the <strong>Construction Manual</strong>, <strong>Design Directives</strong>, <strong>Materials Procedures</strong>, and <strong>Approved Sources</strong>. One page, fewer clicks.</p>
+
+      <!-- Install App button -->
+      <button id="installBtn" class="btn" style="margin:10px 0 0">Install WVDOH App</button>
     </section>
 
     <!-- Core WVDOH groups -->
@@ -118,7 +126,7 @@
       </article>
     </section>
 
-    <!-- NEW: Quick References (placeholder) -->
+    <!-- Quick References (placeholder) -->
     <section aria-label="Quick references" style="margin:10px 0 50px">
       <h2 style="margin:10px 0 12px">Quick References <span class="badge">coming soon</span></h2>
       <p class="muted" style="margin:0 0 14px">Fast links and tools used in the field. We’ll populate these with official WVDOH resources as we collect them.</p>
@@ -185,7 +193,34 @@
     <a href="/wvdoh.html">WVDOH Info Corner</a>
   </footer>
 
-  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+  <script>
+    // Year stamp
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Register service worker (PWA)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(()=>{});
+    }
+
+    // PWA install prompt (Option 5)
+    let deferredPrompt;
+    const btn = document.getElementById("installBtn");
+    btn.style.display = "none";
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      btn.style.display = "inline-block";
+    });
+
+    btn.addEventListener("click", async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      btn.style.display = "none";
+    });
+  </script>
 </body>
 </html>
 
