@@ -243,8 +243,8 @@
   <!-- Back to top -->
   <button id="topbtn" class="btn" aria-label="Back to top">↑ Top</button>
 
-  <!-- Optional audio elements left as-is from your build -->
-  <audio id="site-audio" preload="auto" loop playsinline autoplay>
+  <!-- Audio defaults to muted for smoother autoplay handling -->
+  <audio id="site-audio" preload="auto" loop playsinline autoplay muted>
     <source src="assets/wv-song.mp3" type="audio/mpeg" />
     <source src="assets/wv-song.wav" type="audio/wav" />
   </audio>
@@ -261,9 +261,10 @@
     addEventListener('scroll', () => { topBtn.style.display = scrollY > 600 ? 'block' : 'none'; });
     topBtn.onclick = () => scrollTo({ top: 0, behavior: 'smooth' });
 
-    // (Audio script from your build omitted for brevity—keep your existing logic if needed)
+    // Keep your existing audio control JS if you want the unmute button to toggle sound.
   </script>
 </body>
 </html>
+
 
 
