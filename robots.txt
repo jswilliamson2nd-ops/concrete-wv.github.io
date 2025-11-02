@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://concrete-wv.org/sitemap.xml
