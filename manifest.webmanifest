@@ -1,0 +1,23 @@
+{
+  "name": "WVDOH Info Corner — ACI WV",
+  "short_name": "ACI WVDOH",
+  "description": "WVDOH specs, construction manual, design directives, materials procedures, and approved sources — organized in one place.",
+  "start_url": "/wvdoh.html?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b1220",
+  "theme_color": "#0b1220",
+  "icons": [
+    { "src": "/assets/pwa/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/pwa/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/assets/pwa/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable any" }
+  ],
+  "shortcuts": [
+    { "name": "Specs",   "url": "/wvdoh.html#card-specs",   "icons": [{ "src": "/assets/pwa/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Manual",  "url": "/wvdoh.html#card-const",   "icons": [{ "src": "/assets/pwa/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Design",  "url": "/wvdoh.html#card-design",  "icons": [{ "src": "/assets/pwa/icon-192.png", "sizes": "192x192" }] },
+    { "name": "MPs",     "url": "/wvdoh.html#card-mp",      "icons": [{ "src": "/assets/pwa/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Approved","url": "/wvdoh.html#card-approved","icons": [{ "src": "/assets/pwa/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
