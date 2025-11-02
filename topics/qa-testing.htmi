@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QA / Field Testing · ACI West Virginia Interest Group</title>
+  <link rel="icon" href="/assets/aciwv_logo_favicon_256x256.png" type="image/png" />
+  <link rel="canonical" href="https://concrete-wv.org/topics/qa-testing.html" />
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="description" content="Jobsite testing workflow: slump/flow, air, temperature, cylinders, handling, acceptance. ASTM references and WVDOH awareness." />
+  <meta property="og:title" content="QA / Field Testing · ACI West Virginia Interest Group" />
+  <meta property="og:description" content="Slump/flow, air, temp, cylinders, handling, and acceptance with ASTM references." />
+  <meta property="og:image" content="https://concrete-wv.org/assets/aciwv_logo_white_square.png" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://concrete-wv.org/topics/qa-testing.html" />
+  <meta property="og:site_name" content="ACI West Virginia Interest Group" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    :root{ --bg:#0b1220; --bg-2:#0f172a; --border:#1f2a44; --text:#e6edf3; --text-dim:#b9c4d0; --accent:#2aa198; --card:#101828; --shadow:0 6px 18px rgba(0,0,0,.25); }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);color:var(--text);line-height:1.6}
+    a{color:var(--text);text-decoration:none} a:hover{color:var(--accent)}
+    .container{width:min(980px,92vw);margin:0 auto}
+    header{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);background:rgba(11,18,32,.7)}
+    .nav{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:8px 0;flex-wrap:wrap}
+    .logo-wrap{display:inline-flex;align-items:flex-end;gap:12px;margin-left:-4px}
+    .logo-img{height:60px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.35))}
+    nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    nav a{color:var(--text-dim);padding:6px 2px} nav a.active{color:var(--accent);font-weight:600}
+    .breadcrumb{font-size:14px;margin:8px 0 0;color:var(--text-dim)}
+    .page-title{padding:30px 0 12px}
+    .grid{display:grid;grid-template-columns:1fr;gap:18px;margin:18px 0 46px}
+    .card{border:1px solid var(--border);border-radius:16px;background:var(--card);padding:18px;box-shadow:var(--shadow)}
+    .muted{color:var(--text-dim)} .cta-row{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid var(--border)} .btn.primary{background:var(--accent);color:#062522;border:none;font-weight:600}
+    code,kbd{background:#0e1628;border:1px solid var(--border);padding:2px 6px;border-radius:6px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="/" class="logo-wrap" aria-label="ACI WV Home">
+        <img class="logo-img" src="/assets/aciwv_logo_body.png?v=5" alt="ACI West Virginia" height="60" width="60" decoding="async" />
+      </a>
+      <nav aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="/topics/" class="active">Topics</a>
+        <a href="/#join">Join</a>
+        <a href="/#verify">Verify</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="breadcrumb"><a href="/">Home</a> ▸ <a href="/topics/">Topics</a> ▸ <strong>QA / Field Testing</strong></div>
+    <header class="page-title">
+      <h1>QA / Field Testing</h1>
+      <p class="muted">Consistent sampling, correct methods, and tight documentation. Coordinate acceptance criteria with specs/WVDOH.</p>
+      <p class="muted">Also see: <a href="/topics/curing.html">Curing</a> · <a href="/topics/specs-mixes.html">Specs & Mixes</a></p>
+    </header>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Sampling &amp; Timing</h2>
+        <ul>
+          <li>Sample per ASTM C172; take from middle of load, not first/last discharge.</li>
+          <li>Start tests promptly; keep samples out of sun/wind; note time and truck ID.</li>
+          <li>Re-mix test portion before slump/air/cylinders as required.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>Fresh Concrete Tests</h2>
+        <ul>
+          <li><strong>Slump / Flow:</strong> ASTM C143 / C1611 (SCC) — level base, proper rodding/strokes.</li>
+          <li><strong>Air content:</strong> ASTM C231 (pressure) or C173 (roll-a-meter for lightweight).</li>
+          <li><strong>Temperature:</strong> ASTM C1064 — measure and record delivery temp.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>Cylinders &amp; Handling</h2>
+        <ul>
+          <li>ASTM C31 — make, finish, protect from vibration and moisture loss; initial cure within temp range.</li>
+          <li>Transport to the lab carefully; document chain-of-custody; avoid freezing or overheating.</li>
+          <li>Breaks per ASTM C39; compare to specified strength and acceptance criteria.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>Acceptance &amp; Documentation</h2>
+        <ul>
+          <li>Verify acceptance criteria (ACI 301/WVDOH) for strength/air/slump/tolerance.</li>
+          <li>Log admixtures, water additions, ambient/weather, and delays.</li>
+          <li>Share results rapidly with the team to adjust operations if needed.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>References</h2>
+        <ul class="muted">
+          <li>ASTM C172, C143, C1611, C231, C173, C1064, C31, C39</li>
+          <li>ACI 301 — Specifications for Concrete Construction</li>
+          <li>WVDOH testing/acceptance provisions (project-specific)</li>
+        </ul>
+      </article>
+    </section>
+
+    <p><a href="/topics/">← Back to Topics</a></p>
+  </main>
+
+  <footer>
+    © <span id="y"></span> ACI West Virginia Interest Group ·
+    <a href="/">Home</a> · <a href="/#join">Join</a> ·
+    <a href="/#verify">Verify</a> · <a href="/topics/">Topics</a>
+  </footer>
+
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>
