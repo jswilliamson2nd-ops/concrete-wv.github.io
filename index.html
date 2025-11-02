@@ -7,6 +7,7 @@
 
   <link rel="icon" href="assets/aciwv_logo_favicon_256x256.png" type="image/png" />
   <link rel="canonical" href="https://concrete-wv.org/" />
+  <meta name="theme-color" content="#0b1220" />
 
   <!-- Preload the logo in /assets -->
   <link rel="preload" as="image" href="assets/aciwv_logo_body.png?v=5" />
@@ -18,6 +19,7 @@
   <meta property="og:image" content="https://concrete-wv.org/assets/aciwv_logo_white_square.png" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://concrete-wv.org/" />
+  <meta property="og:site_name" content="ACI West Virginia Interest Group" />
   <meta name="twitter:card" content="summary_large_image" />
 
   <!-- Structured data -->
@@ -46,10 +48,9 @@
     .grid{display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); margin:40px 0}
     .card{
       border:1px solid var(--border); border-radius:16px; background:var(--card); padding:20px; box-shadow:var(--shadow);
-      opacity:0; transform:translateY(14px); /* start hidden for reveal */
+      opacity:0; transform:translateY(14px);
       animation: revealUp .6s ease forwards;
     }
-    /* Stagger the grid cards slightly */
     .grid .card:nth-child(1){ animation-delay:.06s }
     .grid .card:nth-child(2){ animation-delay:.12s }
     .grid .card:nth-child(3){ animation-delay:.18s }
@@ -68,9 +69,9 @@
     }
     .nav{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; padding:8px 0; flex-wrap:wrap}
     .logo-wrap{display:inline-flex; align-items:flex-end; gap:12px; margin-left:-4px}
-    nav{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+    nav[aria-label="Primary"]{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
     nav a{color:var(--text-dim); padding:6px 2px}
-    nav a.active{color:var(--accent); font-weight:600}
+    nav a[aria-current="true"], nav a.active{color:var(--accent); font-weight:600}
     nav .btn{padding:8px 12px; border-radius:10px; border:1px solid var(--border)}
 
     .cta-row{display:flex; justify-content:center; gap:12px; margin-top:20px; flex-wrap:wrap}
@@ -160,6 +161,7 @@
         <a href="#calendar">Dates</a>
         <a href="#contact">Contact</a>
         <a href="#verify" class="btn">Verify</a>
+        <a href="/topics/">Topics</a>
         <a href="#join" class="btn primary" aria-label="Join the Interest List">Join</a>
       </nav>
     </div>
@@ -240,7 +242,7 @@
         <ul>
           <li>Jan 2026 — Organizing online call ·
             <a download="ACI_WV_Organizing_Call.ics"
-               href="data:text/calendar;charset=utf-8,BEGIN:VCALENDAR%0D%0AVERSION:2.0%0D%0ABEGIN:VEVENT%0D%0ADTSTART:20260115T230000Z%0D%0ADTEND:20260116T000000Z%0D%0ASUMMARY:ACI%20WV%20Organizing%20Call%0D%0ADESCRIPTION:First%20organizing%20call%20for%20ACI%20WV%0D%0AEND:VEVENT%0D%0AEND:VCALENDAR">ICS</a> ·
+               href="data:text/calendar;charset=utf-8,BEGIN:VCALENDAR%0D%0AVERSION:2.0%0D%0APRODID:-//ACIWV//Events//EN%0D%0ABEGIN:VEVENT%0D%0AUID:aciwv-20260115T230000Z@concrete-wv.org%0D%0ADTSTAMP:20250101T000000Z%0D%0ADTSTART:20260115T230000Z%0D%0ADTEND:20260116T000000Z%0D%0ASUMMARY:ACI%20WV%20Organizing%20Call%0D%0ADESCRIPTION:First%20organizing%20call%20for%20ACI%20WV%0D%0AEND:VEVENT%0D%0AEND:VCALENDAR">ICS</a> ·
             <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=ACI+WV+Organizing+Call&dates=20260115T230000Z/20260116T000000Z&details=First+organizing+call+for+ACI+WV"
                target="_blank" rel="noopener noreferrer">Google</a>
           </li>
@@ -260,11 +262,11 @@
 
   <footer>
     © <span id="y"></span> ACI West Virginia Interest Group ·
-    <a href="#about">About</a> · <a href="#join">Join</a> · <a href="#verify">Verify</a> · <a href="#contact">Contact</a>
+    <a href="#about">About</a> · <a href="#join">Join</a> · <a href="#verify">Verify</a> · <a href="/topics/">Topics</a> · <a href="#contact">Contact</a>
   </footer>
 
   <!-- Back to top -->
-  <button id="topbtn" class="btn" aria-label="Back to top">↑ Top</button>
+  <button id="topbtn" class="btn" aria-label="Back to top" type="button">↑ Top</button>
 
   <!-- Audio: attempt unmuted autoplay; fall back to muted + nudge -->
   <audio id="site-audio" preload="auto" loop playsinline autoplay>
@@ -273,7 +275,7 @@
   </audio>
 
   <!-- Floating play/unmute control -->
-  <button id="audio-ctl" aria-label="Play audio"
+  <button id="audio-ctl" type="button" aria-label="Play audio"
     style="position:fixed;right:16px;bottom:72px;z-index:60;padding:10px 14px;border-radius:12px;border:1px solid var(--border,#1f2a44);background:var(--card,#101828);color:var(--text,#e6edf3);box-shadow:var(--shadow);cursor:pointer;">
     ▶️ Play
   </button>
@@ -290,13 +292,17 @@
   addEventListener('scroll', () => { topBtn.style.display = scrollY > 600 ? 'block' : 'none'; });
   topBtn.onclick = () => scrollTo({ top: 0, behavior: 'smooth' });
 
-  // Active section highlight
+  // Active section highlight (+ aria-current hook)
   const navLinks = Array.from(document.querySelectorAll('nav a')).filter(a => a.getAttribute('href')?.startsWith('#'));
   const sections = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       const idx = sections.indexOf(e.target);
-      if (idx > -1) navLinks[idx].classList.toggle('active', e.isIntersecting);
+      if (idx > -1) {
+        const active = e.isIntersecting;
+        navLinks[idx].classList.toggle('active', active);
+        navLinks[idx].setAttribute('aria-current', active ? 'true' : 'false');
+      }
     });
   }, { rootMargin: "-40% 0px -50% 0px", threshold: 0.12 });
   sections.forEach(s => io.observe(s));
