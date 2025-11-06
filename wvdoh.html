@@ -163,7 +163,6 @@
       </article>
     </section>
 
-    <!-- Keep the disclaimer -->
     <section class="container" style="margin-bottom:28px;">
       <details class="card" open data-tags="notes disclaimer">
         <summary><strong>Notes &amp; Disclaimer</strong></summary>
@@ -183,10 +182,8 @@
   </footer>
 
   <script>
-    // Year stamp
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Simple client-side filter (original behavior)
     function filterLinks(){
       const q = (document.getElementById('filterBox').value || '').toLowerCase().trim();
       const cards = document.querySelectorAll('#linkGrid .card');
@@ -196,7 +193,6 @@
       });
     }
 
-    // Service worker (same path as index, safe if present)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(()=>{});
     }
