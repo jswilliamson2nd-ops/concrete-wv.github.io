@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
 
   <!-- SEO / social -->
-  <meta name="description" content="Phone-friendly concrete calculators for field use: volume (yd³), truck loads, cylinder break dates, unit conversions, water adjustment, temperature estimate, air/density check, rebar helper, and binder split." />
+  <meta name="description" content="Phone-friendly concrete calculators for field use: volume (yd³), truck loads, cylinder break dates, yield (ASTM C138), moisture water adjustment, and more." />
   <meta property="og:title" content="Concrete Calculators · ACI West Virginia" />
   <meta property="og:description" content="Fast, field-ready concrete calculators that work great on phones." />
   <meta property="og:image" content="https://concrete-wv.org/assets/aciwv_logo_white_square.png" />
@@ -75,6 +75,12 @@
     <!-- Hub cards -->
     <section class="grid" aria-label="Calculator list">
       <article class="card">
+        <h2>Yield & Relative Yield <span class="badge">ASTM C138</span></h2>
+        <p class="muted">Yield (yd³), relative yield (%), and optional lb/yd³ for cement & water.</p>
+        <p><a class="btn" href="#yield">Open Yield</a></p>
+      </article>
+
+      <article class="card">
         <h2>Volume (yd³) <span class="badge">Slab / Trench / Column</span></h2>
         <p class="muted">Estimate cubic yards with waste % and quick truck-loads.</p>
         <p><a class="btn" href="#volume">Open Volume</a></p>
@@ -93,46 +99,28 @@
       </article>
 
       <article class="card">
-        <h2>Unit Converter</h2>
-        <p class="muted">psi↔MPa, pcf↔kg/m³, °F↔°C, ft³↔m³, lb↔kg.</p>
-        <p><a class="btn" href="#convert">Open Converter</a></p>
-      </article>
-
-      <article class="card">
-        <h2>Water Adjustment</h2>
-        <p class="muted">Adjust batch water for aggregate moisture/absorption. Optional w/cm.</p>
+        <h2>Aggregate Moisture / Water Adj.</h2>
+        <p class="muted">SSD vs. field moisture ⇒ add/remove water; optional w/cm.</p>
         <p><a class="btn" href="#water">Open Water Adjustment</a></p>
       </article>
 
       <article class="card">
-        <h2>Fresh Concrete Temperature</h2>
-        <p class="muted">Estimate mix temperature from component temps/weights.</p>
-        <p><a class="btn" href="#temp">Open Temperature</a></p>
+        <h2>Fresh Temp (estimate)</h2>
+        <p class="muted">Component temps/weights ⇒ estimated fresh concrete °F.</p>
+        <p><a class="btn" href="#temp">Open Temp Estimate</a></p>
       </article>
 
       <article class="card">
-        <h2>Air & Density Check</h2>
-        <p class="muted">Quick check for measured air (%) and fresh unit weight (pcf).</p>
-        <p><a class="btn" href="#air">Open Air/Density</a></p>
-      </article>
-
-      <article class="card">
-        <h2>Rebar Helper</h2>
-        <p class="muted">Weight from bar size/length, plus grid spacing takeoff.</p>
-        <p><a class="btn" href="#rebar">Open Rebar</a></p>
-      </article>
-
-      <article class="card">
-        <h2>Binder Split</h2>
-        <p class="muted">Split total binder into cement and multiple SCMs.</p>
-        <p><a class="btn" href="#binder">Open Binder Split</a></p>
+        <h2>Unit Converter</h2>
+        <p class="muted">psi↔MPa, pcf↔kg/m³, °F↔°C, ft³↔m³, yd³↔m³, lb↔kg.</p>
+        <p><a class="btn" href="#convert">Open Converter</a></p>
       </article>
     </section>
 
     <!-- Tool mount point (calcs.js injects UI based on hash) -->
     <section id="tool" class="card tool" aria-live="polite">
       <h2 id="tool-title">Select a calculator above</h2>
-      <p class="muted">Deep links like <code>/calculators/#volume</code> will load here.</p>
+      <p class="muted">Deep links like <code>/calculators/#yield</code> or <code>#volume</code> will load here.</p>
     </section>
 
     <p class="muted" style="margin-top:12px">Questions or requests? <a href="mailto:info@concrete-wv.org">info@concrete-wv.org</a></p>
