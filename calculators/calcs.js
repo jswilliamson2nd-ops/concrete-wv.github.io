@@ -1,1 +1,505 @@
-<script src="./calcs.js" defer></script>
+/* ACI WV · calculators/calcs.js
+   Tools: #volume, #trucks, #cylinders
+   - Mobile-first, no deps
+   - LocalStorage persistence
+   - Deep-link query params (read & write)
+   - Copy results buttons
+*/
+
+(function(){
+  // ---------------- Utilities ----------------
+  const $id = (id, root=document) => root.getElementById(id);
+  const qs  = (sel, root=document) => root.querySelector(sel);
+
+  const fmt = (n, d=2) => (Number.isFinite(n) ? n.toFixed(d) : '—');
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const toNum = (val) => {
+    if (val == null) return null;
+    const s = String(val).trim().replace(/,/g,'');
+    const n = Number(s);
+    return Number.isFinite(n) ? n : null;
+  };
+
+  // URL params inside the hash (e.g. #volume?len=24&wid=30)
+  function readHash(){
+    const h = location.hash || '';
+    const [hash, q=''] = h.split('?');
+    const params = new URLSearchParams(q);
+    return { hash: hash.toLowerCase(), params };
+  }
+  function writeHash(hash, obj){
+    const p = new URLSearchParams();
+    Object.entries(obj || {}).forEach(([k,v])=>{
+      if (v !== '' && v != null && !Number.isNaN(v)) p.set(k, String(v));
+    });
+    const next = p.toString() ? `${hash}?${p.toString()}` : hash;
+    if (location.hash !== next) history.replaceState(null, '', next);
+  }
+
+  // Local storage helpers
+  const LS_KEY = 'aciwv_calc_state_v1';
+  function loadState(){
+    try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}'); } catch { return {}; }
+  }
+  function saveState(state){
+    try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch {}
+  }
+  const state = loadState();
+
+  // Copy helper
+  async function copyText(text){
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch {}
+      ta.remove(); return ok;
+    }
+  }
+
+  // Small UI helpers
+  function pillCopy(html, getText){
+    // html target must exist, we inject a Copy pill in the right-top
+    const wrap = document.createElement('div');
+    wrap.style.position='relative';
+    wrap.innerHTML = html;
+    const out = wrap.firstElementChild; // assume html root is block
+    const btn = document.createElement('button');
+    btn.textContent = 'Copy';
+    btn.className = 'btn';
+    btn.style.position='absolute';
+    btn.style.top='8px';
+    btn.style.right='8px';
+    btn.style.padding='6px 10px';
+    btn.style.fontSize='12px';
+    btn.addEventListener('click', async()=>{
+      const ok = await copyText(getText());
+      btn.textContent = ok ? 'Copied!' : 'Copy failed';
+      setTimeout(()=>btn.textContent='Copy', 1200);
+    });
+    out.style.position='relative';
+    out.appendChild(btn);
+    return wrap;
+  }
+
+  // Mount point
+  const mount = $id('tool');
+  const titleNode = $id('tool-title');
+
+  // ---------------- Router ----------------
+  const tools = {
+    '#volume': renderVolume,
+    '#trucks': renderTrucks,
+    '#cylinders': renderCylinders,
+  };
+
+  function render(){
+    const { hash, params } = readHash();
+    if (!tools[hash]) {
+      if (titleNode) titleNode.textContent = 'Select a calculator above';
+      if (mount) {
+        mount.innerHTML = '<p class="muted">Pick a tool from the cards above.</p>';
+      }
+      return;
+    }
+    tools[hash](params);
+  }
+  window.addEventListener('hashchange', render);
+  document.addEventListener('DOMContentLoaded', render);
+
+  // =========================================================
+  // VOLUME (yd³): slab / trench / column (cylindrical)
+  // =========================================================
+  function renderVolume(params){
+    if (titleNode) titleNode.textContent = 'Volume (yd³) — slab / trench / column';
+    if (!mount) return;
+
+    const s = Object.assign({shape:'slab', len:'', wid:'', th_in:'', qty:'1', waste:'5', // slab
+                             trench_len:'', trench_w_in:'', trench_d_in:'', trench_qty:'1',
+                             col_d_in:'', col_h_ft:'', col_qty:'1'}, state.volume||{});
+
+    // override from URL
+    ['shape','len','wid','th_in','qty','waste','trench_len','trench_w_in','trench_d_in','trench_qty','col_d_in','col_h_ft','col_qty']
+      .forEach(k => { if (params.has(k)) s[k]=params.get(k); });
+
+    // UI
+    mount.innerHTML = `
+      <h2>Volume (yd³)</h2>
+      <p class="muted">Estimate concrete volume with optional waste and quick truck-loads. Choose a shape:</p>
+
+      <div class="input-row">
+        <label>Shape<br>
+          <select id="v_shape">
+            <option value="slab">Slab / Pad (rectangular)</option>
+            <option value="trench">Trench / Footing (linear)</option>
+            <option value="column">Column (cylindrical)</option>
+          </select>
+        </label>
+        <label>Waste (%)<br><input id="v_waste" type="number" step="0.1" min="0" max="30" placeholder="e.g., 5"></label>
+      </div>
+
+      <!-- Slab -->
+      <section id="v_slab" class="card" style="margin-top:8px">
+        <h3>Slab / Pad</h3>
+        <div class="input-row">
+          <label>Length (ft)<br><input id="v_len" type="number" step="0.01" min="0" placeholder="e.g., 32"></label>
+          <label>Width (ft)<br><input id="v_wid" type="number" step="0.01" min="0" placeholder="e.g., 24"></label>
+        </div>
+        <div class="input-row">
+          <label>Thickness (in)<br><input id="v_th" type="number" step="0.1" min="0" placeholder="e.g., 6"></label>
+          <label>Quantity<br><input id="v_qty" type="number" step="1" min="1" value="1"></label>
+        </div>
+        <div class="out" id="v_out_slab">Enter dimensions.</div>
+      </section>
+
+      <!-- Trench -->
+      <section id="v_trench" class="card" style="margin-top:8px; display:none">
+        <h3>Trench / Footing</h3>
+        <div class="input-row">
+          <label>Total length (ft)<br><input id="vt_len" type="number" step="0.01" min="0" placeholder="e.g., 180"></label>
+          <label>Width (in)<br><input id="vt_w" type="number" step="0.1" min="0" placeholder="e.g., 24"></label>
+        </div>
+        <div class="input-row">
+          <label>Depth (in)<br><input id="vt_d" type="number" step="0.1" min="0" placeholder="e.g., 18"></label>
+          <label>Quantity<br><input id="vt_qty" type="number" step="1" min="1" value="1"></label>
+        </div>
+        <div class="out" id="v_out_trench">Enter dimensions.</div>
+      </section>
+
+      <!-- Column -->
+      <section id="v_column" class="card" style="margin-top:8px; display:none">
+        <h3>Column (cylindrical)</h3>
+        <div class="input-row">
+          <label>Diameter (in)<br><input id="vc_d" type="number" step="0.1" min="0" placeholder="e.g., 18"></label>
+          <label>Height (ft)<br><input id="vc_h" type="number" step="0.01" min="0" placeholder="e.g., 10"></label>
+        </div>
+        <div class="input-row">
+          <label>Quantity<br><input id="vc_qty" type="number" step="1" min="1" value="1"></label>
+          <div></div>
+        </div>
+        <div class="out" id="v_out_col">Enter dimensions.</div>
+      </section>
+
+      <section id="v_summary" style="margin-top:10px"></section>
+    `;
+
+    // Prefill
+    qs('#v_shape').value = s.shape;
+    $id('v_waste').value = s.waste ?? '';
+
+    // slab
+    $id('v_len').value  = s.len ?? '';
+    $id('v_wid').value  = s.wid ?? '';
+    $id('v_th').value   = s.th_in ?? '';
+    $id('v_qty').value  = s.qty ?? '1';
+
+    // trench
+    $id('vt_len').value = s.trench_len ?? '';
+    $id('vt_w').value   = s.trench_w_in ?? '';
+    $id('vt_d').value   = s.trench_d_in ?? '';
+    $id('vt_qty').value = s.trench_qty ?? '1';
+
+    // column
+    $id('vc_d').value   = s.col_d_in ?? '';
+    $id('vc_h').value   = s.col_h_ft ?? '';
+    $id('vc_qty').value = s.col_qty ?? '1';
+
+    // toggles
+    function syncPanels(){
+      const shape = qs('#v_shape').value;
+      qs('#v_slab').style.display   = shape==='slab'   ? '' : 'none';
+      qs('#v_trench').style.display = shape==='trench' ? '' : 'none';
+      qs('#v_column').style.display = shape==='column' ? '' : 'none';
+      compute();
+    }
+
+    // core compute
+    function compute(){
+      const shape = qs('#v_shape').value;
+      const waste = clamp(toNum($id('v_waste').value) ?? 0, 0, 30);
+
+      // Save + URL
+      state.volume = Object.assign(state.volume||{}, { shape, waste: String(waste) });
+
+      let ft3 = 0, qty = 1, detail = '';
+
+      if (shape==='slab'){
+        const L = toNum($id('v_len').value);
+        const W = toNum($id('v_wid').value);
+        const Th= toNum($id('v_th').value); // inches
+        qty = clamp(toNum($id('v_qty').value) ?? 1, 1, 9999);
+        if (L>0 && W>0 && Th>0){
+          ft3 = L * W * (Th/12) * qty;
+          $id('v_out_slab').innerHTML = `ft³: ${fmt(ft3,2)} (L×W×t × qty)`;
+          Object.assign(state.volume, { len:String(L), wid:String(W), th_in:String(Th), qty:String(qty) });
+          writeHash('#volume', { shape, len:L, wid:W, th_in:Th, qty, waste });
+        } else {
+          $id('v_out_slab').textContent = 'Enter dimensions.';
+        }
+      }
+      else if (shape==='trench'){
+        const L = toNum($id('vt_len').value);       // ft
+        const W = toNum($id('vt_w').value);         // in
+        const D = toNum($id('vt_d').value);         // in
+        qty = clamp(toNum($id('vt_qty').value) ?? 1, 1, 9999);
+        if (L>0 && W>0 && D>0){
+          ft3 = L * (W/12) * (D/12) * qty;
+          $id('v_out_trench').innerHTML = `ft³: ${fmt(ft3,2)} (L × W × D × qty)`;
+          Object.assign(state.volume, { trench_len:String(L), trench_w_in:String(W), trench_d_in:String(D), trench_qty:String(qty) });
+          writeHash('#volume', { shape, trench_len:L, trench_w_in:W, trench_d_in:D, trench_qty:qty, waste });
+        } else {
+          $id('v_out_trench').textContent = 'Enter dimensions.';
+        }
+      }
+      else { // column cylindrical
+        const Dia = toNum($id('vc_d').value);   // in
+        const H   = toNum($id('vc_h').value);   // ft
+        qty = clamp(toNum($id('vc_qty').value) ?? 1, 1, 9999);
+        if (Dia>0 && H>0){
+          const r_ft = (Dia/12)/2;
+          ft3 = Math.PI * r_ft * r_ft * H * qty;
+          $id('v_out_col').innerHTML = `ft³: ${fmt(ft3,2)} (π r² h × qty)`;
+          Object.assign(state.volume, { col_d_in:String(Dia), col_h_ft:String(H), col_qty:String(qty) });
+          writeHash('#volume', { shape, col_d_in:Dia, col_h_ft:H, col_qty:qty, waste });
+        } else {
+          $id('v_out_col').textContent = 'Enter dimensions.';
+        }
+      }
+
+      saveState(state);
+
+      // Summary + truck loads
+      const yd3 = ft3/27;
+      const yd3w = yd3 * (1 + waste/100);
+
+      const loads = [9.0, 9.5, 10.0].map(sz=>{
+        const count = Math.ceil(yd3w / sz);
+        const over  = count*sz - yd3w;
+        return { sz, count, over };
+      });
+
+      const summaryText = [
+        `Volume: ${fmt(yd3,3)} yd³`,
+        `Waste: ${fmt(waste,1)}% → ${fmt(yd3w,3)} yd³ (incl.)`,
+        `Loads (9.0): ${loads[0].count} | (9.5): ${loads[1].count} | (10.0): ${loads[2].count}`
+      ].join('\n');
+
+      const html = `
+        <div class="card">
+          <h3>Summary</h3>
+          <div class="out" id="v_sum">
+            Volume: ${fmt(yd3,3)} yd³<br>
+            With waste ${fmt(waste,1)}%: <strong>${fmt(yd3w,3)} yd³</strong><br>
+            <span class="small">Truck loads:</span><br>
+            • 9.0 yd³: ${loads[0].count} (over ${fmt(loads[0].over,2)} yd³)<br>
+            • 9.5 yd³: ${loads[1].count} (over ${fmt(loads[1].over,2)} yd³)<br>
+            • 10.0 yd³: ${loads[2].count} (over ${fmt(loads[2].over,2)} yd³)
+          </div>
+        </div>
+      `;
+      const node = pillCopy(html, ()=>summaryText);
+      const target = $id('v_summary');
+      target.innerHTML = '';
+      target.appendChild(node);
+    }
+
+    // events
+    ['v_shape','v_waste','v_len','v_wid','v_th','v_qty','vt_len','vt_w','vt_d','vt_qty','vc_d','vc_h','vc_qty']
+      .forEach(id => {
+        const el = $id(id);
+        if (!el) return;
+        el.addEventListener('input', compute, { passive:true });
+        el.addEventListener('change', compute, { passive:true });
+      });
+
+    qs('#v_shape').addEventListener('change', ()=>{
+      state.volume = Object.assign(state.volume||{}, { shape: qs('#v_shape').value });
+      saveState(state);
+      syncPanels();
+    });
+
+    syncPanels();
+  }
+
+  // =========================================================
+  // TRUCK LOADS helper
+  // =========================================================
+  function renderTrucks(params){
+    if (titleNode) titleNode.textContent = 'Truck Loads Helper';
+    if (!mount) return;
+
+    const s = Object.assign({ yd3:'', waste:'0', size:'9.5' }, state.trucks||{});
+    ['yd3','waste','size'].forEach(k => { if (params.has(k)) s[k]=params.get(k); });
+
+    mount.innerHTML = `
+      <h2>Truck Loads Helper</h2>
+      <p class="muted">Convert total yardage into truck counts. Shows 9.0 / 9.5 / 10.0 yd³ for comparison.</p>
+      <div class="input-row">
+        <label>Total concrete (yd³)<br><input id="t_total" type="number" step="0.01" min="0" placeholder="e.g., 54.25"></label>
+        <label>Waste (%)<br><input id="t_waste" type="number" step="0.1" min="0" max="30" placeholder="0–30"></label>
+      </div>
+      <div class="input-row">
+        <label>Primary truck size (yd³)<br>
+          <select id="t_size">
+            <option value="9">9.0</option>
+            <option value="9.5">9.5</option>
+            <option value="10">10.0</option>
+          </select>
+        </label>
+        <div></div>
+      </div>
+      <section id="t_out_wrap"></section>
+    `;
+
+    $id('t_total').value = s.yd3 ?? '';
+    $id('t_waste').value = s.waste ?? '0';
+    $id('t_size').value = s.size ?? '9.5';
+
+    function compute(){
+      const yd = toNum($id('t_total').value) ?? 0;
+      const waste = clamp(toNum($id('t_waste').value) ?? 0, 0, 30);
+      const size = toNum($id('t_size').value) ?? 9.5;
+
+      state.trucks = { yd3:String(yd), waste:String(waste), size:String(size) };
+      saveState(state);
+      writeHash('#trucks', { yd3: yd, waste, size });
+
+      const ydW = yd * (1 + waste/100);
+      const sizes = [9.0, 9.5, 10.0].map(sz=>{
+        const count = Math.ceil(ydW / sz);
+        const over  = count*sz - ydW;
+        return { sz, count, over };
+      });
+
+      const primary = sizes.find(x => Math.abs(x.sz - size) < 0.001) || sizes[1];
+
+      const text = [
+        `Total (incl. waste): ${fmt(ydW,3)} yd³`,
+        `Primary ${fmt(primary.sz,1)} yd³: ${primary.count} trucks (over ${fmt(primary.over,2)} yd³)`,
+        `9.0 yd³: ${sizes[0].count} | 9.5 yd³: ${sizes[1].count} | 10.0 yd³: ${sizes[2].count}`
+      ].join('\n');
+
+      const html = `
+        <div class="card">
+          <h3>Loads</h3>
+          <div class="out" id="t_out">
+            Total (with waste): <strong>${fmt(ydW,3)} yd³</strong><br>
+            Primary ${fmt(primary.sz,1)} yd³: <strong>${primary.count} trucks</strong> (over ${fmt(primary.over,2)} yd³)<br>
+            <span class="small">Comparison:</span><br>
+            • 9.0 yd³: ${sizes[0].count} (over ${fmt(sizes[0].over,2)} yd³)<br>
+            • 9.5 yd³: ${sizes[1].count} (over ${fmt(sizes[1].over,2)} yd³)<br>
+            • 10.0 yd³: ${sizes[2].count} (over ${fmt(sizes[2].over,2)} yd³)
+          </div>
+        </div>
+      `;
+      const node = pillCopy(html, ()=>text);
+      const wrap = $id('t_out_wrap'); wrap.innerHTML=''; wrap.appendChild(node);
+    }
+
+    ['t_total','t_waste','t_size'].forEach(id=>{
+      const el=$id(id);
+      el.addEventListener('input', compute, { passive:true });
+      el.addEventListener('change', compute, { passive:true });
+    });
+    compute();
+  }
+
+  // =========================================================
+  // CYLINDER BREAK PLANNER
+  // =========================================================
+  function renderCylinders(params){
+    if (titleNode) titleNode.textContent = 'Cylinder Break Planner';
+    if (!mount) return;
+
+    const s = Object.assign({ cast:'', time:'08:00', ages:'7,14,28' }, state.cylinders||{});
+    ['cast','time','ages'].forEach(k => { if (params.has(k)) s[k]=params.get(k); });
+
+    mount.innerHTML = `
+      <h2>Cylinder Break Planner</h2>
+      <p class="muted">Enter the cast date/time and target ages (days). We’ll list the break dates in your local time.</p>
+      <div class="input-row">
+        <label>Cast date<br><input id="c_date" type="date"></label>
+        <label>Time (HH:MM)<br><input id="c_time" type="time" step="60"></label>
+      </div>
+      <div class="input-row">
+        <label>Ages (days, comma-sep)<br><input id="c_ages" type="text" placeholder="e.g., 7,14,28"></label>
+        <div></div>
+      </div>
+      <section id="c_out_wrap"></section>
+    `;
+
+    // Prefill defaults (today)
+    const todayISO = new Date().toISOString().slice(0,10);
+    $id('c_date').value = s.cast || todayISO;
+    $id('c_time').value = s.time || '08:00';
+    $id('c_ages').value = s.ages || '7,14,28';
+
+    function compute(){
+      const dStr = $id('c_date').value;   // YYYY-MM-DD
+      const tStr = $id('c_time').value || '08:00';
+      const agesStr = ($id('c_ages').value || '7,14,28').replace(/\s+/g,'');
+      const ages = agesStr.split(',').map(x=>parseInt(x,10)).filter(x=>Number.isFinite(x) && x>=1 && x<=365);
+
+      state.cylinders = { cast:dStr, time:tStr, ages:ages.join(',') };
+      saveState(state);
+      writeHash('#cylinders', { cast:dStr, time:tStr, ages:ages.join(',') });
+
+      let base;
+      if (dStr){
+        // Construct local time date
+        const [hh,mm] = (tStr||'08:00').split(':').map(x=>parseInt(x,10)||0);
+        const [Y,M,D] = dStr.split('-').map(n=>parseInt(n,10));
+        base = new Date(Y, (M-1), D, hh, mm, 0, 0);
+      }
+
+      let rows = '';
+      if (base && ages.length){
+        rows = ages.map(a=>{
+          const ms = a*24*60*60*1000;
+          const dt = new Date(base.getTime() + ms);
+          const dateStr = dt.toLocaleString([], { year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+          return `<tr><td>${a} days</td><td>${dateStr}</td></tr>`;
+        }).join('');
+      }
+
+      const text = (()=>{
+        if (!base || !rows) return 'Enter cast date/time and ages.';
+        const lines = ages.map(a=>{
+          const ms = a*24*60*60*1000;
+          const dt = new Date(base.getTime() + ms);
+          return `${a} days: ${dt.toLocaleString()}`;
+        });
+        return lines.join('\n');
+      })();
+
+      const html = `
+        <div class="card">
+          <h3>Break Schedule</h3>
+          <div class="out" id="c_out">
+            <table style="width:100%; border-collapse:collapse">
+              <thead>
+                <tr><th style="text-align:left">Age</th><th style="text-align:left">Break date (local)</th></tr>
+              </thead>
+              <tbody>${rows || '<tr><td colspan="2">Enter cast date/time and ages.</td></tr>'}</tbody>
+            </table>
+            <div class="small" style="margin-top:6px">Advisory only. Confirm with your lab’s schedule and pickup times.</div>
+          </div>
+        </div>
+      `;
+      const node = pillCopy(html, ()=>text);
+      const wrap = $id('c_out_wrap'); wrap.innerHTML=''; wrap.appendChild(node);
+    }
+
+    ['c_date','c_time','c_ages'].forEach(id=>{
+      const el=$id(id);
+      el.addEventListener('input', compute, { passive:true });
+      el.addEventListener('change', compute, { passive:true });
+    });
+    compute();
+  }
+
+})();
