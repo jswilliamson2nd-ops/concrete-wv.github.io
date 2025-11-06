@@ -18,15 +18,24 @@
   <meta name="description" content="Central access to WVDOH references: Standard Specifications, Construction Manual, Design Directives, Materials Procedures, and Approved Sources." />
   <meta property="og:title" content="WVDOH Information Corner · ACI West Virginia Interest Group" />
   <meta property="og:description" content="One place for WVDOH spec books, construction manual, design directives, materials procedures, and approved sources." />
-@@ -29,17 +36,15 @@
+  <meta property="og:image" content="https://concrete-wv.org/assets/aciwv_logo_white_square.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://concrete-wv.org/wvdoh.html" />
+  <meta property="og:site_name" content="ACI West Virginia Interest Group" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    :root{ --bg:#0b1220; --bg-2:#0f172a; --border:#1f2a44; --text:#e6edf3; --text-dim:#b9c4d0; --accent:#2aa198; --card:#101828; --shadow:0 6px 18px rgba(0,0,0,.25) }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);color:var(--text);line-height:1.6}
+    a{color:var(--text);text-decoration:none} a:hover{color:var(--accent)}
+    .container{width:min(1080px,92vw);margin:0 auto}
+    header{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);background:rgba(11,18,32,.7)}
+    .nav{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:8px 0;flex-wrap:wrap}
+    .logo-wrap{display:inline-flex;align-items:flex-end;gap:12px;margin-left:-4px}
     .logo-img{height:60px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.35))}
     nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
     nav a{color:var(--text-dim);padding:6px 2px} nav a.active{color:var(--accent);font-weight:600}
-
-    .hero{text-align:center;padding:36px 0}
-    .hero h1{margin:0 0 8px}
-    .hero p{margin:0 auto;max-width:72ch;color:var(--text-dim)}
-
     .hero{text-align:center;padding:30px 0 10px}
     .hero h1{margin:0 0 6px}
     .hero p{margin:0 auto 8px;max-width:72ch;color:var(--text-dim)}
@@ -35,12 +44,35 @@
     .card h2,.card h3{margin:0 0 8px}
     .muted{color:var(--text-dim)}
     .links{display:grid;gap:10px}
-    .btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid var(--border);text-align:center}
     .btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid var(--border);text-align:center;cursor:pointer}
     .btn.primary{background:var(--accent);color:#062522;border:none;font-weight:600}
     .btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
     .note{font-size:13px;color:var(--text-dim);margin-top:8px}
-@@ -71,6 +76,9 @@
+    .badge{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--border);color:var(--text-dim)}
+    footer{border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:14px;padding:20px 0}
+    .breadcrumb{font-size:14px;margin:8px 0 0;color:var(--text-dim)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="/" class="logo-wrap" aria-label="ACI WV Home">
+        <img class="logo-img" src="/assets/aciwv_logo_body.png?v=5" alt="ACI West Virginia" height="60" width="60" decoding="async" />
+      </a>
+      <nav aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="/topics/">Topics</a>
+        <a href="/#join">Join</a>
+        <a href="/#verify">Verify</a>
+        <a href="/wvdoh.html" class="active">WVDOH Info Corner</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="breadcrumb"><a href="/">Home</a> ▸ <strong>WVDOH Information Corner</strong></div>
+
     <section class="hero">
       <h1>WVDOH Information Corner</h1>
       <p>Central access to WVDOH references the field actually uses: <strong>Standard Specifications</strong>, the <strong>Construction Manual</strong>, <strong>Design Directives</strong>, <strong>Materials Procedures</strong>, and <strong>Approved Sources</strong>. One page, fewer clicks.</p>
@@ -50,20 +82,117 @@
     </section>
 
     <!-- Core WVDOH groups -->
-@@ -118,7 +126,7 @@
+    <section class="grid" aria-label="WVDOH link groups">
+      <article class="card" id="card-specs">
+        <h2>Standard Specifications <span class="badge">Spec Book</span></h2>
+        <div class="links">
+          <a class="btn primary" href="https://transportation.wv.gov/highways/TechnicalSupport/specifications/Pages/default.aspx" target="_blank" rel="noopener">Current Spec Book</a>
+          <a class="btn" href="https://transportation.wv.gov/highways/TechnicalSupport/specifications/Documents/2025%20Supplemental%20Specifications_20241209.pdf" target="_blank" rel="noopener">2025 Supplemental Specifications (PDF)</a>
+          <span class="note">Governing specifications and the latest supplement.</span>
+        </div>
+      </article>
+
+      <article class="card" id="card-const">
+        <h2>Construction Manual</h2>
+        <div class="links">
+          <a class="btn primary" href="https://transportation.wv.gov/highways/TechnicalSupport/specifications/ConstManual/Pages/default.aspx" target="_blank" rel="noopener">Construction Manual (Index)</a>
+          <span class="note">Procedures, inspection methods, and administration.</span>
+        </div>
+      </article>
+
+      <article class="card" id="card-design">
+        <h2>Design Directives</h2>
+        <div class="links">
+          <a class="btn primary" href="https://transportation.wv.gov/highways/TechnicalSupport/Pages/Design-Directives.aspx" target="_blank" rel="noopener">Design Directives Index</a>
+          <a class="btn" href="https://transportation.wv.gov/highways/engineering/files/WVBDML%202006.pdf" target="_blank" rel="noopener">Bridge Design Memo List (PDF)</a>
+          <span class="note">Policies and standards for roadway/bridge design.</span>
+        </div>
+      </article>
+
+      <article class="card" id="card-mp">
+        <h2>Materials Procedures <span class="badge">MPs</span></h2>
+        <div class="links">
+          <a class="btn primary" href="https://transportation.wv.gov/highways/mcst/Pages/WVDOH-Materials-Procedures.aspx" target="_blank" rel="noopener">Materials Procedures (Home)</a>
+          <span class="note">Detailed test and acceptance procedures.</span>
+        </div>
+      </article>
+
+      <article class="card" id="card-approved">
+        <h2>Approved Sources</h2>
+        <div class="links">
+          <a class="btn primary" href="https://transportation.wv.gov/highways/mcst/Pages/APL_By_Number.aspx" target="_blank" rel="noopener">Approved Products &amp; Sources</a>
+          <span class="note">Prequalified products, suppliers, and producers.</span>
+        </div>
       </article>
     </section>
 
-    <!-- NEW: Quick References (placeholder) -->
     <!-- Quick References (placeholder) -->
     <section aria-label="Quick references" style="margin:10px 0 50px">
       <h2 style="margin:10px 0 12px">Quick References <span class="badge">coming soon</span></h2>
       <p class="muted" style="margin:0 0 14px">Fast links and tools used in the field. We’ll populate these with official WVDOH resources as we collect them.</p>
-@@ -185,7 +193,34 @@
+
+      <div class="grid">
+        <article class="card">
+          <h3>Districts &amp; Contacts</h3>
+          <p class="muted">District map, key phone numbers, office addresses.</p>
+          <div class="links">
+            <a class="btn" aria-disabled="true">District Map (PDF)</a>
+            <a class="btn" aria-disabled="true">District Office Contacts</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Technician Directories</h3>
+          <p class="muted">Search WVDOH / ACI certifications and technician records.</p>
+          <div class="links">
+            <a class="btn" href="https://webapps.transportation.wv.gov/materialsdir" target="_blank" rel="noopener">WVDOH Materials Directory</a>
+            <a class="btn" href="https://www.concrete.org/certification/verifyacertification.aspx?d=Ask" target="_blank" rel="noopener">Verify ACI Certification</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Sampling &amp; Forms</h3>
+          <p class="muted">Field forms, sample IDs, chain-of-custody, submittal templates.</p>
+          <div class="links">
+            <a class="btn" aria-disabled="true">Concrete Sample ID Form</a>
+            <a class="btn" aria-disabled="true">Cylinder Pickup / Curing Log</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Field Calculators</h3>
+          <p class="muted">Evaporation, yield, replacement, and w/cm quick checks.</p>
+          <div class="links">
+            <a class="btn" aria-disabled="true">Evaporation Rate Tool</a>
+            <a class="btn" aria-disabled="true">Concrete Yield Calculator</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Submittals &amp; Mixes</h3>
+          <p class="muted">Submittal checklist, SCMs, admixtures, QA attachments.</p>
+          <div class="links">
+            <a class="btn" aria-disabled="true">Mix Submittal Checklist</a>
+            <a class="btn" aria-disabled="true">SCM/Admixture Data Sheet Bundle</a>
+          </div>
+        </article>
+      </div>
+
+      <p class="muted" style="margin-top:8px">Have a link we should include? Email <a href="mailto:info@concrete-wv.org">info@concrete-wv.org</a>.</p>
+    </section>
+
+    <p class="muted">Suggestions or corrections? Email <a href="mailto:info@concrete-wv.org">info@concrete-wv.org</a>. We’ll keep this page current.</p>
+
+    <p><a href="/">← Back to Home</a> · <a href="/topics/">Topics</a></p>
+  </main>
+
+  <footer>
+    © <span id="y"></span> ACI West Virginia Interest Group ·
+    <a href="/">Home</a> · <a href="/#join">Join</a> ·
+    <a href="/#verify">Verify</a> · <a href="/topics/">Topics</a> ·
     <a href="/wvdoh.html">WVDOH Info Corner</a>
   </footer>
 
-  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
   <script>
     // Year stamp
     document.getElementById('y').textContent = new Date().getFullYear();
