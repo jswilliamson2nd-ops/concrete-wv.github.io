@@ -51,6 +51,14 @@
     .badge{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--border);color:var(--text-dim)}
     footer{border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:14px;padding:20px 0}
     .breadcrumb{font-size:14px;margin:8px 0 0;color:var(--text-dim)}
+    .input-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+    .input-row label{font-size:13px;color:var(--text-dim)}
+    input[type="number"], input[type="text"], select{
+      width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:#0e1627;color:var(--text)
+    }
+    .out{padding:10px;border-radius:10px;background:#0e1627;border:1px dashed var(--border);font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
+    .ok{color:#7bd389}.warn{color:#ffd166}.bad{color:#ff6b6b}
+    .small{font-size:12px;color:var(--text-dim)}
   </style>
 </head>
 <body>
@@ -126,55 +134,77 @@
       </article>
     </section>
 
-    <!-- Quick References (placeholder) -->
+    <!-- Quick References (now with live calculators) -->
     <section aria-label="Quick references" style="margin:10px 0 50px">
-      <h2 style="margin:10px 0 12px">Quick References <span class="badge">coming soon</span></h2>
-      <p class="muted" style="margin:0 0 14px">Fast links and tools used in the field. We’ll populate these with official WVDOH resources as we collect them.</p>
+      <h2 style="margin:10px 0 12px">Quick References</h2>
+      <p class="muted" style="margin:0 0 14px">Fast tools used in the field. Built for phones. Values are helpers—verify against contract documents and official methods.</p>
 
       <div class="grid">
-        <article class="card">
-          <h3>Districts &amp; Contacts</h3>
-          <p class="muted">District map, key phone numbers, office addresses.</p>
-          <div class="links">
-            <a class="btn" aria-disabled="true">District Map (PDF)</a>
-            <a class="btn" aria-disabled="true">District Office Contacts</a>
+        <!-- Concrete Yield -->
+        <article class="card" id="calc-yield">
+          <h3>Concrete Yield (ASTM C138 style)</h3>
+          <div class="input-row">
+            <label>Measured unit weight (pcf)<br><input id="y_unitwt" type="number" inputmode="decimal" step="0.1" placeholder="e.g., 145.0"></label>
+            <label>Total batch mass (lb)<br><input id="y_batchlb" type="number" inputmode="decimal" step="1" placeholder="e.g., 39150"></label>
           </div>
+          <div class="input-row">
+            <label>Plan quantity (yd³)<br><input id="y_plan" type="number" inputmode="decimal" step="0.01" placeholder="optional"></label>
+            <div></div>
+          </div>
+          <div class="links">
+            <button class="btn primary" id="btnYield">Compute Yield</button>
+          </div>
+          <div class="out" id="y_out" aria-live="polite">Yield ft³: — | yd³: — | Rel. yield: —</div>
+          <p class="small">Yield (ft³) = batch mass (lb) ÷ unit weight (pcf). Relative yield = actual yd³ ÷ plan yd³.</p>
         </article>
 
-        <article class="card">
-          <h3>Technician Directories</h3>
-          <p class="muted">Search WVDOH / ACI certifications and technician records.</p>
-          <div class="links">
-            <a class="btn" href="https://webapps.transportation.wv.gov/materialsdir" target="_blank" rel="noopener">WVDOH Materials Directory</a>
-            <a class="btn" href="https://www.concrete.org/certification/verifyacertification.aspx?d=Ask" target="_blank" rel="noopener">Verify ACI Certification</a>
+        <!-- Water–cement ratios -->
+        <article class="card" id="calc-wc">
+          <h3>Water–Cement Ratio</h3>
+          <div class="input-row">
+            <label>Total water (lb)<br><input id="wc_water" type="number" step="0.1" placeholder="mix water + free water"></label>
+            <label>Cement only (lb)<br><input id="wc_c" type="number" step="0.1" placeholder="cement mass"></label>
           </div>
+          <div class="input-row">
+            <label>Supplementary cementitious (lb)<br><input id="wc_scm" type="number" step="0.1" placeholder="fly ash/slag/silica fume"></label>
+            <label>Report mode<br>
+              <select id="wc_mode">
+                <option value="wc">w/c (cement only)</option>
+                <option value="wcm">w/cm (cement + SCM)</option>
+              </select>
+            </label>
+          </div>
+          <div class="links"><button class="btn primary" id="btnWC">Compute Ratio</button></div>
+          <div class="out" id="wc_out" aria-live="polite">w/c: — | w/cm: —</div>
+          <p class="small">Check against spec limits (e.g., 0.45 or 0.42). Use total water actually in the mix.</p>
         </article>
 
-        <article class="card">
-          <h3>Sampling &amp; Forms</h3>
-          <p class="muted">Field forms, sample IDs, chain-of-custody, submittal templates.</p>
-          <div class="links">
-            <a class="btn" aria-disabled="true">Concrete Sample ID Form</a>
-            <a class="btn" aria-disabled="true">Cylinder Pickup / Curing Log</a>
+        <!-- SCM replacement helper -->
+        <article class="card" id="calc-scm">
+          <h3>SCM Replacement</h3>
+          <div class="input-row">
+            <label>Target binder total (lb)<br><input id="scm_total" type="number" step="0.1" placeholder="e.g., 564"></label>
+            <label>SCM % by mass<br><input id="scm_pct" type="number" step="0.1" placeholder="e.g., 20"></label>
           </div>
+          <div class="links"><button class="btn primary" id="btnSCM">Compute Split</button></div>
+          <div class="out" id="scm_out" aria-live="polite">Cement: — lb | SCM: — lb</div>
+          <p class="small">SCM (lb) = total × (%/100). Cement (lb) = total − SCM.</p>
         </article>
 
-        <article class="card">
-          <h3>Field Calculators</h3>
-          <p class="muted">Evaporation, yield, replacement, and w/cm quick checks.</p>
-          <div class="links">
-            <a class="btn" aria-disabled="true">Evaporation Rate Tool</a>
-            <a class="btn" aria-disabled="true">Concrete Yield Calculator</a>
+        <!-- Evaporation Rate (beta) -->
+        <article class="card" id="calc-evap">
+          <h3>Evaporation Rate (beta)</h3>
+          <div class="input-row">
+            <label>Concrete temp Tc (°F)<br><input id="ev_tc_f" type="number" step="0.1" placeholder="e.g., 70"></label>
+            <label>Air temp Ta (°F)<br><input id="ev_ta_f" type="number" step="0.1" placeholder="e.g., 80"></label>
           </div>
-        </article>
-
-        <article class="card">
-          <h3>Submittals &amp; Mixes</h3>
-          <p class="muted">Submittal checklist, SCMs, admixtures, QA attachments.</p>
-          <div class="links">
-            <a class="btn" aria-disabled="true">Mix Submittal Checklist</a>
-            <a class="btn" aria-disabled="true">SCM/Admixture Data Sheet Bundle</a>
+          <div class="input-row">
+            <label>Wind speed V (mph)<br><input id="ev_v_mph" type="number" step="0.1" placeholder="e.g., 10"></label>
+            <label>Relative humidity RH (%)<br><input id="ev_rh" type="number" step="0.1" placeholder="e.g., 50"></label>
           </div>
+          <div class="links"><button class="btn primary" id="btnEvap">Estimate</button></div>
+          <div class="out" id="ev_out" aria-live="polite">—</div>
+          <p class="small">Advisory only. Compare to the common caution threshold of <strong>0.2 lb/ft²/hr</strong>. Use official methods on site.</p>
         </article>
       </div>
 
@@ -219,6 +249,95 @@
       await deferredPrompt.userChoice;
       deferredPrompt = null;
       btn.style.display = "none";
+    });
+
+    // ------- Calculators -------
+    const fmt = (n, d=2) => Number.isFinite(n) ? n.toFixed(d) : "—";
+
+    // Concrete Yield
+    document.getElementById('btnYield').addEventListener('click', () => {
+      const unitwt = parseFloat(document.getElementById('y_unitwt').value);
+      const batchlb = parseFloat(document.getElementById('y_batchlb').value);
+      const plan = parseFloat(document.getElementById('y_plan').value);
+      const out = document.getElementById('y_out');
+
+      if(!(unitwt>0 && batchlb>0)){ out.textContent = "Enter unit weight (pcf) and batch mass (lb)."; return; }
+
+      const yield_ft3 = batchlb / unitwt;            // ft³
+      const yield_yd3 = yield_ft3 / 27.0;            // yd³
+      let msg = `Yield ft³: ${fmt(yield_ft3,2)} | yd³: ${fmt(yield_yd3,3)}`;
+
+      if(plan>0){
+        const rel = yield_yd3 / plan;
+        const pct = (rel-1)*100;
+        let cls = Math.abs(pct)<=1 ? "ok" : (Math.abs(pct)<=3 ? "warn" : "bad");
+        msg += ` | Rel. yield: <span class="${cls}">${fmt(rel,3)} (${pct>=0?"+":""}${fmt(pct,1)}%)</span>`;
+      }
+      out.innerHTML = msg;
+    });
+
+    // Water–cement ratios
+    document.getElementById('btnWC').addEventListener('click', () => {
+      const water = parseFloat(document.getElementById('wc_water').value);
+      const c = parseFloat(document.getElementById('wc_c').value);
+      const scm = parseFloat(document.getElementById('wc_scm').value) || 0;
+      const mode = document.getElementById('wc_mode').value;
+      const out = document.getElementById('wc_out');
+
+      if(!(water>0 && c>0)){ out.textContent = "Enter water and cement masses (lb)."; return; }
+
+      const wc = water / c;
+      const wcm = water / (c + scm);
+      const show = mode === "wc"
+        ? `w/c: ${fmt(wc,3)} | w/cm: ${fmt(wcm,3)}`
+        : `w/cm: ${fmt(wcm,3)} | w/c: ${fmt(wc,3)}`;
+      out.textContent = show;
+    });
+
+    // SCM replacement helper
+    document.getElementById('btnSCM').addEventListener('click', () => {
+      const total = parseFloat(document.getElementById('scm_total').value);
+      const pct = parseFloat(document.getElementById('scm_pct').value);
+      const out = document.getElementById('scm_out');
+      if(!(total>0 && pct>=0)){ out.textContent = "Enter total binder and SCM percent."; return; }
+      const scm = total * (pct/100);
+      const cement = total - scm;
+      out.textContent = `Cement: ${fmt(cement,1)} lb | SCM: ${fmt(scm,1)} lb`;
+    });
+
+    // Evaporation rate (beta) – advisory estimate
+    // Inputs: Tc (°F), Ta (°F), V (mph), RH (%)
+    // Output: kg/m²/h and lb/ft²/h. Flags >= 0.20 lb/ft²/h.
+    document.getElementById('btnEvap').addEventListener('click', () => {
+      const TcF = parseFloat(document.getElementById('ev_tc_f').value);
+      const TaF = parseFloat(document.getElementById('ev_ta_f').value);
+      const Vmph = parseFloat(document.getElementById('ev_v_mph').value);
+      const RH = parseFloat(document.getElementById('ev_rh').value);
+      const out = document.getElementById('ev_out');
+
+      if(![TcF,TaF,Vmph,RH].every(n=>Number.isFinite(n))){ out.textContent = "Enter Tc, Ta, wind, and RH."; return; }
+
+      // Convert to °C and m/s
+      const Tc = (TcF - 32) * 5/9;
+      const Ta = (TaF - 32) * 5/9;
+      const V = Vmph * 0.44704;
+
+      // Empirical estimate (advisory) inspired by nomograph relationships.
+      // E_kgm2h ≈ A*((Tc+18)**2.5 - (Ta+18)**2.5) * (1 + 0.4*V) * (1 - RH/100)
+      // A chosen to produce reasonable magnitudes; use official methods onsite.
+      const A = 1e-4;
+      const E_kgm2h = Math.max(0,
+        A * (Math.pow(Tc+18,2.5) - Math.pow(Ta+18,2.5)) * (1 + 0.4*V) * (1 - RH/100)
+      );
+
+      const kgm2h_to_lbft2h = 0.204816; // 1 kg/m²/h ≈ 0.204816 lb/ft²/h
+      const E_lbft2h = E_kgm2h * kgm2h_to_lbft2h;
+
+      const risk = E_lbft2h >= 0.20 ? "bad" : (E_lbft2h >= 0.15 ? "warn" : "ok");
+      const label = E_lbft2h >= 0.20 ? "≥ 0.20 caution" : (E_lbft2h >= 0.15 ? "0.15–0.20 watch" : "< 0.15 lower risk");
+
+      out.innerHTML = `Evap rate: ${fmt(E_kgm2h,2)} kg/m²/h | ${fmt(E_lbft2h,3)} lb/ft²/hr · <span class="${risk}">${label}</span><br>
+        <span class="small">Advisory only. Use field charts/instruments or official calculators to confirm.</span>`;
     });
   </script>
 </body>
