@@ -1,5 +1,5 @@
 /* ACI WV · calculators/calcs.js
-   Tools: #volume, #trucks, #cylinders, #convert, #water, #temp
+   Tools: #volume, #trucks, #cylinders, #convert, #water, #temp, #air, #rebar, #binder
    - Mobile-first, no deps
    - LocalStorage persistence
    - Deep-link query params (read & write)
@@ -98,6 +98,9 @@
     '#convert': renderConvert,
     '#water': renderWater,
     '#temp': renderTemp,
+    '#air': renderAir,
+    '#rebar': renderRebar,
+    '#binder': renderBinder,
   };
 
   function render(){
@@ -499,7 +502,7 @@
   }
 
   // =========================================================
-  // CONVERTER: psi↔MPa, pcf↔kg/m³, °F↔°C, ft³↔m³, lb↔kg, yd³↔m³
+  // CONVERTER
   // =========================================================
   function renderConvert(params){
     if (titleNode) titleNode.textContent = 'Unit Converter';
@@ -626,7 +629,7 @@
   }
 
   // =========================================================
-  // WATER ADJUSTMENT: aggregates moisture/absorption → water add/remove + w/cm
+  // WATER ADJUSTMENT
   // =========================================================
   function renderWater(params){
     if (titleNode) titleNode.textContent = 'Aggregate Moisture / Water Adjustment';
@@ -766,7 +769,7 @@
   }
 
   // =========================================================
-  // TEMP ESTIMATE: fresh concrete temperature from component temps/weights
+  // TEMP ESTIMATE
   // =========================================================
   function renderTemp(params){
     if (titleNode) titleNode.textContent = 'Fresh Concrete Temperature (estimate)';
@@ -869,6 +872,334 @@
     }
 
     ['te_tw','te_ww','te_tc','te_wc','te_tca','te_wca','te_tfa','te_wfa'].forEach(id=>{
+      const el=$id(id);
+      el.addEventListener('input', compute, { passive:true });
+      el.addEventListener('change', compute, { passive:true });
+    });
+    compute();
+  }
+
+  // =========================================================
+  // AIR & DENSITY CHECK
+  // =========================================================
+  function renderAir(params){
+    if (titleNode) titleNode.textContent = 'Air & Density Check';
+    if (!mount) return;
+
+    const s = Object.assign({
+      air_meas:'', air_target:'', air_tol:'2',
+      uw_meas:'', uw_target:''
+    }, state.air||{});
+    ['air_meas','air_target','air_tol','uw_meas','uw_target'].forEach(k=>{ if(params.has(k)) s[k]=params.get(k); });
+
+    mount.innerHTML = `
+      <h2>Air & Density Check</h2>
+      <p class="muted">Quick field check for measured air (%) and fresh unit weight (pcf) vs specified targets.</p>
+
+      <div class="card">
+        <h3>Air Content</h3>
+        <div class="input-row">
+          <label>Measured air (%)<br><input id="a_meas" type="number" step="0.1" placeholder="e.g., 5.0"></label>
+          <label>Target air (%)<br><input id="a_target" type="number" step="0.1" placeholder="e.g., 6.0"></label>
+        </div>
+        <div class="input-row">
+          <label>Tolerance (± %)<br><input id="a_tol" type="number" step="0.1" placeholder="e.g., 2.0"></label>
+          <div></div>
+        </div>
+        <div class="out" id="a_out">Enter air values.</div>
+      </div>
+
+      <div class="card">
+        <h3>Fresh Density</h3>
+        <div class="input-row">
+          <label>Measured unit weight (pcf)<br><input id="d_meas" type="number" step="0.1" placeholder="e.g., 145.0"></label>
+          <label>Target unit weight (pcf) <span class="small">(optional)</span><br><input id="d_target" type="number" step="0.1" placeholder="e.g., 144.0"></label>
+        </div>
+        <div class="out" id="d_out">Enter density values (optional target).</div>
+      </div>
+    `;
+
+    $id('a_meas').value = s.air_meas ?? '';
+    $id('a_target').value = s.air_target ?? '';
+    $id('a_tol').value = s.air_tol ?? '2';
+    $id('d_meas').value = s.uw_meas ?? '';
+    $id('d_target').value = s.uw_target ?? '';
+
+    function compute(){
+      const am = toNum($id('a_meas').value);
+      const at = toNum($id('a_target').value);
+      const tol = toNum($id('a_tol').value) ?? 2;
+
+      const dm = toNum($id('d_meas').value);
+      const dt = toNum($id('d_target').value);
+
+      // Air output
+      let airHtml = 'Enter air values.';
+      if (am != null && at != null){
+        const lo = at - tol, hi = at + tol;
+        const badge = (am<lo || am>hi) ? 'bad' : (Math.abs(am-at) >= tol*0.7 ? 'warn' : 'ok');
+        const label = (am<lo || am>hi) ? 'Out of tolerance' : (badge==='warn' ? 'Near limit' : 'Within tolerance');
+        airHtml = `Measured: <strong>${fmt(am,1)}%</strong> | Target: ${fmt(at,1)}% ± ${fmt(tol,1)}%<br>
+          <span class="${badge}">${label}</span>`;
+      }
+      $id('a_out').innerHTML = airHtml;
+
+      // Density output
+      let densHtml = 'Enter density values (optional target).';
+      if (dm != null && dt != null){
+        const diff = dm - dt;
+        const pdiff = (diff/dt)*100;
+        const badge = Math.abs(pdiff) > 2.0 ? 'warn' : 'ok';
+        densHtml = `Measured: <strong>${fmt(dm,1)} pcf</strong> | Target: ${fmt(dt,1)} pcf<br>
+          Δ = ${fmt(diff,1)} pcf (${diff>=0?'+':''}${fmt(pdiff,1)}%) · <span class="${badge}">${badge==='ok'?'Close':'Investigate'}</span>`;
+      } else if (dm != null) {
+        densHtml = `Measured unit weight: <strong>${fmt(dm,1)} pcf</strong>`;
+      }
+      $id('d_out').innerHTML = densHtml;
+
+      state.air = {
+        air_meas:$id('a_meas').value, air_target:$id('a_target').value, air_tol:$id('a_tol').value,
+        uw_meas:$id('d_meas').value, uw_target:$id('d_target').value
+      };
+      saveState(state);
+      writeHash('#air', state.air);
+    }
+
+    ['a_meas','a_target','a_tol','d_meas','d_target'].forEach(id=>{
+      const el=$id(id);
+      el.addEventListener('input', compute, { passive:true });
+      el.addEventListener('change', compute, { passive:true });
+    });
+    compute();
+  }
+
+  // =========================================================
+  // REBAR HELPER (weight & spacing takeoff)
+  // =========================================================
+  function renderRebar(params){
+    if (titleNode) titleNode.textContent = 'Rebar Helper';
+    if (!mount) return;
+
+    const s = Object.assign({
+      size:'4', len:'', qty:'',  // cut list
+      slab_l:'', slab_w:'', spacing:'18', size_grid:'4' // grid
+    }, state.rebar||{});
+    ['size','len','qty','slab_l','slab_w','spacing','size_grid'].forEach(k=>{ if(params.has(k)) s[k]=params.get(k); });
+
+    const BAR_W = { '3':0.376, '4':0.668, '5':1.043, '6':1.502, '7':2.044, '8':2.670, '9':3.400, '10':4.303, '11':5.313 };
+
+    mount.innerHTML = `
+      <h2>Rebar Helper</h2>
+      <p class="muted">Weight from bar size/length, plus grid spacing takeoff for slabs. Uses nominal bar weights (lb/ft).</p>
+
+      <div class="card">
+        <h3>Cut List Weight</h3>
+        <div class="input-row">
+          <label>Bar size<br>
+            <select id="rb_size">
+              <option value="3">#3</option><option value="4">#4</option><option value="5">#5</option><option value="6">#6</option>
+              <option value="7">#7</option><option value="8">#8</option><option value="9">#9</option><option value="10">#10</option><option value="11">#11</option>
+            </select>
+          </label>
+          <label>Length per bar (ft)<br><input id="rb_len" type="number" step="0.01" placeholder="e.g., 20"></label>
+        </div>
+        <div class="input-row">
+          <label>Quantity<br><input id="rb_qty" type="number" step="1" min="1" placeholder="e.g., 40"></label>
+          <div></div>
+        </div>
+        <div class="out" id="rb_out">Enter size, length, and quantity.</div>
+      </div>
+
+      <div class="card">
+        <h3>Slab Grid Takeoff</h3>
+        <div class="input-row">
+          <label>Slab length (ft)<br><input id="rg_L" type="number" step="0.1" placeholder="e.g., 60"></label>
+          <label>Slab width (ft)<br><input id="rg_W" type="number" step="0.1" placeholder="e.g., 30"></label>
+        </div>
+        <div class="input-row">
+          <label>Spacing (in)<br><input id="rg_s" type="number" step="0.1" placeholder="e.g., 18"></label>
+          <label>Bar size<br>
+            <select id="rg_size">
+              <option value="3">#3</option><option value="4">#4</option><option value="5">#5</option><option value="6">#6</option>
+              <option value="7">#7</option><option value="8">#8</option><option value="9">#9</option><option value="10">#10</option><option value="11">#11</option>
+            </select>
+          </label>
+        </div>
+        <div class="out" id="rg_out">Enter slab dimensions and spacing.</div>
+      </div>
+    `;
+
+    $id('rb_size').value = s.size || '4';
+    $id('rb_len').value = s.len || '';
+    $id('rb_qty').value = s.qty || '';
+
+    $id('rg_L').value = s.slab_l || '';
+    $id('rg_W').value = s.slab_w || '';
+    $id('rg_s').value = s.spacing || '18';
+    $id('rg_size').value = s.size_grid || '4';
+
+    function computeCut(){
+      const sz = $id('rb_size').value;
+      const wft = BAR_W[sz] || 0;
+      const len = toNum($id('rb_len').value) ?? 0;
+      const qty = clamp(toNum($id('rb_qty').value) ?? 0, 0, 1e6);
+      const totalLen = len * qty;
+      const wt = totalLen * wft;
+
+      $id('rb_out').innerHTML = (len>0 && qty>0)
+        ? `Bar: #${sz} (${fmt(wft,3)} lb/ft)<br>Total length: ${fmt(totalLen,2)} ft<br>
+           Estimated weight: <strong>${fmt(wt,1)} lb</strong>`
+        : 'Enter size, length, and quantity.';
+
+      state.rebar = Object.assign(state.rebar||{}, { size:sz, len:String(len||''), qty:String(qty||'') });
+      saveState(state);
+      writeHash('#rebar', Object.assign({}, state.rebar));
+    }
+
+    function computeGrid(){
+      const L = toNum($id('rg_L').value);
+      const W = toNum($id('rg_W').value);
+      const s_in = toNum($id('rg_s').value);
+      const sz = $id('rg_size').value;
+      const wft = BAR_W[sz] || 0;
+
+      if (!(L>0 && W>0 && s_in>0)){
+        $id('rg_out').textContent = 'Enter slab dimensions and spacing.';
+        return;
+      }
+
+      // counts (bars each way); include both edges
+      const nX = Math.floor((W*12)/s_in) + 1; // bars running along length
+      const nY = Math.floor((L*12)/s_in) + 1; // bars running along width
+      const lenX = nX * L; // ft
+      const lenY = nY * W; // ft
+      const totalLen = lenX + lenY;
+      const wt = totalLen * wft;
+
+      $id('rg_out').innerHTML = `
+        Bars along length: ${nX} × ${fmt(L,2)} ft = ${fmt(lenX,2)} ft<br>
+        Bars along width: ${nY} × ${fmt(W,2)} ft = ${fmt(lenY,2)} ft<br>
+        Total length: <strong>${fmt(totalLen,2)} ft</strong> · Est. weight (#${sz}): <strong>${fmt(wt,1)} lb</strong>
+        <div class="small" style="margin-top:6px">Simple takeoff (no laps/trim/edge offsets). Adjust per plan.</div>
+      `;
+
+      state.rebar = Object.assign(state.rebar||{}, {
+        slab_l:String(L||''), slab_w:String(W||''), spacing:String(s_in||''), size_grid:sz
+      });
+      saveState(state);
+      writeHash('#rebar', Object.assign({}, state.rebar));
+    }
+
+    ['rb_size','rb_len','rb_qty'].forEach(id=>{
+      const el=$id(id);
+      el.addEventListener('input', computeCut, { passive:true });
+      el.addEventListener('change', computeCut, { passive:true });
+    });
+    ['rg_L','rg_W','rg_s','rg_size'].forEach(id=>{
+      const el=$id(id);
+      el.addEventListener('input', computeGrid, { passive:true });
+      el.addEventListener('change', computeGrid, { passive:true });
+    });
+
+    computeCut(); computeGrid();
+  }
+
+  // =========================================================
+  // BINDER SPLIT (cement + multiple SCMs)
+  // =========================================================
+  function renderBinder(params){
+    if (titleNode) titleNode.textContent = 'Binder Split (cement + SCMs)';
+    if (!mount) return;
+
+    const s = Object.assign({
+      total:'', slag:'', fly:'', silica:'', other:''
+    }, state.binder||{});
+    ['total','slag','fly','silica','other'].forEach(k=>{ if(params.has(k)) s[k]=params.get(k); });
+
+    mount.innerHTML = `
+      <h2>Binder Split</h2>
+      <p class="muted">Split total binder into cement and SCMs by percentage. We’ll show pounds and percentages.</p>
+
+      <div class="card">
+        <h3>Inputs</h3>
+        <div class="input-row">
+          <label>Total binder (lb)<br><input id="bd_total" type="number" step="0.1" placeholder="e.g., 600"></label>
+          <div></div>
+        </div>
+        <div class="input-row">
+          <label>Slag (%)<br><input id="bd_slag" type="number" step="0.1" placeholder="e.g., 30"></label>
+          <label>Fly ash (%)<br><input id="bd_fly" type="number" step="0.1" placeholder="e.g., 20"></label>
+        </div>
+        <div class="input-row">
+          <label>Silica fume (%)<br><input id="bd_silica" type="number" step="0.1" placeholder="e.g., 5"></label>
+          <label>Other SCM (%)<br><input id="bd_other" type="number" step="0.1" placeholder="e.g., 0"></label>
+        </div>
+      </div>
+
+      <section id="bd_out_wrap"></section>
+    `;
+
+    $id('bd_total').value = s.total ?? '';
+    $id('bd_slag').value = s.slag ?? '';
+    $id('bd_fly').value = s.fly ?? '';
+    $id('bd_silica').value = s.silica ?? '';
+    $id('bd_other').value = s.other ?? '';
+
+    function compute(){
+      const total = toNum($id('bd_total').value) ?? 0;
+      const slagP = clamp(toNum($id('bd_slag').value) ?? 0, 0, 100);
+      const flyP = clamp(toNum($id('bd_fly').value) ?? 0, 0, 100);
+      const silicaP = clamp(toNum($id('bd_silica').value) ?? 0, 0, 100);
+      const otherP = clamp(toNum($id('bd_other').value) ?? 0, 0, 100);
+
+      const pcSum = slagP + flyP + silicaP + otherP;
+      const cementP = Math.max(0, 100 - pcSum);
+
+      const slag = total * (slagP/100);
+      const fly  = total * (flyP/100);
+      const silica = total * (silicaP/100);
+      const other = total * (otherP/100);
+      const cement = total - (slag + fly + silica + other);
+
+      const warn = pcSum>100 ? 'bad' : (pcSum>80 ? 'warn' : 'ok');
+
+      const text = [
+        `Total: ${fmt(total,1)} lb`,
+        `Cement: ${fmt(cement,1)} lb (${fmt(cementP,1)}%)`,
+        `Slag: ${fmt(slag,1)} lb (${fmt(slagP,1)}%)`,
+        `Fly ash: ${fmt(fly,1)} lb (${fmt(flyP,1)}%)`,
+        `Silica fume: ${fmt(silica,1)} lb (${fmt(silicaP,1)}%)`,
+        `Other: ${fmt(other,1)} lb (${fmt(otherP,1)}%)`,
+        `Sum of SCM %: ${fmt(pcSum,1)}%`
+      ].join('\n');
+
+      const html = `
+        <div class="card">
+          <h3>Split</h3>
+          <div class="out" id="bd_out">
+            Total: ${fmt(total,1)} lb<br>
+            Cement: <strong>${fmt(cement,1)} lb</strong> (${fmt(cementP,1)}%)<br>
+            Slag: ${fmt(slag,1)} lb (${fmt(slagP,1)}%)<br>
+            Fly ash: ${fmt(fly,1)} lb (${fmt(flyP,1)}%)<br>
+            Silica fume: ${fmt(silica,1)} lb (${fmt(silicaP,1)}%)<br>
+            Other SCM: ${fmt(other,1)} lb (${fmt(otherP,1)}%)<br>
+            Sum of SCM %: <span class="${warn}">${fmt(pcSum,1)}%</span>
+            <div class="small" style="margin-top:6px">${pcSum>100 ? 'Total SCM % exceeds 100% — reduce.' : (pcSum>80 ? 'High SCM % — confirm spec limits.' : 'Check against project limits.')}</div>
+          </div>
+        </div>
+      `;
+      const node = pillCopy(html, ()=>text);
+      const wrap = $id('bd_out_wrap'); wrap.innerHTML=''; wrap.appendChild(node);
+
+      state.binder = {
+        total:$id('bd_total').value, slag:$id('bd_slag').value, fly:$id('bd_fly').value,
+        silica:$id('bd_silica').value, other:$id('bd_other').value
+      };
+      saveState(state);
+      writeHash('#binder', state.binder);
+    }
+
+    ['bd_total','bd_slag','bd_fly','bd_silica','bd_other'].forEach(id=>{
       const el=$id(id);
       el.addEventListener('input', compute, { passive:true });
       el.addEventListener('change', compute, { passive:true });
