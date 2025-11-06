@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
 
   <!-- SEO / social -->
-  <meta name="description" content="Phone-friendly concrete calculators for field use: volume (yd³), truck loads, cylinder break dates, yield (ASTM C138), moisture water adjustment, and more." />
+  <meta name="description" content="Phone-friendly concrete calculators for field use — volume, rebar takeoff, joint spacing, slope/grade, yield, w/cm, moisture adjustment, pumping, trucking cycles, coverage, evaporation, fresh temp, insulation, and strength gain." />
   <meta property="og:title" content="Concrete Calculators · ACI West Virginia" />
   <meta property="og:description" content="Fast, field-ready concrete calculators that work great on phones." />
   <meta property="og:image" content="https://concrete-wv.org/assets/aciwv_logo_white_square.png" />
@@ -74,72 +74,44 @@
 
     <!-- Hub cards -->
     <section class="grid" aria-label="Calculator list">
-      <article class="card">
-        <h2>Yield & Relative Yield <span class="badge">ASTM C138</span></h2>
-        <p class="muted">Yield (yd³), relative yield (%), and optional lb/yd³ for cement & water.</p>
-        <p><a class="btn" href="#yield">Open Yield</a></p>
-      </article>
-
-      <article class="card">
-        <h2>Volume (yd³) <span class="badge">Slab / Trench / Column</span></h2>
-        <p class="muted">Estimate cubic yards with waste % and quick truck-loads.</p>
-        <p><a class="btn" href="#volume">Open Volume</a></p>
-      </article>
-
-      <article class="card">
-        <h2>Truck Loads Helper</h2>
-        <p class="muted">Convert yd³ to 9.0 / 9.5 / 10.0 yd³ loads; over/under check.</p>
-        <p><a class="btn" href="#trucks">Open Truck Loads</a></p>
-      </article>
-
-      <article class="card">
-        <h2>Cylinder Break Planner</h2>
-        <p class="muted">7/14/28-day break dates; custom ages; local time.</p>
-        <p><a class="btn" href="#cylinders">Open Planner</a></p>
-      </article>
-
-      <article class="card">
-        <h2>Aggregate Moisture / Water Adj.</h2>
-        <p class="muted">SSD vs. field moisture ⇒ add/remove water; optional w/cm.</p>
-        <p><a class="btn" href="#water">Open Water Adjustment</a></p>
-      </article>
-
-      <article class="card">
-        <h2>Fresh Temp (estimate)</h2>
-        <p class="muted">Component temps/weights ⇒ estimated fresh concrete °F.</p>
-        <p><a class="btn" href="#temp">Open Temp Estimate</a></p>
-      </article>
-
-      <article class="card">
-        <h2>Unit Converter</h2>
-        <p class="muted">psi↔MPa, pcf↔kg/m³, °F↔°C, ft³↔m³, yd³↔m³, lb↔kg.</p>
-        <p><a class="btn" href="#convert">Open Converter</a></p>
-      </article>
+      <article class="card"><h2>Volume (yd³) <span class="badge">Slab/Trench/Column</span></h2><p class="muted">Estimate yd³ with waste and quick truck loads.</p><p><a class="btn" href="#volume">Open Volume</a></p></article>
+      <article class="card"><h2>Rebar Takeoff (simple)</h2><p class="muted">Bar counts by spacing, total length & weight.</p><p><a class="btn" href="#rebar">Open Rebar</a></p></article>
+      <article class="card"><h2>Joint Spacing</h2><p class="muted">Rule-of-thumb from slab thickness (min / max / target).</p><p><a class="btn" href="#joints">Open Joint Spacing</a></p></article>
+      <article class="card"><h2>Slope / Grade</h2><p class="muted">Rise/run, % slope, thickness change across width.</p><p><a class="btn" href="#slope">Open Slope</a></p></article>
+      <article class="card"><h2>Yield (ASTM C138)</h2><p class="muted">yd³ and relative yield; optional cement & water / yd³.</p><p><a class="btn" href="#yield">Open Yield</a></p></article>
+      <article class="card"><h2>w/c & w/cm</h2><p class="muted">Water–cement and water–cementitious ratios.</p><p><a class="btn" href="#wc">Open w/c</a></p></article>
+      <article class="card"><h2>Moisture / Absorption Adjust</h2><p class="muted">Add/remove batch water; updated w/cm.</p><p><a class="btn" href="#water">Open Moisture</a></p></article>
+      <article class="card"><h2>Pump Time & Output</h2><p class="muted">Yards/hour, total time; crew pacing.</p><p><a class="btn" href="#pump">Open Pump</a></p></article>
+      <article class="card"><h2>Truck Cycle Planner</h2><p class="muted">Loads, cycle time, fleet size for target rate.</p><p><a class="btn" href="#cycle">Open Cycle Planner</a></p></article>
+      <article class="card"><h2>Surface Coverage</h2><p class="muted">Curing/sealer gallons from ft² & coverage rate.</p><p><a class="btn" href="#coverage">Open Coverage</a></p></article>
+      <article class="card"><h2>Evaporation Rate</h2><p class="muted">Nomograph-style estimate; caution ≥ 0.20 lb/ft²/hr.</p><p><a class="btn" href="#evap">Open Evap Rate</a></p></article>
+      <article class="card"><h2>Fresh Concrete Temp</h2><p class="muted">Component temps/weights → mix temp (estimate).</p><p><a class="btn" href="#temp">Open Temp</a></p></article>
+      <article class="card"><h2>Insulation Need (basic)</h2><p class="muted">Heuristic R-value / blankets from ΔT & exposure.</p><p><a class="btn" href="#insulation">Open Insulation</a></p></article>
+      <article class="card"><h2>Strength Gain (heuristic)</h2><p class="muted">Typical % vs age; normal vs SCM mixes.</p><p><a class="btn" href="#strength">Open Strength Gain</a></p></article>
     </section>
 
-    <!-- Tool mount point (calcs.js injects UI based on hash) -->
+    <!-- Tool mount point -->
     <section id="tool" class="card tool" aria-live="polite">
       <h2 id="tool-title">Select a calculator above</h2>
-      <p class="muted">Deep links like <code>/calculators/#yield</code> or <code>#volume</code> will load here.</p>
+      <p class="muted">Deep links like <code>/calculators/#pump</code> will load here.</p>
     </section>
 
     <p class="muted" style="margin-top:12px">Questions or requests? <a href="mailto:info@concrete-wv.org">info@concrete-wv.org</a></p>
     <p><a href="/wvdoh.html">← Back to WVDOH Info Corner</a></p>
   </main>
 
-  <footer>
-    © <span id="y"></span> ACI West Virginia Interest Group
-  </footer>
+  <footer>© <span id="y"></span> ACI West Virginia Interest Group</footer>
 
   <script>
     (function(){ const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear(); })();
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(()=>{}); }
   </script>
 
-  <!-- All calculator logic lives here -->
+  <!-- Calculator logic -->
   <script src="./calcs.js" defer></script>
 </body>
 </html>
+
 
 
 
