@@ -18,7 +18,7 @@
   <!-- SEO / social -->
   <meta name="description" content="One-stop hub for WVDOH links, forms, certifications, specs, and field resources." />
   <meta property="og:title" content="WVDOH Info Corner — ACI West Virginia" />
-  <meta property="og:description" content="Quick links to WVDOH certifications, APL, specs, forms, districts, and more." />
+  <meta property="og:description" content="Quick links to WVDOH certifications, APL, specs, forms, and more." />
   <meta property="og:image" content="https://concrete-wv.org/assets/aciwv_logo_white_square.png" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://concrete-wv.org/wvdoh.html" />
@@ -30,7 +30,6 @@
   </script>
 
   <style>
-    /* ===== match index look & feel ===== */
     :root{ --bg:#0b1220; --bg-2:#0f172a; --border:#1f2a44; --text:#e6edf3; --text-dim:#b9c4d0; --accent:#2aa198; --card:#101828; --shadow:0 6px 18px rgba(0,0,0,.25) }
     *{box-sizing:border-box} html,body{height:100%}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);color:var(--text);line-height:1.6}
@@ -54,21 +53,18 @@
     .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
     .sr-only:focus{left:16px;top:16px;width:auto;height:auto;background:#fff;color:#000;padding:8px 12px;border-radius:8px;z-index:100}
 
-    /* ===== page-specific ===== */
-    .hero{text-align:center;padding:36px 0 10px}
+    .hero{text-align:center;padding:36px 0 18px}
     .hero h1{letter-spacing:.2px;margin-bottom:6px}
     .hero p{max-width:72ch;margin:0 auto;color:var(--text-dim)}
-    .tools{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:center;margin:18px 0 0}
+    .tools{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:center;margin:18px 0 8px}
     .search{flex:1 1 320px;max-width:680px}
     .search input{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--text)}
-    .muted{color:var(--text-dim);font-size:14px;text-align:center}
-    .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin:24px 0 40px}
+    .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin:28px 0 40px}
     .card{border:1px solid var(--border);border-radius:16px;background:var(--card);padding:18px;box-shadow:var(--shadow);opacity:0;transform:translateY(14px);animation:revealUp .6s ease forwards}
     .card h3{margin:0 0 8px 0}
     .card ul{margin:0;padding-left:18px}
     .card li{margin:6px 0}
     .tag{display:inline-block;font-size:12px;padding:2px 8px;border:1px solid var(--border);border-radius:999px;margin-left:8px;color:var(--text-dim)}
-    .inline-btn{margin-left:8px;padding:2px 8px;border:1px solid var(--border);border-radius:999px;background:transparent;color:var(--text-dim);cursor:pointer}
 
     @keyframes headerDrop{to{opacity:1;transform:translateY(0)}}
     @keyframes revealUp{to{opacity:1;transform:translateY(0)}}
@@ -102,18 +98,13 @@
     <section class="hero">
       <h1>WVDOH Information Corner</h1>
       <p>Your one-stop hub for official WVDOH links, forms, certification tools, and field resources.</p>
-
       <div class="tools">
         <div class="search">
           <input id="filterBox" type="search" placeholder="Search (APL, specs, certification, forms, districts…)" oninput="filterLinks()" />
         </div>
         <a class="btn" href="https://transportation.wv.gov/highways/mcst/Pages/default.aspx" target="_blank" rel="noopener">MCST Home</a>
         <a class="btn" href="https://transportation.wv.gov/" target="_blank" rel="noopener">WVDOH Portal</a>
-        <button id="install-app" class="btn" style="display:none;">Install App</button>
       </div>
-
-      <p id="filter-count" class="muted" style="margin:10px 0 0;">Showing all resources</p>
-      <p id="filter-empty" class="muted" style="display:none;margin:6px 0 0;">No matches. Try “APL”, “specs”, “forms”, “districts”…</p>
     </section>
 
     <section class="grid" id="linkGrid">
@@ -170,41 +161,15 @@
           <li><a href="https://transportation.wv.gov/highways/districts/Pages/default.aspx" target="_blank" rel="noopener">WVDOH — Districts Directory</a></li>
         </ul>
       </article>
-
-      <!-- Materials Procedures -->
-      <article class="card" data-tags="materials procedures mp 600 specs sampling testing">
-        <h3>Materials Procedures (MP-600s) <span class="tag">Standards</span></h3>
-        <ul>
-          <li><a href="https://transportation.wv.gov/highways/mcst/Pages/MP-600s.aspx" target="_blank" rel="noopener">MP-600s Index</a></li>
-        </ul>
-      </article>
-
-      <!-- PCC Tech Manual -->
-      <article class="card" data-tags="pcc manual portland cement concrete technician inspector">
-        <h3>PCC Technician Manual <span class="tag">Field</span></h3>
-        <ul>
-          <li><a href="https://transportation.wv.gov/highways/mcst/Documents/Technician%20Manuals/PCC%20Manual.pdf" target="_blank" rel="noopener">PCC Manual (PDF)</a></li>
-        </ul>
-      </article>
-
-      <!-- Source Map -->
-      <article class="card" data-tags="approved sources aggregate asphalt cement concrete gis map">
-        <h3>Approved Material Sources Map <span class="tag">GIS</span></h3>
-        <ul>
-          <li><a href="https://www.arcgis.com/home/item.html?id=716f6aeb883c40dc9eb0b9a9bea6333a" target="_blank" rel="noopener">ArcGIS Source Map</a></li>
-        </ul>
-      </article>
     </section>
 
+    <!-- Keep the disclaimer -->
     <section class="container" style="margin-bottom:28px;">
       <details class="card" open data-tags="notes disclaimer">
         <summary><strong>Notes &amp; Disclaimer</strong></summary>
         <p class="muted" style="text-align:left;margin-top:8px;">
-          This page links to official WVDOH resources for convenience. It is not affiliated with WVDOH.
-          Always refer to current WVDOH publications and directives for governing requirements.
-        </p>
-        <p class="muted" style="text-align:left;margin-top:4px;">
-          Last checked: <time id="checked-date" datetime="2025-11-06">Nov 6, 2025</time>
+          This page links to official WVDOH resources for convenience. It is not affiliated with WVDOH. Always
+          refer to current WVDOH publications and directives for governing requirements.
         </p>
       </details>
     </section>
@@ -218,108 +183,23 @@
   </footer>
 
   <script>
-    // Year
+    // Year stamp
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Filter with counter + empty state
+    // Simple client-side filter (original behavior)
     function filterLinks(){
       const q = (document.getElementById('filterBox').value || '').toLowerCase().trim();
       const cards = document.querySelectorAll('#linkGrid .card');
-      const countEl = document.getElementById('filter-count');
-      const emptyEl = document.getElementById('filter-empty');
-      let shown = 0;
       cards.forEach(c => {
         const text = (c.innerText + ' ' + (c.getAttribute('data-tags')||'')).toLowerCase();
-        const hit = text.includes(q);
-        c.style.display = hit ? '' : 'none';
-        if (hit) shown++;
+        c.style.display = text.includes(q) ? '' : 'none';
       });
-      if (!q) {
-        countEl.textContent = 'Showing all resources';
-        emptyEl.style.display = 'none';
-      } else {
-        countEl.textContent = `Showing ${shown} result${shown===1?'':'s'}`;
-        emptyEl.style.display = shown ? 'none' : '';
-      }
     }
 
-    // Add Copy + Check buttons to each resource link
-    (function enhanceLinks(){
-      const grid = document.getElementById('linkGrid');
-      if (!grid) return;
-      const links = grid.querySelectorAll('a[href^="http"]');
-
-      links.forEach(a => {
-        const li = a.closest('li');
-        if (!li) return;
-
-        // Copy button
-        if (!li.querySelector('.copy-btn')) {
-          const copyBtn = document.createElement('button');
-          copyBtn.className = 'inline-btn copy-btn';
-          copyBtn.type = 'button';
-          copyBtn.textContent = 'Copy';
-          copyBtn.setAttribute('aria-label', `Copy link: ${a.textContent.trim()}`);
-          copyBtn.addEventListener('click', async () => {
-            try {
-              await navigator.clipboard.writeText(a.href);
-              const old = copyBtn.textContent; copyBtn.textContent = 'Copied!';
-              setTimeout(()=>copyBtn.textContent = old, 900);
-            } catch {
-              copyBtn.textContent = 'Press Ctrl+C';
-              setTimeout(()=>copyBtn.textContent = 'Copy', 1200);
-            }
-          });
-          li.appendChild(copyBtn);
-        }
-
-        // Check button
-        if (!li.querySelector('.check-btn')) {
-          const checkBtn = document.createElement('button');
-          checkBtn.className = 'inline-btn check-btn';
-          checkBtn.type = 'button';
-          checkBtn.textContent = 'Check';
-          checkBtn.setAttribute('aria-label', `Check link: ${a.textContent.trim()}`);
-          checkBtn.addEventListener('click', async () => {
-            const old = checkBtn.textContent;
-            checkBtn.textContent = '…';
-            try {
-              // Try HEAD (no-cors; success is opaque but won't throw)
-              await fetch(a.href, { method:'HEAD', mode:'no-cors' });
-              checkBtn.textContent = '✅';
-            } catch {
-              try {
-                await fetch(a.href, { method:'GET', mode:'no-cors' });
-                checkBtn.textContent = '✅';
-              } catch {
-                checkBtn.textContent = '⚠️';
-              }
-            }
-            setTimeout(()=>checkBtn.textContent = old, 1500);
-          });
-          li.appendChild(checkBtn);
-        }
-      });
-    })();
-
-    // PWA: register SW + Install prompt button
+    // Service worker (same path as index, safe if present)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(()=>{});
     }
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault(); deferredPrompt = e;
-      const btn = document.getElementById('install-app');
-      if (btn) btn.style.display = 'inline-block';
-    });
-    document.getElementById('install-app')?.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      document.getElementById('install-app').style.display='none';
-    });
   </script>
 </body>
 </html>
-
