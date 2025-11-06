@@ -82,7 +82,6 @@
       <h1>WVDOH Information Corner</h1>
       <p>Central access to WVDOH references the field actually uses: <strong>Standard Specifications</strong>, the <strong>Construction Manual</strong>, <strong>Design Directives</strong>, <strong>Materials Procedures</strong>, and <strong>Approved Sources</strong>. One page, fewer clicks.</p>
 
-      <!-- Install App button -->
       <button id="installBtn" class="btn" style="margin:10px 0 0">Install WVDOH App</button>
     </section>
 
@@ -189,16 +188,16 @@
           <p class="small">SCM = total × (%/100). Cement = total − SCM.</p>
         </article>
 
-        <!-- Evaporation Rate (live + robust parsing) -->
+        <!-- Evaporation Rate (live + tuned to ACI nomograph style) -->
         <article class="card" id="calc-evap">
           <h3>Evaporation Rate (beta)</h3>
           <div class="input-row">
             <label>Concrete temp Tc (°F)<br><input id="ev_tc_f" type="number" step="0.1" inputmode="decimal" placeholder="e.g., 70"></label>
-            <label>Air temp Ta (°F)<br><input id="ev_ta_f" type="number" step="0.1" inputmode="decimal" placeholder="e.g., 80"></label>
+            <label>Air temp Ta (°F)<br><input id="ev_ta_f" type="number" step="0.1" inputmode="decimal" placeholder="e.g., 70"></label>
           </div>
           <div class="input-row">
             <label>Wind speed V (mph)<br><input id="ev_v_mph" type="number" step="0.1" min="0" inputmode="decimal" placeholder="e.g., 10"></label>
-            <label>Relative humidity RH (%)<br><input id="ev_rh" type="number" step="0.1" min="0" max="100" inputmode="decimal" placeholder="e.g., 50"></label>
+            <label>Relative humidity RH (%)<br><input id="ev_rh" type="number" step="0.1" min="0" max="100" inputmode="decimal" placeholder="e.g., 40"></label>
           </div>
           <div class="out" id="ev_out" aria-live="polite">Enter Tc, Ta, wind, RH.</div>
           <p class="small">Advisory only. Compare to the common caution threshold of <strong>0.2 lb/ft²/hr</strong>.</p>
@@ -286,7 +285,7 @@
     }
     [sTotal,sPct].forEach(el=>on(el,['input','change','keyup','blur'],computeSCM));
 
-    // ---- Evaporation Rate (live + robust parsing)
+    // ---- Evaporation Rate (ACI-nomograph-style fit; robust parsing)
     const eTc=$('ev_tc_f'), eTa=$('ev_ta_f'), eV=$('ev_v_mph'), eRH=$('ev_rh'), eOut=$('ev_out');
     function computeEvap(){
       if(!eOut) return;
@@ -294,17 +293,16 @@
       if([TcF,TaF,Vmph,RHin].some(v=>v===null)){ eOut.textContent="Enter Tc, Ta, wind, RH."; return; }
 
       const RH=Math.min(100,Math.max(0,RHin));
-      const V=Math.max(0,Vmph)*0.44704; // mph→m/s
-      const Tc=(TcF-32)*5/9, Ta=(TaF-32)*5/9;
+      const Vkmh=Math.max(0,Vmph)*1.60934;      // mph → km/h
+      const Tc=(TcF-32)*5/9, Ta=(TaF-32)*5/9;   // °F → °C
 
-      const powSafe=tC=>Math.pow(Math.max(0,tC+18),2.5);
-      const base=Math.max(0, powSafe(Tc)-powSafe(Ta));
-      const windFactor=1+0.4*Math.min(V,15);
-      const rhFactor=1-RH/100;
+      // Tuned nomograph-style: includes RH weighting on air term
+      const sat=tC=>Math.pow(Math.max(0,tC+18),2.5);
+      const base=Math.max(0, sat(Tc) - (RH/100)*sat(Ta));
+      const wind=1 + 0.4*Vkmh;
 
-      const A=1e-4; // advisory scale factor
-      const E_kgm2h=Math.max(0, A*base*windFactor*rhFactor);
-      const E_lbft2h=E_kgm2h*0.204816;
+      const E_kgm2h=Math.max(0, 1e-6 * base * wind);
+      const E_lbft2h=E_kgm2h * 0.204816;
 
       const risk=E_lbft2h>=0.20?"bad":(E_lbft2h>=0.15?"warn":"ok");
       const label=E_lbft2h>=0.20?"≥ 0.20 caution":(E_lbft2h>=0.15?"0.15–0.20 watch":"< 0.15 lower risk");
@@ -314,12 +312,11 @@
     }
     [eTc,eTa,eV,eRH].forEach(el=>on(el,['input','change','keyup','blur'],computeEvap));
 
-    // initial paints
+    // Initial render
     computeYield(); computeWC(); computeSCM(); computeEvap();
   })();
   </script>
 </body>
 </html>
-
 
 
