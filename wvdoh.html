@@ -191,7 +191,7 @@
           <p class="small">SCM (lb) = total × (%/100). Cement (lb) = total − SCM.</p>
         </article>
 
-        <!-- Evaporation Rate (hardened) -->
+        <!-- Evaporation Rate (live + hardened) -->
         <article class="card" id="calc-evap">
           <h3>Evaporation Rate (beta)</h3>
           <div class="input-row">
@@ -224,8 +224,12 @@
   </footer>
 
   <script>
+    // ---------- Boilerplate ----------
     // Year stamp
-    document.getElementById('y').textContent = new Date().getFullYear();
+    (function(){
+      const y = document.getElementById('y');
+      if (y) y.textContent = new Date().getFullYear();
+    })();
 
     // Register service worker (PWA)
     if ('serviceWorker' in navigator) {
@@ -233,125 +237,140 @@
     }
 
     // PWA install prompt (Option 5)
-    let deferredPrompt;
-    const btn = document.getElementById("installBtn");
-    if (btn) btn.style.display = "none";
+    (function(){
+      let deferredPrompt;
+      const btn = document.getElementById("installBtn");
+      if (btn) btn.style.display = "none";
 
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      if (btn) btn.style.display = "inline-block";
-    });
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (btn) btn.style.display = "inline-block";
+      });
 
-    if (btn) btn.addEventListener("click", async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      btn.style.display = "none";
-    });
+      if (btn) btn.addEventListener("click", async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        btn.style.display = "none";
+      });
+    })();
 
-    // ------- Calculators -------
-    const fmt = (n, d=2) => Number.isFinite(n) ? n.toFixed(d) : "—";
+    // ---------- Calculators (live + hardened) ----------
+    (function(){
+      const $ = (id) => document.getElementById(id);
+      const fmt = (n, d=2) => Number.isFinite(n) ? n.toFixed(d) : "—";
+      const num = (v) => {
+        const x = parseFloat(v);
+        return Number.isFinite(x) ? x : null;
+      };
 
-    // Concrete Yield
-    document.getElementById('btnYield').addEventListener('click', () => {
-      const unitwt = parseFloat(document.getElementById('y_unitwt').value);
-      const batchlb = parseFloat(document.getElementById('y_batchlb').value);
-      const plan = parseFloat(document.getElementById('y_plan').value);
-      const out = document.getElementById('y_out');
-
-      if(!(unitwt>0 && batchlb>0)){ out.textContent = "Enter unit weight (pcf) and batch mass (lb)."; return; }
-
-      const yield_ft3 = batchlb / unitwt;            // ft³
-      const yield_yd3 = yield_ft3 / 27.0;            // yd³
-      let msg = `Yield ft³: ${fmt(yield_ft3,2)} | yd³: ${fmt(yield_yd3,3)}`;
-
-      if(plan>0){
-        const rel = yield_yd3 / plan;
-        const pct = (rel-1)*100;
-        let cls = Math.abs(pct)<=1 ? "ok" : (Math.abs(pct)<=3 ? "warn" : "bad");
-        msg += ` | Rel. yield: <span class="${cls}">${fmt(rel,3)} (${pct>=0?"+":""}${fmt(pct,1)}%)</span>`;
+      // ----- Concrete Yield -----
+      const yUnit = $('y_unitwt'), yBatch = $('y_batchlb'), yPlan = $('y_plan'), yOut = $('y_out');
+      function computeYield(){
+        if (!yOut) return;
+        const unitwt = num(yUnit?.value), batchlb = num(yBatch?.value), plan = num(yPlan?.value);
+        if(!(unitwt>0 && batchlb>0)){ yOut.textContent = "Enter unit weight (pcf) and batch mass (lb)."; return; }
+        const ft3 = batchlb / unitwt;
+        const yd3 = ft3 / 27;
+        let msg = `Yield ft³: ${fmt(ft3,2)} | yd³: ${fmt(yd3,3)}`;
+        if(plan>0){
+          const rel = yd3/plan, pct = (rel-1)*100;
+          const cls = Math.abs(pct)<=1 ? "ok" : (Math.abs(pct)<=3 ? "warn" : "bad");
+          msg += ` | Rel. yield: <span class="${cls}">${fmt(rel,3)} (${pct>=0?"+":""}${fmt(pct,1)}%)</span>`;
+        }
+        yOut.innerHTML = msg;
       }
-      out.innerHTML = msg;
-    });
-
-    // Water–cement ratios
-    document.getElementById('btnWC').addEventListener('click', () => {
-      const water = parseFloat(document.getElementById('wc_water').value);
-      const c = parseFloat(document.getElementById('wc_c').value);
-      const scm = parseFloat(document.getElementById('wc_scm').value) || 0;
-      const mode = document.getElementById('wc_mode').value;
-      const out = document.getElementById('wc_out');
-
-      if(!(water>0 && c>0)){ out.textContent = "Enter water and cement masses (lb)."; return; }
-
-      const wc = water / c;
-      const wcm = water / (c + scm);
-      const show = mode === "wc"
-        ? `w/c: ${fmt(wc,3)} | w/cm: ${fmt(wcm,3)}`
-        : `w/cm: ${fmt(wcm,3)} | w/c: ${fmt(wc,3)}`;
-      out.textContent = show;
-    });
-
-    // SCM replacement helper
-    document.getElementById('btnSCM').addEventListener('click', () => {
-      const total = parseFloat(document.getElementById('scm_total').value);
-      const pct = parseFloat(document.getElementById('scm_pct').value);
-      const out = document.getElementById('scm_out');
-      if(!(total>0 && pct>=0)){ out.textContent = "Enter total binder and SCM percent."; return; }
-      const scm = total * (pct/100);
-      const cement = total - scm;
-      out.textContent = `Cement: ${fmt(cement,1)} lb | SCM: ${fmt(scm,1)} lb`;
-    });
-
-    // Evaporation rate (beta) – hardened version
-    // Inputs: Tc (°F), Ta (°F), V (mph), RH (%)
-    // Output: kg/m²/h and lb/ft²/h; flags ≥ 0.20 lb/ft²/h.
-    document.getElementById('btnEvap').addEventListener('click', () => {
-      const TcF = parseFloat(document.getElementById('ev_tc_f').value);
-      const TaF = parseFloat(document.getElementById('ev_ta_f').value);
-      const Vmph = parseFloat(document.getElementById('ev_v_mph').value);
-      let RH = parseFloat(document.getElementById('ev_rh').value);
-      const out = document.getElementById('ev_out');
-
-      if (![TcF, TaF, Vmph, RH].every(Number.isFinite)) {
-        out.textContent = "Enter Tc, Ta, wind, and RH.";
-        return;
+      if (yUnit && yBatch && yOut) {
+        ['input','change'].forEach(ev=>{
+          yUnit.addEventListener(ev, computeYield);
+          yBatch.addEventListener(ev, computeYield);
+          if (yPlan) yPlan.addEventListener(ev, computeYield);
+        });
+        $('btnYield')?.addEventListener('click', computeYield);
       }
 
-      // Clamp obvious bounds
-      RH = Math.min(100, Math.max(0, RH));
-      const V = Math.max(0, Vmph) * 0.44704; // mph → m/s
+      // ----- w/c and w/cm -----
+      const wcWater = $('wc_water'), wcC = $('wc_c'), wcSCM = $('wc_scm'), wcMode = $('wc_mode'), wcOut = $('wc_out');
+      function computeWC(){
+        if (!wcOut) return;
+        const water = num(wcWater?.value), c = num(wcC?.value), scm = num(wcSCM?.value) || 0;
+        if(!(water>0 && c>0)){ wcOut.textContent = "Enter water and cement masses (lb)."; return; }
+        const wc = water/c, wcm = water/(c+scm);
+        wcOut.textContent = (wcMode?.value === 'wc')
+          ? `w/c: ${fmt(wc,3)} | w/cm: ${fmt(wcm,3)}`
+          : `w/cm: ${fmt(wcm,3)} | w/c: ${fmt(wc,3)}`;
+      }
+      if (wcOut) {
+        ['input','change'].forEach(ev=>{
+          wcWater?.addEventListener(ev, computeWC);
+          wcC?.addEventListener(ev, computeWC);
+          wcSCM?.addEventListener(ev, computeWC);
+          wcMode?.addEventListener(ev, computeWC);
+        });
+        $('btnWC')?.addEventListener('click', computeWC);
+      }
 
-      // Convert temps to °C
-      const Tc = (TcF - 32) * 5/9;
-      const Ta = (TaF - 32) * 5/9;
+      // ----- SCM replacement -----
+      const sTotal = $('scm_total'), sPct = $('scm_pct'), sOut = $('scm_out');
+      function computeSCM(){
+        if (!sOut) return;
+        const total = num(sTotal?.value), pct = num(sPct?.value);
+        if(!(total>0 && pct>=0)){ sOut.textContent = "Enter total binder and SCM percent."; return; }
+        const scm = total * (pct/100), cement = total - scm;
+        sOut.textContent = `Cement: ${fmt(cement,1)} lb | SCM: ${fmt(scm,1)} lb`;
+      }
+      if (sOut) {
+        ['input','change'].forEach(ev=>{
+          sTotal?.addEventListener(ev, computeSCM);
+          sPct?.addEventListener(ev, computeSCM);
+        });
+        $('btnSCM')?.addEventListener('click', computeSCM);
+      }
 
-      // Safe exponent to avoid fractional power of negative values
-      const powSafe = (tC) => Math.pow(Math.max(0, tC + 18), 2.5);
+      // ----- Evaporation Rate (live + hardened) -----
+      const eTc = $('ev_tc_f'), eTa = $('ev_ta_f'), eV = $('ev_v_mph'), eRH = $('ev_rh'), eOut = $('ev_out');
+      function computeEvap(){
+        if (!eOut) return;
+        const TcF = num(eTc?.value), TaF = num(eTa?.value), Vmph = num(eV?.value), RHraw = num(eRH?.value);
+        if([TcF,TaF,Vmph,RHraw].some(v=>v===null)){ eOut.textContent = "Enter Tc, Ta, wind, and RH."; return; }
 
-      // Advisory empirical relationship (nomograph-inspired), with caps
-      const base = Math.max(0, powSafe(Tc) - powSafe(Ta));
-      const windFactor = 1 + 0.4 * Math.min(V, 15);   // cap wind influence
-      const rhFactor   = 1 - RH / 100;
+        const RH = Math.min(100, Math.max(0, RHraw));
+        const V = Math.max(0, Vmph) * 0.44704; // mph → m/s
+        const Tc = (TcF - 32) * 5/9;
+        const Ta = (TaF - 32) * 5/9;
 
-      // Scale tuned to produce reasonable magnitudes (advisory only)
-      const A = 1e-4;
-      const E_kgm2h = Math.max(0, A * base * windFactor * rhFactor);
+        const powSafe = tC => Math.pow(Math.max(0, tC + 18), 2.5);
+        const base = Math.max(0, powSafe(Tc) - powSafe(Ta));
+        const windFactor = 1 + 0.4 * Math.min(V, 15);  // cap wind effect
+        const rhFactor   = 1 - RH/100;
 
-      const KG_M2H_TO_LB_FT2H = 0.204816; // 1 kg/m²/h ≈ 0.204816 lb/ft²/h
-      const E_lbft2h = E_kgm2h * KG_M2H_TO_LB_FT2H;
+        const A = 1e-4; // advisory scale factor
+        const E_kgm2h = Math.max(0, A * base * windFactor * rhFactor);
+        const E_lbft2h = E_kgm2h * 0.204816;
 
-      const risk = E_lbft2h >= 0.20 ? "bad" : (E_lbft2h >= 0.15 ? "warn" : "ok");
-      const label = E_lbft2h >= 0.20 ? "≥ 0.20 caution"
-                  : E_lbft2h >= 0.15 ? "0.15–0.20 watch"
-                  : "< 0.15 lower risk";
+        const risk = E_lbft2h >= 0.20 ? "bad" : (E_lbft2h >= 0.15 ? "warn" : "ok");
+        const label = E_lbft2h >= 0.20 ? "≥ 0.20 caution"
+                    : E_lbft2h >= 0.15 ? "0.15–0.20 watch"
+                    : "< 0.15 lower risk";
 
-      const fmt3 = (n, d=3) => Number.isFinite(n) ? n.toFixed(d) : "—";
-      out.innerHTML = `Evap rate: ${fmt(E_kgm2h,2)} kg/m²/h | ${fmt3(E_lbft2h,3)} lb/ft²/hr · <span class="${risk}">${label}</span><br>
-        <span class="small">Advisory only. Confirm with official charts/instruments onsite.</span>`;
-    });
+        eOut.innerHTML = `Evap rate: ${fmt(E_kgm2h,2)} kg/m²/h | ${fmt(E_lbft2h,3)} lb/ft²/hr · <span class="${risk}">${label}</span><br>
+          <span class="small">Advisory only. Confirm with official charts/instruments onsite.</span>`;
+      }
+      if (eOut) {
+        ['input','change'].forEach(ev=>{
+          eTc?.addEventListener(ev, computeEvap);
+          eTa?.addEventListener(ev, computeEvap);
+          eV?.addEventListener(ev, computeEvap);
+          eRH?.addEventListener(ev, computeEvap);
+        });
+        $('btnEvap')?.addEventListener('click', computeEvap);
+      }
+
+      // Initial compute to populate outputs
+      computeYield(); computeWC(); computeSCM(); computeEvap();
+    })();
   </script>
 </body>
 </html>
