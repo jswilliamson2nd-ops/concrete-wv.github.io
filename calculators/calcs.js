@@ -38,6 +38,7 @@
 
   // Local storage helpers
   const LS_KEY = 'aciwv_calc_state_v1';
+  const LS_TOOL_KEY = 'aciwv_calc_last_tool';
   function loadState(){
     try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}'); } catch { return {}; }
   }
@@ -100,14 +101,20 @@
   };
 
   function render(){
-    const { hash, params } = readHash();
+    let { hash, params } = readHash();
+
+    // Auto-open last tool if no valid hash
+    if (!hash || !tools[hash]) {
+      const last = localStorage.getItem(LS_TOOL_KEY);
+      if (last && tools[last]) { location.hash = last; return; }
+    }
+
     if (!tools[hash]) {
       if (titleNode) titleNode.textContent = 'Select a calculator above';
-      if (mount) {
-        mount.innerHTML = '<p class="muted">Pick a tool from the cards above.</p>';
-      }
+      if (mount) mount.innerHTML = '<p class="muted">Pick a tool from the cards above.</p>';
       return;
     }
+    localStorage.setItem(LS_TOOL_KEY, hash);
     tools[hash](params);
   }
   window.addEventListener('hashchange', render);
@@ -870,4 +877,5 @@
   }
 
 })();
+
 
