@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
 
   <!-- SEO / social -->
-  <meta name="description" content="Phone-friendly concrete calculators for field use: volume (yd³), truck loads, cylinder break dates, and more." />
+  <meta name="description" content="Phone-friendly concrete calculators for field use: volume (yd³), truck loads, cylinder break dates, unit conversions, water adjustment, and temperature estimate." />
   <meta property="og:title" content="Concrete Calculators · ACI West Virginia" />
   <meta property="og:description" content="Fast, field-ready concrete calculators that work great on phones." />
   <meta property="og:image" content="https://concrete-wv.org/assets/aciwv_logo_white_square.png" />
@@ -97,6 +97,18 @@
         <p class="muted">psi↔MPa, pcf↔kg/m³, °F↔°C, ft³↔m³, lb↔kg.</p>
         <p><a class="btn" href="#convert">Open Converter</a></p>
       </article>
+
+      <article class="card">
+        <h2>Water Adjustment</h2>
+        <p class="muted">Adjust batch water for aggregate moisture/absorption. Optional w/cm.</p>
+        <p><a class="btn" href="#water">Open Water Adjustment</a></p>
+      </article>
+
+      <article class="card">
+        <h2>Fresh Concrete Temperature</h2>
+        <p class="muted">Estimate mix temperature from component temps/weights.</p>
+        <p><a class="btn" href="#temp">Open Temperature</a></p>
+      </article>
     </section>
 
     <!-- Tool mount point (calcs.js injects UI based on hash) -->
@@ -114,9 +126,7 @@
   </footer>
 
   <script>
-    // Footer year
     (function(){ const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear(); })();
-    // Optional: register your service worker when you’re ready to cache this page
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(()=>{}); }
   </script>
 
