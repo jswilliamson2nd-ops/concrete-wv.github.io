@@ -56,6 +56,10 @@
     .out{padding:10px;border-radius:10px;background:#0e1627;border:1px dashed var(--border);font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
     .ok{color:#7bd389}.warn{color:#ffd166}.bad{color:#ff6b6b}
     .small{font-size:12px;color:var(--text-dim)}
+    .btn{display:inline-block;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#0e1627;color:var(--text);text-align:center;cursor:pointer;transition:.15s transform, .15s background}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(180deg,#0f2230,#0b1b29);border-color:#163049}
+    @media (max-width:520px){ .input-row{grid-template-columns:1fr} }
   </style>
 </head>
 <body>
@@ -70,6 +74,7 @@
         <a href="/#join">Join</a>
         <a href="/#verify">Verify</a>
         <a href="/wvdoh.html" class="active">WVDOH Info Corner</a>
+        <a href="/calculators/">Calculators</a>
         <a href="/#contact">Contact</a>
       </nav>
     </div>
@@ -81,7 +86,6 @@
     <section class="hero">
       <h1>WVDOH Information Corner</h1>
       <p>Central access to WVDOH references the field actually uses: <strong>Standard Specifications</strong>, the <strong>Construction Manual</strong>, <strong>Design Directives</strong>, <strong>Materials Procedures</strong>, and <strong>Approved Sources</strong>. One page, fewer clicks.</p>
-
       <button id="installBtn" class="btn" style="margin:10px 0 0">Install WVDOH App</button>
     </section>
 
@@ -130,65 +134,15 @@
       </article>
     </section>
 
-    <!-- Quick References (live calculators) -->
+    <!-- Quick References (keep page lean: Evaporation inline; link to full calculators) -->
     <section aria-label="Quick references" style="margin:10px 0 50px">
       <h2 style="margin:10px 0 12px">Quick References</h2>
-      <p class="muted" style="margin:0 0 14px">Live tools, phone-friendly. Helpers only—verify against contract docs and official methods.</p>
+      <p class="muted" style="margin:0 0 14px">Live tool below. For more, open the full calculators page.</p>
+
+      <p><a class="btn primary" href="/calculators/#volume">Open Concrete Calculators →</a></p>
 
       <div class="grid">
-        <!-- Concrete Yield -->
-        <article class="card" id="calc-yield">
-          <h3>Concrete Yield (ASTM C138 style)</h3>
-          <div class="input-row">
-            <label>Measured unit weight (pcf)<br>
-              <input id="y_unitwt" type="number" inputmode="decimal" step="0.1" min="60" max="170" placeholder="e.g., 145.0">
-            </label>
-            <label>Total batch mass (lb)<br>
-              <input id="y_batchlb" type="number" inputmode="decimal" step="1" min="1" placeholder="e.g., 39150">
-            </label>
-          </div>
-          <div class="input-row">
-            <label>Plan quantity (yd³) <span class="small">(optional)</span><br>
-              <input id="y_plan" type="number" inputmode="decimal" step="0.01" min="0">
-            </label>
-            <div></div>
-          </div>
-          <div class="out" id="y_out" aria-live="polite">Enter unit weight & batch mass.</div>
-          <p class="small">Yield (ft³) = batch lb ÷ pcf. Relative yield = actual yd³ ÷ plan yd³.</p>
-        </article>
-
-        <!-- Water–cement ratios -->
-        <article class="card" id="calc-wc">
-          <h3>Water–Cement Ratio</h3>
-          <div class="input-row">
-            <label>Total water (lb)<br><input id="wc_water" type="number" step="0.1" min="0"></label>
-            <label>Cement only (lb)<br><input id="wc_c" type="number" step="0.1" min="0"></label>
-          </div>
-          <div class="input-row">
-            <label>Supplementary cementitious (lb)<br><input id="wc_scm" type="number" step="0.1" min="0"></label>
-            <label>Report mode<br>
-              <select id="wc_mode">
-                <option value="wc">w/c (cement only)</option>
-                <option value="wcm">w/cm (cement + SCM)</option>
-              </select>
-            </label>
-          </div>
-          <div class="out" id="wc_out" aria-live="polite">Enter water & cement.</div>
-          <p class="small">Compare against limits (e.g., 0.45). Use total water actually in the mix.</p>
-        </article>
-
-        <!-- SCM replacement helper -->
-        <article class="card" id="calc-scm">
-          <h3>SCM Replacement</h3>
-          <div class="input-row">
-            <label>Target binder total (lb)<br><input id="scm_total" type="number" step="0.1" min="0" placeholder="e.g., 564"></label>
-            <label>SCM % by mass<br><input id="scm_pct" type="number" step="0.1" min="0" max="80" placeholder="e.g., 20"></label>
-          </div>
-          <div class="out" id="scm_out" aria-live="polite">Enter total binder & %.</div>
-          <p class="small">SCM = total × (%/100). Cement = total − SCM.</p>
-        </article>
-
-        <!-- Evaporation Rate (live + tuned to ACI nomograph style) -->
+        <!-- Evaporation Rate (live) -->
         <article class="card" id="calc-evap">
           <h3>Evaporation Rate (beta)</h3>
           <div class="input-row">
@@ -215,8 +169,8 @@
   <footer>
     © <span id="y"></span> ACI West Virginia Interest Group ·
     <a href="/">Home</a> · <a href="/#join">Join</a> ·
-    <a href="/#verify">Verify</a> · <a href="/topics/">Topics</a> ·
-    <a href="/wvdoh.html">WVDOH Info Corner</a>
+    <a href="/#verify">Verify</a> · <a href="/wvdoh.html">WVDOH Info Corner</a> ·
+    <a href="/calculators/">Calculators</a>
   </footer>
 
   <script>
@@ -230,62 +184,19 @@
     if (btn) btn.addEventListener("click", async()=>{ if(!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; btn.style.display="none"; });
   })();
 
-  // ---------- Calculators (pure live) ----------
+  // ---------- Evaporation calculator ----------
   (function(){
     const $ = id => document.getElementById(id);
     const fmt = (n, d=2) => (typeof n==='number' && isFinite(n)) ? n.toFixed(d) : '—';
-    const readNum = el => {
-      if (!el) return null;
-      const n = el.valueAsNumber;
-      if (typeof n === 'number' && !isNaN(n)) return n;
-      const f = parseFloat(el.value);
-      return (typeof f === 'number' && !isNaN(f)) ? f : null;
+    const toNum = (val) => {
+      if (val == null) return null;
+      const s = String(val).trim().replace(/,/g,'');
+      const n = Number(s);
+      return (typeof n === 'number' && !isNaN(n)) ? n : null;
     };
-    const on = (el, evts, fn) => el && evts.forEach(e => el.addEventListener(e, fn));
+    const readNum = (el) => !el ? null : (Number.isFinite(el.valueAsNumber) ? el.valueAsNumber : toNum(el.value));
+    const on = (el, evts, fn) => el && evts.forEach(e => el.addEventListener(e, fn, { passive: true }));
 
-    // ---- Concrete Yield
-    const yUnit=$('y_unitwt'), yBatch=$('y_batchlb'), yPlan=$('y_plan'), yOut=$('y_out');
-    function computeYield(){
-      if(!yOut) return;
-      const unitwt=readNum(yUnit), batchlb=readNum(yBatch);
-      if(!(unitwt>0 && batchlb>0)){ yOut.textContent="Enter unit weight & batch mass."; return; }
-      const plan=readNum(yPlan);
-      const ft3=batchlb/unitwt, yd3=ft3/27;
-      let msg=`Yield ft³: ${fmt(ft3,2)} | yd³: ${fmt(yd3,3)}`;
-      if(plan>0){
-        const rel=yd3/plan, pct=(rel-1)*100;
-        const cls=Math.abs(pct)<=1?"ok":(Math.abs(pct)<=3?"warn":"bad");
-        msg+=` | Rel. yield: <span class="${cls}">${fmt(rel,3)} (${pct>=0?"+":""}${fmt(pct,1)}%)</span>`;
-      }
-      yOut.innerHTML=msg;
-    }
-    [yUnit,yBatch,yPlan].forEach(el=>on(el,['input','change','keyup','blur'],computeYield));
-
-    // ---- w/c and w/cm
-    const wcWater=$('wc_water'), wcC=$('wc_c'), wcSCM=$('wc_scm'), wcMode=$('wc_mode'), wcOut=$('wc_out');
-    function computeWC(){
-      if(!wcOut) return;
-      const water=readNum(wcWater), c=readNum(wcC), scm=readNum(wcSCM)||0;
-      if(!(water>0 && c>0)){ wcOut.textContent="Enter water & cement."; return; }
-      const wc=water/c, wcm=water/(c+scm);
-      wcOut.textContent=(wcMode?.value==='wc')
-        ? `w/c: ${fmt(wc,3)} | w/cm: ${fmt(wcm,3)}`
-        : `w/cm: ${fmt(wcm,3)} | w/c: ${fmt(wc,3)}`;
-    }
-    [wcWater,wcC,wcSCM,wcMode].forEach(el=>on(el,['input','change','keyup','blur'],computeWC));
-
-    // ---- SCM replacement
-    const sTotal=$('scm_total'), sPct=$('scm_pct'), sOut=$('scm_out');
-    function computeSCM(){
-      if(!sOut) return;
-      const total=readNum(sTotal), pct=readNum(sPct);
-      if(!(total>0 && pct>=0)){ sOut.textContent="Enter total binder & %."; return; }
-      const scm=total*(pct/100), cement=total-scm;
-      sOut.textContent=`Cement: ${fmt(cement,1)} lb | SCM: ${fmt(scm,1)} lb`;
-    }
-    [sTotal,sPct].forEach(el=>on(el,['input','change','keyup','blur'],computeSCM));
-
-    // ---- Evaporation Rate (ACI-nomograph-style fit; robust parsing)
     const eTc=$('ev_tc_f'), eTa=$('ev_ta_f'), eV=$('ev_v_mph'), eRH=$('ev_rh'), eOut=$('ev_out');
     function computeEvap(){
       if(!eOut) return;
@@ -296,7 +207,7 @@
       const Vkmh=Math.max(0,Vmph)*1.60934;      // mph → km/h
       const Tc=(TcF-32)*5/9, Ta=(TaF-32)*5/9;   // °F → °C
 
-      // Tuned nomograph-style: includes RH weighting on air term
+      // Tuned nomograph-style fit (advisory)
       const sat=tC=>Math.pow(Math.max(0,tC+18),2.5);
       const base=Math.max(0, sat(Tc) - (RH/100)*sat(Ta));
       const wind=1 + 0.4*Vkmh;
@@ -311,12 +222,11 @@
         <span class="small">Advisory only. Confirm with official charts/instruments onsite.</span>`;
     }
     [eTc,eTa,eV,eRH].forEach(el=>on(el,['input','change','keyup','blur'],computeEvap));
-
-    // Initial render
-    computeYield(); computeWC(); computeSCM(); computeEvap();
+    computeEvap();
   })();
   </script>
 </body>
 </html>
+
 
 
