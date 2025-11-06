@@ -134,7 +134,7 @@
       </article>
     </section>
 
-    <!-- Quick References (now with live calculators) -->
+    <!-- Quick References (with live calculators) -->
     <section aria-label="Quick references" style="margin:10px 0 50px">
       <h2 style="margin:10px 0 12px">Quick References</h2>
       <p class="muted" style="margin:0 0 14px">Fast tools used in the field. Built for phones. Values are helpers—verify against contract documents and official methods.</p>
@@ -152,7 +152,7 @@
             <div></div>
           </div>
           <div class="links">
-            <button class="btn primary" id="btnYield">Compute Yield</button>
+            <button class="btn primary" id="btnYield" type="button">Compute Yield</button>
           </div>
           <div class="out" id="y_out" aria-live="polite">Yield ft³: — | yd³: — | Rel. yield: —</div>
           <p class="small">Yield (ft³) = batch mass (lb) ÷ unit weight (pcf). Relative yield = actual yd³ ÷ plan yd³.</p>
@@ -174,7 +174,7 @@
               </select>
             </label>
           </div>
-          <div class="links"><button class="btn primary" id="btnWC">Compute Ratio</button></div>
+          <div class="links"><button class="btn primary" id="btnWC" type="button">Compute Ratio</button></div>
           <div class="out" id="wc_out" aria-live="polite">w/c: — | w/cm: —</div>
           <p class="small">Check against spec limits (e.g., 0.45 or 0.42). Use total water actually in the mix.</p>
         </article>
@@ -186,12 +186,12 @@
             <label>Target binder total (lb)<br><input id="scm_total" type="number" step="0.1" placeholder="e.g., 564"></label>
             <label>SCM % by mass<br><input id="scm_pct" type="number" step="0.1" placeholder="e.g., 20"></label>
           </div>
-          <div class="links"><button class="btn primary" id="btnSCM">Compute Split</button></div>
+          <div class="links"><button class="btn primary" id="btnSCM" type="button">Compute Split</button></div>
           <div class="out" id="scm_out" aria-live="polite">Cement: — lb | SCM: — lb</div>
           <p class="small">SCM (lb) = total × (%/100). Cement (lb) = total − SCM.</p>
         </article>
 
-        <!-- Evaporation Rate (beta) -->
+        <!-- Evaporation Rate (hardened) -->
         <article class="card" id="calc-evap">
           <h3>Evaporation Rate (beta)</h3>
           <div class="input-row">
@@ -202,7 +202,7 @@
             <label>Wind speed V (mph)<br><input id="ev_v_mph" type="number" step="0.1" placeholder="e.g., 10"></label>
             <label>Relative humidity RH (%)<br><input id="ev_rh" type="number" step="0.1" placeholder="e.g., 50"></label>
           </div>
-          <div class="links"><button class="btn primary" id="btnEvap">Estimate</button></div>
+          <div class="links"><button class="btn primary" id="btnEvap" type="button">Estimate</button></div>
           <div class="out" id="ev_out" aria-live="polite">—</div>
           <p class="small">Advisory only. Compare to the common caution threshold of <strong>0.2 lb/ft²/hr</strong>. Use official methods on site.</p>
         </article>
@@ -235,15 +235,15 @@
     // PWA install prompt (Option 5)
     let deferredPrompt;
     const btn = document.getElementById("installBtn");
-    btn.style.display = "none";
+    if (btn) btn.style.display = "none";
 
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      btn.style.display = "inline-block";
+      if (btn) btn.style.display = "inline-block";
     });
 
-    btn.addEventListener("click", async () => {
+    if (btn) btn.addEventListener("click", async () => {
       if (!deferredPrompt) return;
       deferredPrompt.prompt();
       await deferredPrompt.userChoice;
@@ -305,39 +305,52 @@
       out.textContent = `Cement: ${fmt(cement,1)} lb | SCM: ${fmt(scm,1)} lb`;
     });
 
-    // Evaporation rate (beta) – advisory estimate
+    // Evaporation rate (beta) – hardened version
     // Inputs: Tc (°F), Ta (°F), V (mph), RH (%)
-    // Output: kg/m²/h and lb/ft²/h. Flags >= 0.20 lb/ft²/h.
+    // Output: kg/m²/h and lb/ft²/h; flags ≥ 0.20 lb/ft²/h.
     document.getElementById('btnEvap').addEventListener('click', () => {
       const TcF = parseFloat(document.getElementById('ev_tc_f').value);
       const TaF = parseFloat(document.getElementById('ev_ta_f').value);
       const Vmph = parseFloat(document.getElementById('ev_v_mph').value);
-      const RH = parseFloat(document.getElementById('ev_rh').value);
+      let RH = parseFloat(document.getElementById('ev_rh').value);
       const out = document.getElementById('ev_out');
 
-      if(![TcF,TaF,Vmph,RH].every(n=>Number.isFinite(n))){ out.textContent = "Enter Tc, Ta, wind, and RH."; return; }
+      if (![TcF, TaF, Vmph, RH].every(Number.isFinite)) {
+        out.textContent = "Enter Tc, Ta, wind, and RH.";
+        return;
+      }
 
-      // Convert to °C and m/s
+      // Clamp obvious bounds
+      RH = Math.min(100, Math.max(0, RH));
+      const V = Math.max(0, Vmph) * 0.44704; // mph → m/s
+
+      // Convert temps to °C
       const Tc = (TcF - 32) * 5/9;
       const Ta = (TaF - 32) * 5/9;
-      const V = Vmph * 0.44704;
 
-      // Empirical estimate (advisory) inspired by nomograph relationships.
-      // E_kgm2h ≈ A*((Tc+18)**2.5 - (Ta+18)**2.5) * (1 + 0.4*V) * (1 - RH/100)
-      // A chosen to produce reasonable magnitudes; use official methods onsite.
+      // Safe exponent to avoid fractional power of negative values
+      const powSafe = (tC) => Math.pow(Math.max(0, tC + 18), 2.5);
+
+      // Advisory empirical relationship (nomograph-inspired), with caps
+      const base = Math.max(0, powSafe(Tc) - powSafe(Ta));
+      const windFactor = 1 + 0.4 * Math.min(V, 15);   // cap wind influence
+      const rhFactor   = 1 - RH / 100;
+
+      // Scale tuned to produce reasonable magnitudes (advisory only)
       const A = 1e-4;
-      const E_kgm2h = Math.max(0,
-        A * (Math.pow(Tc+18,2.5) - Math.pow(Ta+18,2.5)) * (1 + 0.4*V) * (1 - RH/100)
-      );
+      const E_kgm2h = Math.max(0, A * base * windFactor * rhFactor);
 
-      const kgm2h_to_lbft2h = 0.204816; // 1 kg/m²/h ≈ 0.204816 lb/ft²/h
-      const E_lbft2h = E_kgm2h * kgm2h_to_lbft2h;
+      const KG_M2H_TO_LB_FT2H = 0.204816; // 1 kg/m²/h ≈ 0.204816 lb/ft²/h
+      const E_lbft2h = E_kgm2h * KG_M2H_TO_LB_FT2H;
 
       const risk = E_lbft2h >= 0.20 ? "bad" : (E_lbft2h >= 0.15 ? "warn" : "ok");
-      const label = E_lbft2h >= 0.20 ? "≥ 0.20 caution" : (E_lbft2h >= 0.15 ? "0.15–0.20 watch" : "< 0.15 lower risk");
+      const label = E_lbft2h >= 0.20 ? "≥ 0.20 caution"
+                  : E_lbft2h >= 0.15 ? "0.15–0.20 watch"
+                  : "< 0.15 lower risk";
 
-      out.innerHTML = `Evap rate: ${fmt(E_kgm2h,2)} kg/m²/h | ${fmt(E_lbft2h,3)} lb/ft²/hr · <span class="${risk}">${label}</span><br>
-        <span class="small">Advisory only. Use field charts/instruments or official calculators to confirm.</span>`;
+      const fmt3 = (n, d=3) => Number.isFinite(n) ? n.toFixed(d) : "—";
+      out.innerHTML = `Evap rate: ${fmt(E_kgm2h,2)} kg/m²/h | ${fmt3(E_lbft2h,3)} lb/ft²/hr · <span class="${risk}">${label}</span><br>
+        <span class="small">Advisory only. Confirm with official charts/instruments onsite.</span>`;
     });
   </script>
 </body>
