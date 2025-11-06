@@ -189,7 +189,7 @@
           <p class="small">SCM = total × (%/100). Cement = total − SCM.</p>
         </article>
 
-        <!-- Evaporation Rate (live + hardened) -->
+        <!-- Evaporation Rate (live + robust parsing) -->
         <article class="card" id="calc-evap">
           <h3>Evaporation Rate (beta)</h3>
           <div class="input-row">
@@ -222,35 +222,35 @@
 
   <script>
   // ---------- Boilerplate ----------
-  // Year stamp
-  (function(){ const y = document.getElementById('y'); if (y) y.textContent = new Date().getFullYear(); })();
-
-  // Register service worker (PWA)
+  (function(){ const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear(); })();
   if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(()=>{}); }
-
-  // PWA install prompt (Option 5)
   (function(){
-    let deferredPrompt;
-    const btn = document.getElementById("installBtn");
-    if (btn) btn.style.display = "none";
-    window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferredPrompt = e; if (btn) btn.style.display = "inline-block"; });
-    if (btn) btn.addEventListener("click", async () => { if (!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; btn.style.display = "none"; });
+    let deferredPrompt; const btn=document.getElementById("installBtn");
+    if (btn) btn.style.display="none";
+    window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); deferredPrompt=e; if(btn) btn.style.display="inline-block"; });
+    if (btn) btn.addEventListener("click", async()=>{ if(!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; btn.style.display="none"; });
   })();
 
-  // ---------- Calculators (pure live, no buttons) ----------
+  // ---------- Calculators (pure live) ----------
   (function(){
     const $ = id => document.getElementById(id);
-    const fmt = (n, d=2) => Number.isFinite(n) ? n.toFixed(d) : "—";
-    const num = v => { const x = parseFloat(v); return Number.isFinite(x) ? x : null; };
+    const fmt = (n, d=2) => (typeof n==='number' && isFinite(n)) ? n.toFixed(d) : '—';
+    const readNum = el => {
+      if (!el) return null;
+      const n = el.valueAsNumber;
+      if (typeof n === 'number' && !isNaN(n)) return n;
+      const f = parseFloat(el.value);
+      return (typeof f === 'number' && !isNaN(f)) ? f : null;
+    };
     const on = (el, evts, fn) => el && evts.forEach(e => el.addEventListener(e, fn));
 
     // ---- Concrete Yield
     const yUnit=$('y_unitwt'), yBatch=$('y_batchlb'), yPlan=$('y_plan'), yOut=$('y_out');
     function computeYield(){
       if(!yOut) return;
-      const unitwt=num(yUnit?.value), batchlb=num(yBatch?.value);
+      const unitwt=readNum(yUnit), batchlb=readNum(yBatch);
       if(!(unitwt>0 && batchlb>0)){ yOut.textContent="Enter unit weight & batch mass."; return; }
-      const plan=num(yPlan?.value);
+      const plan=readNum(yPlan);
       const ft3=batchlb/unitwt, yd3=ft3/27;
       let msg=`Yield ft³: ${fmt(ft3,2)} | yd³: ${fmt(yd3,3)}`;
       if(plan>0){
@@ -260,61 +260,59 @@
       }
       yOut.innerHTML=msg;
     }
-    [yUnit,yBatch,yPlan].forEach(el=>on(el,['input','change'],computeYield));
+    [yUnit,yBatch,yPlan].forEach(el=>on(el,['input','change','keyup','blur'],computeYield));
 
     // ---- w/c and w/cm
     const wcWater=$('wc_water'), wcC=$('wc_c'), wcSCM=$('wc_scm'), wcMode=$('wc_mode'), wcOut=$('wc_out');
     function computeWC(){
       if(!wcOut) return;
-      const water=num(wcWater?.value), c=num(wcC?.value), scm=num(wcSCM?.value)||0;
+      const water=readNum(wcWater), c=readNum(wcC), scm=readNum(wcSCM)||0;
       if(!(water>0 && c>0)){ wcOut.textContent="Enter water & cement."; return; }
       const wc=water/c, wcm=water/(c+scm);
-      wcOut.textContent = (wcMode?.value==='wc')
+      wcOut.textContent=(wcMode?.value==='wc')
         ? `w/c: ${fmt(wc,3)} | w/cm: ${fmt(wcm,3)}`
         : `w/cm: ${fmt(wcm,3)} | w/c: ${fmt(wc,3)}`;
     }
-    [wcWater,wcC,wcSCM,wcMode].forEach(el=>on(el,['input','change'],computeWC));
+    [wcWater,wcC,wcSCM,wcMode].forEach(el=>on(el,['input','change','keyup','blur'],computeWC));
 
     // ---- SCM replacement
     const sTotal=$('scm_total'), sPct=$('scm_pct'), sOut=$('scm_out');
     function computeSCM(){
       if(!sOut) return;
-      const total=num(sTotal?.value), pct=num(sPct?.value);
+      const total=readNum(sTotal), pct=readNum(sPct);
       if(!(total>0 && pct>=0)){ sOut.textContent="Enter total binder & %."; return; }
       const scm=total*(pct/100), cement=total-scm;
       sOut.textContent=`Cement: ${fmt(cement,1)} lb | SCM: ${fmt(scm,1)} lb`;
     }
-    [sTotal,sPct].forEach(el=>on(el,['input','change'],computeSCM));
+    [sTotal,sPct].forEach(el=>on(el,['input','change','keyup','blur'],computeSCM));
 
-    // ---- Evaporation Rate (live + hardened)
+    // ---- Evaporation Rate (live + robust parsing)
     const eTc=$('ev_tc_f'), eTa=$('ev_ta_f'), eV=$('ev_v_mph'), eRH=$('ev_rh'), eOut=$('ev_out');
     function computeEvap(){
       if(!eOut) return;
-      const TcF=num(eTc?.value), TaF=num(eTa?.value), Vmph=num(eV?.value), RHraw=num(eRH?.value);
-      if([TcF,TaF,Vmph,RHraw].some(v=>v===null)){ eOut.textContent="Enter Tc, Ta, wind, RH."; return; }
+      const TcF=readNum(eTc), TaF=readNum(eTa), Vmph=readNum(eV), RHin=readNum(eRH);
+      if([TcF,TaF,Vmph,RHin].some(v=>v===null)){ eOut.textContent="Enter Tc, Ta, wind, RH."; return; }
 
-      // clamp inputs
-      const RH=Math.min(100,Math.max(0,RHraw));
+      const RH=Math.min(100,Math.max(0,RHin));
       const V=Math.max(0,Vmph)*0.44704; // mph→m/s
       const Tc=(TcF-32)*5/9, Ta=(TaF-32)*5/9;
 
-      // safe power: avoid fractional power of negatives
       const powSafe=tC=>Math.pow(Math.max(0,tC+18),2.5);
       const base=Math.max(0, powSafe(Tc)-powSafe(Ta));
-      const windFactor=1+0.4*Math.min(V,15); // cap wind effect
+      const windFactor=1+0.4*Math.min(V,15);
       const rhFactor=1-RH/100;
 
-      // advisory scale factor (nomograph-inspired)
-      const A=1e-4;
+      const A=1e-4; // advisory scale factor
       const E_kgm2h=Math.max(0, A*base*windFactor*rhFactor);
       const E_lbft2h=E_kgm2h*0.204816;
 
       const risk=E_lbft2h>=0.20?"bad":(E_lbft2h>=0.15?"warn":"ok");
       const label=E_lbft2h>=0.20?"≥ 0.20 caution":(E_lbft2h>=0.15?"0.15–0.20 watch":"< 0.15 lower risk");
 
-      eOut.innerHTML=`Evap rate: ${fmt(E_kgm2h,2)} kg/m²/h | ${fmt(E_lbft2h,3)} lb/ft²/hr · <span class="${risk}">${label}</span><br><span class="small">Advisory only. Confirm with official charts/instruments onsite.</span>`;
+      eOut.innerHTML=`Evap rate: ${fmt(E_kgm2h,2)} kg/m²/h | ${fmt(E_lbft2h,3)} lb/ft²/hr · <span class="${risk}">${label}</span><br>
+        <span class="small">Advisory only. Confirm with official charts/instruments onsite.</span>`;
     }
-    [eTc,eTa,eV,eRH].forEach(el=>on(el,['input','change'],computeEvap));
+    [eTc,eTa,eV,eRH].forEach(el=>on(el,['input','change','keyup','blur'],computeEvap));
 
     // initial paints
     computeYield(); computeWC(); computeSCM(); computeEvap();
@@ -322,4 +320,5 @@
   </script>
 </body>
 </html>
+
 
