@@ -1,16 +1,15 @@
 /* ACI WV · calculators/calcs.js
    Tools: #volume, #trucks, #cylinders, #convert, #water, #temp, #yield, #evap
+          + #wcm, #rebar, #joints, #slope, #pump, #cycle, #coverage, #insulation, #strength
    - Mobile-first, no deps
    - LocalStorage persistence
    - Deep-link query params (read & write)
    - Copy results buttons
 */
-
 (function(){
   // ---------------- Utilities ----------------
   const $id = (id, root=document) => root.getElementById(id);
   const qs  = (sel, root=document) => root.querySelector(sel);
-
   const fmt = (n, d=2) => (Number.isFinite(n) ? n.toFixed(d) : '—');
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
   const toNum = (val) => {
@@ -95,7 +94,17 @@
     '#water': renderWater,
     '#temp': renderTemp,
     '#yield': renderYield,
-    '#evap': renderEvap
+    '#evap': renderEvap,
+    // NEW:
+    '#wcm': renderWcm,
+    '#rebar': renderRebar,
+    '#joints': renderJoints,
+    '#slope': renderSlope,
+    '#pump': renderPump,
+    '#cycle': renderCycle,
+    '#coverage': renderCoverage,
+    '#insulation': renderInsulation,
+    '#strength': renderStrength
   };
 
   function render(){
@@ -106,6 +115,8 @@
       return;
     }
     tools[hash](params);
+    // smooth scroll into view for mobile
+    setTimeout(()=>{ mount?.scrollIntoView({behavior:'smooth', block:'start'}); }, 0);
   }
   window.addEventListener('hashchange', render);
   document.addEventListener('DOMContentLoaded', render);
@@ -1053,9 +1064,579 @@
     compute();
   }
 
+  // =========================================================
+  // NEW TOOLS TO MATCH INDEX CARDS
+  // =========================================================
+
+  // Water–Cement / Water–Cementitious Ratio
+  function renderWcm(params){
+    if (titleNode) titleNode.textContent = 'Water–Cement / Water–Cementitious Ratio';
+    if (!mount) return;
+
+    const s = Object.assign({ water:'', cement:'', scm:'0' }, state.wcm||{});
+    ['water','cement','scm'].forEach(k=>{ if(params.has(k)) s[k]=params.get(k); });
+
+    mount.innerHTML = `
+      <h2>Water–Cement (w/c) and Water–Cementitious (w/cm)</h2>
+      <div class="card">
+        <div class="input-row">
+          <label>Water (lb)<br><input id="wcm_w" type="number" step="0.1" placeholder="e.g., 275"></label>
+          <label>Cement (lb)<br><input id="wcm_c" type="number" step="0.1" placeholder="e.g., 564"></label>
+        </div>
+        <div class="input-row">
+          <label>Supplementary cementitious materials, SCM (lb) <span class="small">(optional)</span><br><input id="wcm_scm" type="number" step="0.1" placeholder="e.g., 100"></label>
+          <div></div>
+        </div>
+      </div>
+      <section id="wcm_out_wrap"></section>
+    `;
+
+    $id('wcm_w').value = s.water ?? '';
+    $id('wcm_c').value = s.cement ?? '';
+    $id('wcm_scm').value = s.scm ?? '0';
+
+    function compute(){
+      const W = toNum($id('wcm_w').value);
+      const C = toNum($id('wcm_c').value);
+      const S = toNum($id('wcm_scm').value) ?? 0;
+
+      let wc=null, wcm=null;
+      if (W>0 && C>0) wc = W/C;
+      if (W>0 && (C??0)+(S??0) > 0) wcm = W/((C??0)+(S??0));
+
+      state.wcm = { water:$id('wcm_w').value, cement:$id('wcm_c').value, scm:$id('wcm_scm').value };
+      saveState(state);
+      writeHash('#wcm', state.wcm);
+
+      const html = `
+        <div class="card">
+          <h3>Result</h3>
+          <div class="out">
+            w/c: <strong>${wc==null?'—':fmt(wc,3)}</strong><br>
+            w/cm (incl. SCM): <strong>${wcm==null?'—':fmt(wcm,3)}</strong>
+          </div>
+        </div>
+      `;
+      const node = pillCopy(html, ()=>[
+        `w/c: ${wc==null?'—':fmt(wc,3)}`,
+        `w/cm: ${wcm==null?'—':fmt(wcm,3)}`
+      ].join('\n'));
+      const wrap = $id('wcm_out_wrap'); wrap.innerHTML=''; wrap.appendChild(node);
+    }
+
+    ['wcm_w','wcm_c','wcm_scm'].forEach(id=>{
+      const el=$id(id); el.addEventListener('input', compute, { passive:true }); el.addEventListener('change', compute, { passive:true });
+    });
+    compute();
+  }
+
+  // Rebar Takeoff (simple)
+  function renderRebar(params){
+    if (titleNode) titleNode.textContent = 'Rebar Takeoff (simple)';
+    if (!mount) return;
+
+    const s = Object.assign({ len:'', wid:'', spacing:'12', size:'#4' }, state.rebar||{});
+    ['len','wid','spacing','size'].forEach(k=>{ if(params.has(k)) s[k]=params.get(k); });
+
+    mount.innerHTML = `
+      <h2>Rebar Takeoff (simple)</h2>
+      <p class="muted">Rectangular slab mat. Counts each direction, total length, and estimated weight.</p>
+      <div class="card">
+        <div class="input-row">
+          <label>Length (ft)<br><input id="rb_len" type="number" step="0.1" placeholder="e.g., 60"></label>
+          <label>Width (ft)<br><input id="rb_wid" type="number" step="0.1" placeholder="e.g., 40"></label>
+        </div>
+        <div class="input-row">
+          <label>Bar spacing (in)<br><input id="rb_sp" type="number" step="0.1" placeholder="e.g., 12"></label>
+          <label>Bar size<br>
+            <select id="rb_size">
+              <option>#3</option><option selected>#4</option><option>#5</option><option>#6</option><option>#7</option><option>#8</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <section id="rb_out_wrap"></section>
+    `;
+
+    $id('rb_len').value = s.len ?? '';
+    $id('rb_wid').value = s.wid ?? '';
+    $id('rb_sp').value  = s.spacing ?? '12';
+    $id('rb_size').value= s.size ?? '#4';
+
+    const wtPerFt = { '#3':0.376, '#4':0.668, '#5':1.043, '#6':1.502, '#7':2.044, '#8':2.670 };
+
+    function compute(){
+      const L = toNum($id('rb_len').value);
+      const W = toNum($id('rb_wid').value);
+      const sp = toNum($id('rb_sp').value);
+      const size = $id('rb_size').value;
+
+      if (!(L>0 && W>0 && sp>0)){
+        $id('rb_out_wrap').innerHTML = '<div class="out">Enter length, width, and spacing.</div>';
+        return;
+      }
+
+      const nLong = Math.floor(W*12/sp)+1;
+      const nTrans= Math.floor(L*12/sp)+1;
+      const lenLong = nLong*L;
+      const lenTrans= nTrans*W;
+      const totalLen = lenLong + lenTrans;
+      const weight = totalLen * (wtPerFt[size] || 0);
+
+      const text = [
+        `Bars lengthwise: ${nLong} × ${fmt(L,2)} ft`,
+        `Bars widthwise: ${nTrans} × ${fmt(W,2)} ft`,
+        `Total bar length: ${fmt(totalLen,1)} ft`,
+        `Estimated weight (${size}): ${fmt(weight,1)} lb`
+      ].join('\n');
+
+      const html = `
+        <div class="card">
+          <h3>Results</h3>
+          <div class="out">
+            Bars lengthwise: ${nLong} × ${fmt(L,2)} ft<br>
+            Bars widthwise: ${nTrans} × ${fmt(W,2)} ft<br>
+            Total bar length: <strong>${fmt(totalLen,1)} ft</strong><br>
+            Estimated weight (${size}): <strong>${fmt(weight,1)} lb</strong>
+          </div>
+        </div>
+      `;
+      const node = pillCopy(html, ()=>text);
+      const wrap = $id('rb_out_wrap'); wrap.innerHTML=''; wrap.appendChild(node);
+
+      state.rebar = { len:$id('rb_len').value, wid:$id('rb_wid').value, spacing:$id('rb_sp').value, size };
+      saveState(state);
+      writeHash('#rebar', state.rebar);
+    }
+
+    ['rb_len','rb_wid','rb_sp','rb_size'].forEach(id=>{
+      const el=$id(id); el.addEventListener('input', compute, { passive:true }); el.addEventListener('change', compute, { passive:true });
+    });
+    compute();
+  }
+
+  // Joint Spacing (rule-of-thumb)
+  function renderJoints(params){
+    if (titleNode) titleNode.textContent = 'Joint Spacing';
+    if (!mount) return;
+
+    const s = Object.assign({ thickness:'6' }, state.joints||{});
+    ['thickness'].forEach(k=>{ if(params.has(k)) s[k]=params.get(k); });
+
+    mount.innerHTML = `
+      <h2>Joint Spacing (rule-of-thumb)</h2>
+      <p class="muted">Typical guidance: spacing ≈ 2–3 × slab thickness (inches) in feet.</p>
+      <div class="card">
+        <div class="input-row">
+          <label>Thickness (in)<br><input id="j_th" type="number" step="0.1" placeholder="e.g., 6"></label>
+          <div></div>
+        </div>
+      </div>
+      <section id="j_out_wrap"></section>
+    `;
+
+    $id('j_th').value = s.thickness ?? '6';
+
+    function compute(){
+      const t = toNum($id('j_th').value);
+      if (!(t>0)){ $id('j_out_wrap').innerHTML='<div class="out">Enter thickness.</div>'; return; }
+
+      const min = (2*t)/12;
+      const rec = (2.5*t)/12;
+      const max = (3*t)/12;
+
+      const text = [
+        `Min spacing ≈ ${fmt(min,2)} ft`,
+        `Recommended ≈ ${fmt(rec,2)} ft`,
+        `Max spacing ≈ ${fmt(max,2)} ft`
+      ].join('\n');
+
+      const html = `
+        <div class="card">
+          <h3>Spacing</h3>
+          <div class="out">
+            Min: ${fmt(min,2)} ft · Recommended: <strong>${fmt(rec,2)} ft</strong> · Max: ${fmt(max,2)} ft
+          </div>
+        </div>
+      `;
+      const node = pillCopy(html, ()=>text);
+      const wrap=$id('j_out_wrap'); wrap.innerHTML=''; wrap.appendChild(node);
+
+      state.joints = { thickness:$id('j_th').value };
+      saveState(state);
+      writeHash('#joints', state.joints);
+    }
+
+    ['j_th'].forEach(id=>{ const el=$id(id); el.addEventListener('input', compute, { passive:true }); el.addEventListener('change', compute, { passive:true }); });
+    compute();
+  }
+
+  // Slope / Grade
+  function renderSlope(params){
+    if (titleNode) titleNode.textContent = 'Slope / Grade';
+    if (!mount) return;
+
+    const s = Object.assign({ run:'10', percent:'2' }, state.slope||{});
+    ['run','percent'].forEach(k=>{ if(params.has(k)) s[k]=params.get(k); });
+
+    mount.innerHTML = `
+      <h2>Slope / Grade</h2>
+      <div class="card">
+        <div class="input-row">
+          <label>Run (ft)<br><input id="sl_run" type="number" step="0.01" placeholder="e.g., 10"></label>
+          <label>Slope (%)<br><input id="sl_pct" type="number" step="0.01" placeholder="e.g., 2"></label>
+        </div>
+      </div>
+      <section id="sl_out_wrap"></section>
+    `;
+
+    $id('sl_run').value = s.run ?? '10';
+    $id('sl_pct').value = s.percent ?? '2';
+
+    function compute(){
+      const run = toNum($id('sl_run').value);
+      const pct = toNum($id('sl_pct').value);
+      if (!(run>=0 && pct!=null)){
+        $id('sl_out_wrap').innerHTML = '<div class="out">Enter run and slope.</div>'; return;
+      }
+      const rise_ft = run * (pct/100);
+      const rise_in = rise_ft * 12;
+
+      const text = [
+        `Rise: ${fmt(rise_ft,3)} ft (${fmt(rise_in,1)} in)`,
+        `Ratio: 1 : ${pct===0?'—':fmt(100/pct,2)}`
+      ].join('\n');
+
+      const html = `
+        <div class="card">
+          <h3>Results</h3>
+          <div class="out">
+            Rise: <strong>${fmt(rise_ft,3)} ft</strong> (${fmt(rise_in,1)} in)<br>
+            Ratio: 1 : ${pct===0?'—':fmt(100/pct,2)}
+          </div>
+        </div>
+      `;
+      const node = pillCopy(html, ()=>text);
+      const wrap=$id('sl_out_wrap'); wrap.innerHTML=''; wrap.appendChild(node);
+
+      state.slope = { run:$id('sl_run').value, percent:$id('sl_pct').value };
+      saveState(state);
+      writeHash('#slope', state.slope);
+    }
+
+    ['sl_run','sl_pct'].forEach(id=>{ const el=$id(id); el.addEventListener('input', compute, { passive:true }); el.addEventListener('change', compute, { passive:true }); });
+    compute();
+  }
+
+  // Pump Time & Output
+  function renderPump(params){
+    if (titleNode) titleNode.textContent = 'Pump Time & Output';
+    if (!mount) return;
+
+    const s = Object.assign({ yd3:'', rate:'60' }, state.pump||{});
+    ['yd3','rate'].forEach(k=>{ if(params.has(k)) s[k]=params.get(k); });
+
+    mount.innerHTML = `
+      <h2>Pump Time & Output</h2>
+      <div class="card">
+        <div class="input-row">
+          <label>Total concrete (yd³)<br><input id="pm_yd" type="number" step="0.01" placeholder="e.g., 120"></label>
+          <label>Pump rate (yd³/hr)<br><input id="pm_rate" type="number" step="0.1" placeholder="e.g., 60"></label>
+        </div>
+      </div>
+      <section id="pm_out_wrap"></section>
+    `;
+
+    $id('pm_yd').value = s.yd3 ?? '';
+    $id('pm_rate').value = s.rate ?? '60';
+
+    function compute(){
+      const yd = toNum($id('pm_yd').value);
+      const rate = toNum($id('pm_rate').value);
+      if (!(yd>0 && rate>0)){
+        $id('pm_out_wrap').innerHTML = '<div class="out">Enter total yd³ and pump rate.</div>'; return;
+      }
+      const hours = yd / rate;
+      const per10 = rate / 6; // yd³ per 10 minutes
+
+      const text = [
+        `Duration: ${fmt(hours,2)} hours`,
+        `Crew pacing: ${fmt(per10,2)} yd³ / 10 min`
+      ].join('\n');
+
+      const html = `
+        <div class="card">
+          <h3>Results</h3>
+          <div class="out">
+            Duration: <strong>${fmt(hours,2)} hours</strong><br>
+            Crew pacing: ${fmt(per10,2)} yd³ / 10 min
+          </div>
+        </div>
+      `;
+      const node = pillCopy(html, ()=>text);
+      const wrap=$id('pm_out_wrap'); wrap.innerHTML=''; wrap.appendChild(node);
+
+      state.pump = { yd3:$id('pm_yd').value, rate:$id('pm_rate').value };
+      saveState(state);
+      writeHash('#pump', state.pump);
+    }
+
+    ['pm_yd','pm_rate'].forEach(id=>{ const el=$id(id); el.addEventListener('input', compute, { passive:true }); el.addEventListener('change', compute, { passive:true }); });
+    compute();
+  }
+
+  // Truck Cycle Planner (simple)
+  function renderCycle(params){
+    if (titleNode) titleNode.textContent = 'Truck Cycle Planner';
+    if (!mount) return;
+
+    const s = Object.assign({ total:'', rate:'60', size:'9.5', trucks:'6', cycle:'30' }, state.cycle||{});
+    ['total','rate','size','trucks','cycle'].forEach(k=>{ if(params.has(k)) s[k]=params.get(k); });
+
+    mount.innerHTML = `
+      <h2>Truck Cycle Planner</h2>
+      <p class="muted">Check if fleet + cycle time can supply the target pour rate.</p>
+      <div class="card">
+        <div class="input-row">
+          <label>Total concrete (yd³)<br><input id="cy_total" type="number" step="0.1" placeholder="e.g., 180"></label>
+          <label>Pour rate (yd³/hr)<br><input id="cy_rate" type="number" step="0.1" placeholder="e.g., 60"></label>
+        </div>
+        <div class="input-row">
+          <label>Truck size (yd³)<br><input id="cy_size" type="number" step="0.1" placeholder="e.g., 9.5"></label>
+          <label># of trucks<br><input id="cy_trucks" type="number" step="1" min="1" placeholder="e.g., 6"></label>
+        </div>
+        <div class="input-row">
+          <label>Round-trip cycle (min)<br><input id="cy_cycle" type="number" step="1" placeholder="e.g., 30"></label>
+          <div></div>
+        </div>
+      </div>
+      <section id="cy_out_wrap"></section>
+    `;
+
+    $id('cy_total').value = s.total ?? '';
+    $id('cy_rate').value  = s.rate ?? '60';
+    $id('cy_size').value  = s.size ?? '9.5';
+    $id('cy_trucks').value= s.trucks ?? '6';
+    $id('cy_cycle').value = s.cycle ?? '30';
+
+    function compute(){
+      const total = toNum($id('cy_total').value) ?? 0;
+      const rate  = toNum($id('cy_rate').value) ?? 0;
+      const size  = toNum($id('cy_size').value) ?? 9.5;
+      const trucks= toNum($id('cy_trucks').value) ?? 0;
+      const cycle = toNum($id('cy_cycle').value) ?? 0;
+
+      const supply = (trucks * size) / (cycle/60); // yd³/hr
+      const ok = supply >= rate;
+      const hours = rate>0 ? total / rate : null;
+
+      const text = [
+        `Fleet supply: ${fmt(supply,2)} yd³/hr`,
+        `Target rate: ${fmt(rate,2)} yd³/hr`,
+        `Status: ${ok?'OK (meets or exceeds)':'Short (increase trucks/size or reduce cycle time)'}`,
+        (hours?`Estimated pour duration: ${fmt(hours,2)} hr`:``)
+      ].filter(Boolean).join('\n');
+
+      const html = `
+        <div class="card">
+          <h3>Supply Check</h3>
+          <div class="out">
+            Fleet supply: <strong>${fmt(supply,2)} yd³/hr</strong><br>
+            Target: ${fmt(rate,2)} yd³/hr<br>
+            <span class="${ok?'ok':(supply>=0.8*rate?'warn':'bad')}">
+              ${ok?'OK':'Short'} — ${ok?'meets or exceeds target':'add trucks, larger loads, or faster cycle'}
+            </span>
+            ${hours?`<br>Estimated pour duration: ${fmt(hours,2)} hr`:''}
+          </div>
+        </div>
+      `;
+      const node = pillCopy(html, ()=>text);
+      const wrap=$id('cy_out_wrap'); wrap.innerHTML=''; wrap.appendChild(node);
+
+      state.cycle = { total:$id('cy_total').value, rate:$id('cy_rate').value, size:$id('cy_size').value, trucks:$id('cy_trucks').value, cycle:$id('cy_cycle').value };
+      saveState(state);
+      writeHash('#cycle', state.cycle);
+    }
+
+    ['cy_total','cy_rate','cy_size','cy_trucks','cy_cycle'].forEach(id=>{ const el=$id(id); el.addEventListener('input', compute, { passive:true }); el.addEventListener('change', compute, { passive:true }); });
+    compute();
+  }
+
+  // Surface Coverage
+  function renderCoverage(params){
+    if (titleNode) titleNode.textContent = 'Surface Coverage';
+    if (!mount) return;
+
+    const s = Object.assign({ area:'', rate:'300' }, state.coverage||{});
+    ['area','rate'].forEach(k=>{ if(params.has(k)) s[k]=params.get(k); });
+
+    mount.innerHTML = `
+      <h2>Surface Coverage</h2>
+      <p class="muted">Gallons needed given area and product coverage rate (ft²/gal).</p>
+      <div class="card">
+        <div class="input-row">
+          <label>Area (ft²)<br><input id="cv_area" type="number" step="0.1" placeholder="e.g., 12000"></label>
+          <label>Coverage rate (ft²/gal)<br><input id="cv_rate2" type="number" step="0.1" placeholder="e.g., 300"></label>
+        </div>
+      </div>
+      <section id="cv2_out_wrap"></section>
+    `;
+
+    $id('cv_area').value = s.area ?? '';
+    $id('cv_rate2').value = s.rate ?? '300';
+
+    function compute(){
+      const A = toNum($id('cv_area').value);
+      const R = toNum($id('cv_rate2').value);
+      if (!(A>0 && R>0)){ $id('cv2_out_wrap').innerHTML='<div class="out">Enter area and rate.</div>'; return; }
+      const gal = A / R;
+
+      const html = `
+        <div class="card">
+          <h3>Result</h3>
+          <div class="out">
+            Product needed: <strong>${fmt(gal,2)} gallons</strong>
+          </div>
+        </div>
+      `;
+      const node = pillCopy(html, ()=>`Gallons needed: ${fmt(gal,2)}`);
+      const wrap=$id('cv2_out_wrap'); wrap.innerHTML=''; wrap.appendChild(node);
+
+      state.coverage = { area:$id('cv_area').value, rate:$id('cv_rate2').value };
+      saveState(state);
+      writeHash('#coverage', state.coverage);
+    }
+
+    ['cv_area','cv_rate2'].forEach(id=>{ const el=$id(id); el.addEventListener('input', compute, { passive:true }); el.addEventListener('change', compute, { passive:true }); });
+    compute();
+  }
+
+  // Insulation Need (basic heuristic)
+  function renderInsulation(params){
+    if (titleNode) titleNode.textContent = 'Insulation Need (basic)';
+    if (!mount) return;
+
+    const s = Object.assign({ target:'50', ambient:'30', wind:'5' }, state.insulation||{});
+    ['target','ambient','wind'].forEach(k=>{ if(params.has(k)) s[k]=params.get(k); });
+
+    mount.innerHTML = `
+      <h2>Insulation Need (basic)</h2>
+      <p class="muted">Simple advisory based on ΔT and wind. For detailed control plans use thermal modeling.</p>
+      <div class="card">
+        <div class="input-row">
+          <label>Target concrete min (°F)<br><input id="in_target" type="number" step="0.1" placeholder="e.g., 50"></label>
+          <label>Ambient air (°F)<br><input id="in_amb" type="number" step="0.1" placeholder="e.g., 30"></label>
+        </div>
+        <div class="input-row">
+          <label>Wind (mph)<br><input id="in_wind" type="number" step="0.1" placeholder="e.g., 5"></label>
+          <div></div>
+        </div>
+      </div>
+      <section id="in_out_wrap"></section>
+    `;
+
+    $id('in_target').value = s.target ?? '50';
+    $id('in_amb').value    = s.ambient ?? '30';
+    $id('in_wind').value   = s.wind ?? '5';
+
+    function compute(){
+      const Tt = toNum($id('in_target').value);
+      const Ta = toNum($id('in_amb').value);
+      const W  = Math.max(0, toNum($id('in_wind').value) ?? 0);
+      if ([Tt,Ta].some(v=>v===null)){ $id('in_out_wrap').innerHTML='<div class="out">Enter target and ambient.</div>'; return; }
+
+      const dT = Tt - Ta;
+      let layers = 0;
+      if (dT > 10) layers = 1;
+      if (dT > 20) layers = 2;
+      if (dT > 30) layers = 3;
+      // wind penalty
+      if (W>=10) layers += 1;
+      const cls = layers<=1?'ok':(layers<=2?'warn':'bad');
+
+      const html = `
+        <div class="card">
+          <h3>Advisory</h3>
+          <div class="out">
+            ΔT: ${fmt(dT,1)} °F, wind ${fmt(W,0)} mph<br>
+            Suggested blankets: <span class="${cls}">${layers} layer${layers===1?'':'s'}</span>
+            <div class="small" style="margin-top:6px">Heuristic only. For mass or long durations, use a thermal control plan.</div>
+          </div>
+        </div>
+      `;
+      const node = pillCopy(html, ()=>`ΔT ${fmt(dT,1)} °F; blankets: ${layers}`);
+      const wrap=$id('in_out_wrap'); wrap.innerHTML=''; wrap.appendChild(node);
+
+      state.insulation = { target:$id('in_target').value, ambient:$id('in_amb').value, wind:$id('in_wind').value };
+      saveState(state);
+      writeHash('#insulation', state.insulation);
+    }
+
+    ['in_target','in_amb','in_wind'].forEach(id=>{ const el=$id(id); el.addEventListener('input', compute, { passive:true }); el.addEventListener('change', compute, { passive:true }); });
+    compute();
+  }
+
+  // Strength Gain Curve (heuristic table)
+  function renderStrength(params){
+    if (titleNode) titleNode.textContent = 'Strength Gain Curve (heuristic)';
+    if (!mount) return;
+
+    const s = Object.assign({ fpc:'4000' }, state.strength||{});
+    ['fpc'].forEach(k=>{ if(params.has(k)) s[k]=params.get(k); });
+
+    mount.innerHTML = `
+      <h2>Strength Gain (heuristic)</h2>
+      <p class="muted">Quick advisory table. Enter design f′<sub>c</sub> and we’ll estimate expected strength at common ages.</p>
+      <div class="card">
+        <div class="input-row">
+          <label>Design f′c (psi)<br><input id="sg_fpc" type="number" step="1" placeholder="e.g., 4000"></label>
+          <div></div>
+        </div>
+      </div>
+      <section id="sg_out_wrap"></section>
+    `;
+
+    $id('sg_fpc').value = s.fpc ?? '4000';
+
+    function compute(){
+      const fpc = toNum($id('sg_fpc').value);
+      if (!(fpc>0)){ $id('sg_out_wrap').innerHTML = '<div class="out">Enter design f′c.</div>'; return; }
+
+      // Simple heuristic % by age (normal curing, ~70°F)
+      const pctByDay = {1:0.35, 3:0.55, 7:0.70, 14:0.85, 28:1.00, 56:1.15};
+      const rows = Object.entries(pctByDay).map(([d,p])=>{
+        const psi = fpc * p;
+        return `<tr><td>${d}</td><td>${fmt(p*100,0)}%</td><td>${fmt(psi,0)} psi</td></tr>`;
+      }).join('');
+
+      const html = `
+        <div class="card">
+          <h3>Estimate</h3>
+          <div class="out">
+            <table style="width:100%; border-collapse:collapse">
+              <thead><tr><th style="text-align:left">Days</th><th style="text-align:left">% of f′c</th><th style="text-align:left">psi</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+            <div class="small" style="margin-top:6px">Advisory only. Mix, temperature, and curing can shift these values significantly.</div>
+          </div>
+        </div>
+      `;
+      const node = pillCopy(html, ()=>Object.entries(pctByDay).map(([d,p])=>`${d} d: ${fmt(p*100,0)}% ≈ ${fmt(fpc*p,0)} psi`).join('\n'));
+      const wrap=$id('sg_out_wrap'); wrap.innerHTML=''; wrap.appendChild(node);
+
+      state.strength = { fpc:$id('sg_fpc').value };
+      saveState(state);
+      writeHash('#strength', state.strength);
+    }
+
+    ['sg_fpc'].forEach(id=>{ const el=$id(id); el.addEventListener('input', compute, { passive:true }); el.addEventListener('change', compute, { passive:true }); });
+    compute();
+  }
+
   // Expose a tiny “loaded” ping for sanity checks
   window.__CALCS_OK__ = true;
 })();
+
 
 
 
