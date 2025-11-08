@@ -1179,6 +1179,21 @@
 
   // ====================== DONE ======================
   console.log("ACI WV — 17/17 calculators loaded.");
+  // DOUBLE-TAP = VOICE COMMAND
+if ('webkitSpeechRecognition' in window) {
+  const rec = new webkitSpeechRecognition();
+  rec.continuous = false; rec.lang = 'en-US';
+  rec.onresult = e => {
+    const cmd = e.results[0][0].transcript.toLowerCase();
+    const nums = cmd.match(/\d+/g);
+    if (nums && nums.length >= 3) {
+      location.hash = `#volume?len=${nums[0]}&wid=${nums[1]}&th_in=${nums[2]}`;
+      alert(`Heard: ${nums[0]} × ${nums[1]} × ${nums[2]}" — Volume loaded!`);
+    }
+  };
+  document.body.ondblclick = () => rec.start();
+  console.log('Double-tap anywhere = voice command');
+}
 })();
 
 
