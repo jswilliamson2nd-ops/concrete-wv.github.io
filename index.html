@@ -9,11 +9,9 @@
   <link rel="canonical" href="https://concrete-wv.org/" />
   <meta name="theme-color" content="#0b1220" />
 
-  <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
 
-  <!-- SEO / social -->
   <meta name="description" content="ACI West Virginia Interest Group — building a statewide community to advance concrete knowledge, quality, and certification." />
   <meta property="og:title" content="ACI West Virginia Interest Group" />
   <meta property="og:description" content="Advancing concrete knowledge, quality, and certification across West Virginia." />
@@ -22,117 +20,56 @@
   <meta property="og:url" content="https://concrete-wv.org/" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <!-- Leaflet for future map -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
   <style>
-    :root{
-      --bg:#0b1220; --bg-2:#0f172a; --border:#1f2a44; --text:#e6edf3; --text-dim:#b9c4d0;
-      --accent:#2aa198; --card:#101828; --shadow:0 6px 18px rgba(0,0,0,.25);
-      --orange:#ff9500; --vibe:0.5s cubic-bezier(0.16,1,0.3,1);
-    }
-    .light{
-      --bg:#f8fafc; --bg-2:#f1f5f9; --text:#0f172a; --text-dim:#475569;
-      --card:#ffffff; --border:#e2e8f0; --accent:#0891b2;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;scroll-behavior:smooth}
-    body{
-      margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);color:var(--text);line-height:1.6;
-      transition:background .4s,var(--vibe);
-    }
-    a{color:var(--text);text-decoration:none} a:hover{color:var(--accent)}
+    :root{--bg:#0b1220;--bg-2:#0f172a;--border:#1f2a44;--text:#e6edf3;--text-dim:#b9c4d0;--accent:#2aa198;--card:#101828;--shadow:0 6px 18px rgba(0,0,0,.25);--orange:#ff9500}
+    .light{--bg:#f8fafc;--bg-2:#f1f5f9;--text:#0f172a;--text-dim:#475569;--card:#ffffff;--border:#e2e8f0;--accent:#0891b2}
+    *{box-sizing:border-box}html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);color:var(--text);line-height:1.6;transition:background .4s}
+    a{color:var(--text);text-decoration:none}a:hover{color:var(--accent)}
     .container{width:min(1080px,92vw);margin:0 auto}
-    .skip{position:absolute;left:-9999px}
-    .skip:focus{left:12px;top:12px;background:#000;padding:8px 12px;border-radius:8px;z-index:999}
-
-    header{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);
-      backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(11,18,32,.8)}
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 0;flex-wrap:wrap}
-    .logo-wrap{display:inline-flex;align-items:center;gap:12px;margin-left:-4px}
-    .logo-img{height:60px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.35))}
+    header{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);background:rgba(11,18,32,.9)}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;flex-wrap:wrap}
+    .logo-img{height:56px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.35))}
     nav{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-    nav a{color:var(--text-dim);padding:6px 2px;font-weight:500} 
+    nav a{color:var(--text-dim);padding:6px 2px;font-weight:500}
     nav a.active{color:var(--accent);font-weight:700;position:relative}
     nav a.active::after{content:'';position:absolute;bottom:-9px;left:0;right:0;height:3px;background:var(--accent);border-radius:2px}
-
-    /* Theme toggle */
-    #theme-toggle{background:none;border:none;font-size:1.4rem;cursor:pointer;opacity:.8}
+    #theme-toggle{background:none;border:none;font-size:1.6rem;cursor:pointer;opacity:.85}
     #theme-toggle:hover{opacity:1;transform:scale(1.1)}
 
-    /* Hero */
     .hero-wrap{position:relative;isolation:isolate;border-bottom:1px solid var(--border)}
-    .hero-media{
-      position:relative;aspect-ratio:16/9;max-height:62vh;overflow:hidden;background:#0d1626
-    }
-    .hero-media img,.hero-media video{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.78)}
-    .hero-overlay{
-      position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,18,32,.25),rgba(11,18,32,.85));
-      pointer-events:none
-    }
-    .hero-content{
-      position:relative;margin-top:-110px;padding:0 0 32px;z-index:2
-    }
-    .hero-card{
-      margin:0 auto;max-width:980px;border:1px solid var(--border);border-radius:20px;background:var(--card);
-      padding:28px 32px;box-shadow:var(--shadow);backdrop-filter:blur(8px)
-    }
+    .hero-media{position:relative;aspect-ratio:16/9;max-height:62vh;overflow:hidden;background:#0d1626}
+    .hero-media img{width:100%;height:100%;object-fit:cover;filter:brightness(.78)}
+    .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,18,32,.25),rgba(11,18,32,.85));pointer-events:none}
+    .hero-content{position:relative;margin-top:-110px;padding:0 0 32px;z-index:2}
+    .hero-card{margin:0 auto;max-width:980px;border:1px solid var(--border);border-radius:20px;background:var(--card);padding:28px 32px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
     .hero-card h1{margin:0 0 10px;font-size:2.4rem}
-    .hero-card p{margin:0 0 18px;color:var(--text-dim);font-size:1.1rem}
-    .cta{display:flex;gap:14px;flex-wrap:wrap}
-    .cta .btn{flex:0 0 auto;font-weight:600}
+    .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px}
+    .btn{padding:14px 28px;border-radius:12px;background:var(--orange);color:#000;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(255,149,0,.4);transition:.2s;font-size:1.1rem}
+    .btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(255,149,0,.5)}
+    .btn.primary{background:#163049;border:1px solid #2aa198}
 
-    /* Buttons */
-    .btn{display:inline-block;padding:12px 20px;border-radius:12px;border:1px solid var(--border);
-      background:#0e1627;color:var(--text);text-align:center;cursor:pointer;transition:.2s all;
-      font-weight:500;box-shadow:0 2px 6px rgba(0,0,0,.2)}
-    .btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.3)}
-    .btn.primary{background:linear-gradient(180deg,#0f2230,#0b1b29);border-color:#163049}
-    .btn.orange{background:var(--orange);color:#000;border:none}
-    .btn.ghost{background:transparent;border-color:var(--accent)}
-    .muted{color:var(--text-dim)}
-
-    /* Layout */
     .section{padding:40px 0}
-    .anchor-spacer{scroll-margin-top:90px}
     .grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
-    .card{
-      border:1px solid var(--border);border-radius:20px;background:var(--card);
-      padding:24px;box-shadow:var(--shadow);transition:var(--vibe);
-      opacity:0;transform:translateY(30px)
-    }
+    .card{border:1px solid var(--border);border-radius:20px;background:var(--card);padding:24px;box-shadow:var(--shadow);transition:.4s;opacity:0;transform:translateY(30px)}
     .card.visible{opacity:1;transform:none}
-    .card h2{margin:0 0 10px;font-size:1.4rem}
-    .card h3{margin:0 0 8px;font-size:1.2rem}
-    .kv{display:grid;gap:10px;grid-template-columns:28px 1fr;align-items:start}
-    .kv i{font-size:1.5rem}
+    .kv{display:grid;gap:10px;grid-template-columns:32px 1fr;align-items:start}
+    .kv i{font-size:1.8rem}
 
-    /* Timeline */
     .timeline{display:grid;gap:16px}
     .titem{display:grid;grid-template-columns:130px 1fr;gap:16px;align-items:start}
     .tdate{font-weight:700;color:var(--accent);font-size:1.1rem}
     .tline{border-left:3px solid var(--accent);padding-left:16px;position:relative}
-    .tline::before{content:'';position:absolute;left:-8px;top:0;width:13px;height:13px;background:var(--accent);border-radius:50%;border:3px solid var(--bg-2)}
+    .tline::before{content:'';position:absolute;left:-8.5px;top:2px;width:14px;height:14px;background:var(--bg-2);border:3px solid var(--accent);border-radius:50%}
 
-    /* Partner strip */
-    .strip{display:flex;gap:24px;flex-wrap:wrap;align-items:center;justify-content:center;opacity:.9;padding:20px 0}
-    .strip img{height:42px;filter:grayscale(100%) brightness(110%);transition:.4s;object-fit:contain}
+    .strip{display:flex;gap:24px;flex-wrap:wrap;align-items:center;justify-content:center;padding:20px 0}
+    .strip img{height:42px;filter:grayscale(100%) brightness(110%);transition:.4s}
     .strip img:hover{filter:none;transform:scale(1.15)}
 
-    /* Floating calc button */
-    #calc-float{position:fixed;bottom:24px;right:24px;z-index:100;background:var(--orange);color:#000;
-      width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-      font-size:2rem;box-shadow:0 8px 25px rgba(255,149,0,.4);cursor:pointer;transition:.3s}
+    #calc-float{position:fixed;bottom:24px;right:24px;z-index:100;background:var(--orange);color:#000;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.4rem;box-shadow:0 8px 25px rgba(255,149,0,.4);cursor:pointer;transition:.3s}
     #calc-float:hover{transform:scale(1.1) rotate(15deg)}
-    #calc-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center}
-    #calc-overlay.visible{display:flex}
-    #calc-panel{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;max-width:420px;width:90%;
-      box-shadow:0 20px 50px rgba(0,0,0,.5)}
 
-    footer{border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:14px;padding:24px 0;margin-top:20px}
+    footer{border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:14px;padding:24px 0}
 
-    /* Light mode tweaks */
     .light .hero-overlay{background:linear-gradient(180deg,rgba(248,250,252,.1),rgba(248,250,252,.7))}
     .light header{background:rgba(248,250,252,.9)}
   </style>
@@ -143,7 +80,7 @@
   <header>
     <div class="container nav">
       <a href="/" class="logo-wrap" aria-label="ACI WV Home">
-        <img class="logo-img" src="/assets/aciwv_logo_body.png?v=5" alt="ACI West Virginia" height="60" width="60" decoding="async" />
+        <img class="logo-img" src="/assets/aciwv_logo_body.png?v=5" alt="ACI West Virginia" height="56" width="56" decoding="async" />
       </a>
       <nav aria-label="Primary">
         <a href="/" class="active">Home</a>
@@ -153,19 +90,13 @@
         <a href="#verify">Verify</a>
         <a href="#contact">Contact</a>
       </nav>
-      <button id-theme-toggle aria-label="Toggle light/dark mode">Toggle Theme</button>
+      <button id="theme-toggle" aria-label="Toggle light/dark mode">🌙</button>
     </div>
   </header>
 
-  <!-- HERO — YOUR VIDEO BLOCK UNTOUCHED -->
+  <!-- HERO -->
   <div class="hero-wrap">
     <div class="hero-media" aria-hidden="true">
-      <!-- YOUR VIDEO GOES HERE WHEN READY -->
-      <!--
-      <video autoplay muted loop playsinline preload="metadata" poster="/assets/hero_poster.jpg">
-        <source src="/assets/hero_concrete_bridge.mp4" type="video/mp4">
-      </video>
-      -->
       <img src="/assets/aciwv_logo_body.png?v=5" alt="" loading="eager" style="opacity:.06;object-position:center;filter:blur(2px);">
       <div class="hero-overlay"></div>
     </div>
@@ -174,42 +105,21 @@
       <section class="hero-card">
         <h1>ACI West Virginia Interest Group</h1>
         <p>Connecting inspectors, technicians, engineers, producers, contractors, educators, and students to advance concrete knowledge, quality, and certification across West Virginia.</p>
-        <div class="cta" role="group">
+        <div class="cta">
+          <a class="btn" href="https://forms.gle/oMRrHjgExBBw3dXk8" target="_blank">Join FREE (2 min)</a>
           <a class="btn primary" href="/wvdoh.html">WVDOH Info Corner</a>
-          <a class="btn" href="/calculators/">Concrete Calculators</a>
-          <a class="btn orange" href="https://forms.gle/oMRrHjgExBBw3dXk8" target="_blank">Join FREE (2 min)</a>
         </div>
       </section>
     </div>
   </div>
 
   <main id="main" class="container">
-
     <!-- Value Props -->
-    <section class="section" aria-labelledby="value-props">
-      <h2 id="value-props" class="visually-hidden">Why Join</h2>
+    <section class="section">
       <div class="grid">
-        <article class="card kv">
-          <i>Compass</i>
-          <div>
-            <h3>Connect Statewide</h3>
-            <p class="muted">Contractors, DOT, labs, suppliers, academia — one network.</p>
-          </div>
-        </article>
-        <article class="card kv">
-          <i>Book</i>
-          <div>
-            <h3>Instant Resources</h3>
-            <p class="muted">ACI + WVDOH verification, specs, field tools — zero digging.</p>
-          </div>
-        </article>
-        <article class="card kv">
-          <i>Building</i>
-          <div>
-            <h3>Real Events</h3>
-            <p class="muted">Plant tours, demos, lunch-and-learns starting Jan 2026.</p>
-          </div>
-        </article>
+        <article class="card kv"><i>🧭</i><div><h3>Connect Statewide</h3><p class="muted">One network for everyone in WV concrete.</p></div></article>
+        <article class="card kv"><i>📚</i><div><h3>Instant Resources</h3><p class="muted">Verification, specs, calculators — no digging.</p></div></article>
+        <article class="card kv"><i>🏗️</i><div><h3>Real Events</h3><p class="muted">Plant tours & demos starting Jan 2026.</p></div></article>
       </div>
     </section>
 
@@ -218,106 +128,58 @@
       <div class="grid">
         <article class="card">
           <h2>Verify ACI Certification</h2>
-          <p class="muted">Official ACI lookup — always current.</p>
-          <p><a class="btn" href="https://www.concrete.org/certification/verifyacertification.aspx?d=Ask" target="_blank" rel="noopener">Open ACI Verify</a></p>
+          <p><a class="btn" href="https://www.concrete.org/certification/verifyacertification.aspx" target="_blank" rel="noopener">Open ACI Verify</a></p>
         </article>
         <article class="card">
           <h2>WVDOH Tech Directory</h2>
-          <p class="muted">Every certified tech in the state.</p>
-          <p><a class="btn" href="https://webapps.transportation.wv.gov/TechnicianCertificationDirectory" target="_blank" rel="noopener">Open WVDOH Directory</a></p>
+          <p><a class="btn" href="https://webapps.transportation.wv.gov/TechnicianCertificationDirectory" target="_blank" rel="noopener">Open Directory</a></p>
         </article>
       </div>
     </section>
 
     <!-- Who Should Join -->
-    <section class="section" aria-labelledby="audiences">
-      <h2 id="audiences">Who Should Join?</h2>
+    <section class="section">
+      <h2>Who Should Join?</h2>
       <div class="grid">
-        <article class="card">
-          <h3>Contractors &amp; Producers</h3>
-          <p class="muted">Host demos, find certified techs, shape the future.</p>
-          <p><a class="btn ghost" href="#join">Get Involved</a></p>
-        </article>
-        <article class="card">
-          <h3>Field &amp; Lab Techs</h3>
-          <p class="muted">Level-up skills, get recert alerts, expand your network.</p>
-          <p><a class="btn ghost" href="#join">Add Your Name</a></p>
-        </article>
-        <article class="card">
-          <h3>Engineers &amp; Inspectors</h3>
-          <p class="muted">Stay ahead on specs, collaborate statewide.</p>
-          <p><a class="btn ghost" href="#join">Join the List</a></p>
-        </article>
-        <article class="card">
-          <h3>Students &amp; Educators</h3>
-          <p class="muted">Mentorship, jobs, real-world projects.</p>
-          <p><a class="btn ghost" href="#join">Start Here</a></p>
-        </article>
+        <article class="card"><h3>Contractors & Producers</h3><p class="muted">Host demos, find certified techs.</p><p><a class="btn" href="#join">Get Involved</a></p></article>
+        <article class="card"><h3>Field & Lab Techs</h3><p class="muted">Level-up skills, recert alerts.</p><p><a class="btn" href="#join">Add Your Name</a></p></article>
+        <article class="card"><h3>Engineers & Inspectors</h3><p class="muted">Stay ahead on specs.</p><p><a class="btn" href="#join">Join the List</a></p></article>
+        <article class="card"><h3>Students & Educators</h3><p class="muted">Mentorship, jobs, projects.</p><p><a class="btn" href="#join">Start Here</a></p></article>
       </div>
     </section>
 
     <!-- Timeline -->
-    <section class="section" aria-labelledby="timeline">
-      <h2 id="timeline">What’s Next (2025–2028)</h2>
+    <section class="section">
+      <h2>What’s Next (2025–2028)</h2>
       <div class="card">
         <div class="timeline">
-          <div class="titem">
-            <div class="tdate">Dec 2025</div>
-            <div class="tline">
-              <strong>Statewide Outreach</strong>
-              <div class="muted">Collecting hosts for 2026 plant tours &amp; demos.</div>
-            </div>
-          </div>
-          <div class="titem">
-            <div class="tdate">Jan 2026</div>
-            <div class="tline">
-              <strong>Kickoff Call</strong>
-              <div class="muted">Virtual meeting — agenda dropping soon.</div>
-            </div>
-          </div>
-          <div class="titem">
-            <div class="tdate">2026–2027</div>
-            <div class="tline">
-              <strong>Events Roll Out</strong>
-              <div class="muted">Ready-mix tours, cylinder-break competitions, recert classes.</div>
-            </div>
-          </div>
-          <div class="titem">
-            <div class="tdate">2028 Goal</div>
-            <div class="tline">
-              <strong>Official ACI WV Chapter</strong>
-              <div class="muted">Full charter, board, scholarships, annual conference.</div>
-            </div>
-          </div>
+          <div class="titem"><div class="tdate">Dec 2025</div><div class="tline"><strong>Statewide Outreach</strong><div class="muted">Collecting hosts for 2026 tours.</div></div></div>
+          <div class="titem"><div class="tdate">Jan 2026</div><div class="tline"><strong>Kickoff Call</strong><div class="muted">Virtual meeting — agenda soon.</div></div></div>
+          <div class="titem"><div class="tdate">2026–2027</div><div class="tline"><strong>Events Roll Out</strong><div class="muted">Tours, competitions, recert classes.</div></div></div>
+          <div class="titem"><div class="tdate">2028 Goal</div><div class="tline"><strong>Official ACI WV Chapter</strong><div class="muted">Full charter, scholarships, conference.</div></div></div>
         </div>
       </div>
     </section>
 
-    <!-- Join CTA -->
+    <!-- Join -->
     <section id="join" class="section anchor-spacer">
       <article class="card" style="text-align:center">
-        <h2>Join>Be Part of WV Concrete History</h2>
-        <p class="muted" style="font-size:1.1rem;max-width:600px;margin:0 auto 20px">
-          Zero cost. Zero spam. Just first dibs on events, resources, and shaping the future of concrete in West Virginia.
-        </p>
-        <a class="btn orange" href="https://forms.gle/oMRrHjgExBBw3dXk8" target="_blank" style="font-size:1.2rem;padding:16px 32px">
-          Yes — Count Me In (2 minutes)
-        </a>
+        <h2>Be Part of WV Concrete History</h2>
+        <p class="muted" style="font-size:1.1rem;max-width:600px;margin:20px auto">Zero cost. Zero spam. Just events, resources, and shaping the future.</p>
+        <a class="btn" href="https://forms.gle/oMRrHjgExBBw3dXk8" target="_blank" style="font-size:1.3rem;padding:18px 40px">YES — Count Me In (2 min)</a>
       </article>
     </section>
 
     <!-- Partners -->
-    <section class="section" aria-labelledby="partners">
-      <h2 id="partners">Built With West Virginia’s Concrete Leaders</h2>
+    <section class="section">
+      <h2>Built With West Virginia’s Concrete Leaders</h2>
       <div class="card">
-        <p class="muted" style="margin-top:0;text-align:center">
-          Early supporters (more joining weekly)
-        </p>
-        <div class="strip logos">
-          <img src="https://via.placeholder.com/140x60/333/fff?text=Producer+1" alt="Producer 1" loading="lazy">
-          <img src="https://via.placeholder.com/140x60/333/fff?text=Contractor+Co" alt="Contractor" loading="lazy">
-          <img src="https://via.placeholder.com/140x60/333/fff?text=Lab+Inc" alt="Testing Lab" loading="lazy">
-          <img src="https://via.placeholder.com/140x60/333/fff?text=WVU+Tech" alt="WVU Tech" loading="lazy">
+        <p class="muted" style="text-align:center">Early supporters (more joining weekly)</p>
+        <div class="strip">
+          <img src="https://via.placeholder.com/140x50/333/fff?text=Producer+1" alt="Producer">
+          <img src="https://via.placeholder.com/140x50/333/fff?text=Contractor+Co" alt="Contractor">
+          <img src="https://via.placeholder.com/140x50/333/fff?text=Lab+Inc" alt="Lab">
+          <img src="https://via.placeholder.com/140x50/333/fff?text=WVU+Tech" alt="WVU Tech">
         </div>
       </div>
     </section>
@@ -326,81 +188,36 @@
     <section id="contact" class="section anchor-spacer">
       <article class="card">
         <h2>Contact</h2>
-        <p class="muted">Questions? Ideas? Want to host a tour?<br>We answer every email within 24 hours.</p>
-        <p><a class="btn" href="mailto:info@concrete-wv.org">info@concrete-wv.org</a></p>
+        <p class="muted">Questions? Ideas? Want to host?<br>We answer every email in <24 hours.</p>
+        <p><a class="btn primary" href="mailto:info@concrete-wv.org">info@concrete-wv.org</a></p>
       </article>
     </section>
-
-    <p class="muted" style="text-align:center;margin-top:20px">
-      Pro tip: Add this site to your phone’s home screen → instant app, works offline.
-    </p>
   </main>
 
   <!-- Floating Calculator -->
-  <div id="calc-float" aria-label="Open concrete calculator">Calculator</div>
-  <div id="calc-overlay">
-    <div id="calc-panel">
-      <h3 style="margin-top:0;text-align:center">Quick Concrete Calc</h3>
-      <p class="muted" style="text-align:center">Volume • Yield • Slump Loss • More coming!</p>
-      <div style="display:grid;gap:12px">
-        <input type="number" id="length" placeholder="Length (ft)" style="padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-2)">
-        <input type="number" id="width" placeholder="Width (ft)">
-        <input type="number" id="depth" placeholder="Depth (in)">
-        <button class="btn primary" onclick="calcVolume()">Calculate Volume</button>
-        <p id="calc-result" style="font-weight:600;text-align:center;margin:10px 0"></p>
-      </div>
-      <button style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.5rem;cursor:pointer" onclick="document.getElementById('calc-overlay').classList.remove('visible')">Close</button>
-    </div>
-  </div>
+  <div id="calc-float" aria-label="Open calculator">🧮</div>
 
   <footer>
     © <span id="y"></span> ACI West Virginia Interest Group ·
-    <a href="/">Home</a> · <a href="/topics/">Topics</a> ·
-    <a href="/wvdoh.html">WVDOH</a> · <a href="/calculators/">Calculators</a>
+    <a href="/">Home</a> · <a href="/topics/">Topics</a> · <a href="/wvdoh.html">WVDOH</a> · <a href="/calculators/">Calculators</a>
   </footer>
 
   <script>
-    // Year
+    // Year + theme + animations + floating calc
     document.getElementById('y').textContent = new Date().getFullYear();
-
-    // Theme toggle
-    const toggle = document.getElementById('theme-toggle');
-    toggle.addEventListener('click', () => {
+    document.getElementById('theme-toggle').addEventListener('click', () => {
       document.body.classList.toggle('light');
-      toggle.textContent = document.body.classList.contains('light') ? 'Dark' : 'Light';
+      document.getElementById('theme-toggle').textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
     });
 
-    // Scroll animations
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) e.target.classList.add('visible');
-      });
-    }, {threshold: 0.1});
+    const observer = new IntersectionObserver(e => e.forEach(en => en.isIntersecting && en.target.classList.add('visible')), {threshold: 0.1});
     document.querySelectorAll('.card').forEach(c => observer.observe(c));
 
-    // Floating calculator
+    // Simple floating calc (you can expand later)
     document.getElementById('calc-float').addEventListener('click', () => {
-      document.getElementById('calc-overlay').classList.add('visible');
+      location.href = '/calculators/#volume';
     });
 
-    // Simple volume calc
-    function calcVolume() {
-      const l = parseFloat(document.getElementById('length').value) || 0;
-      const w = parseFloat(document.getElementById('width').value) || 0;
-      const d = parseFloat(document.getElementById('depth').value) || 0;
-      if (l && w && d) {
-        const cuft = l * w * (d/12);
-        const yards = cuft / 27;
-        const bags = Math.ceil(yards * 60 / 0.6); // 60lb bags
-        document.getElementById('calc-result').innerHTML = `
-          ${cuft.toFixed(1)} ft³<br>
-          ${yards.toFixed(2)} yd³<br>
-          ≈ ${bags} × 60 lb bags
-        `;
-      }
-    }
-
-    // PWA service worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(()=>{});
     }
