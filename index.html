@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ACI West Virginia Interest Group</title>
 
-  <link rel="icon" href="assets/aciwv_logo_favicon_256x256.png" type="image/png" />
+  <link rel="icon" href="/assets/aciwv_logo_favicon_256x256.png" type="image/png" />
   <link rel="canonical" href="https://concrete-wv.org/" />
   <meta name="theme-color" content="#0b1220" />
 
+  <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
 
+  <!-- SEO / Social -->
   <meta name="description" content="ACI West Virginia Interest Group — building a statewide community to advance concrete knowledge, quality, and certification." />
   <meta property="og:title" content="ACI West Virginia Interest Group" />
   <meta property="og:description" content="Advancing concrete knowledge, quality, and certification across West Virginia." />
@@ -21,10 +23,13 @@
   <meta name="twitter:card" content="summary_large_image" />
 
   <style>
-    :root{--bg:#0b1220;--bg-2:#0f172a;--border:#1f2a44;--text:#e6edf3;--text-dim:#b9c4d0;--accent:#2aa198;--card:#101828;--shadow:0 6px 18px rgba(0,0,0,.25);--orange:#ff9500}
-    .light{--bg:#f8fafc;--bg-2:#f1f5f9;--text:#0f172a;--text-dim:#475569;--card:#ffffff;--border:#e2e8f0;--accent:#0891b2}
-    *{box-sizing:border-box}html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);color:var(--text);line-height:1.6;transition:background .4s}
-    a{color:var(--text);text-decoration:none}a:hover{color:var(--accent)}
+    :root{
+      --bg:#0b1220; --bg-2:#0f172a; --border:#1f2a44; --text:#e6edf3; --text-dim:#b9c4d0;
+      --accent:#2aa198; --card:#101828; --shadow:0 6px 18px rgba(0,0,0,.25); --orange:#ff9500
+    }
+    .light{--bg:#f8fafc; --bg-2:#f1f5f9; --text:#0f172a; --text-dim:#475569; --card:#fff; --border:#e2e8f0; --accent:#0891b2}
+    *{box-sizing:border-box} html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);color:var(--text);line-height:1.6}
+    a{color:var(--text);text-decoration:none} a:hover{color:var(--accent)}
     .container{width:min(1080px,92vw);margin:0 auto}
     header{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);background:rgba(11,18,32,.9)}
     .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;flex-wrap:wrap}
@@ -38,7 +43,7 @@
 
     .hero-wrap{position:relative;isolation:isolate;border-bottom:1px solid var(--border)}
     .hero-media{position:relative;aspect-ratio:16/9;max-height:62vh;overflow:hidden;background:#0d1626}
-    .hero-media img{width:100%;height:100%;object-fit:cover;filter:brightness(.78)}
+    .hero-media video{width:100%;height:100%;object-fit:cover;filter:brightness(.78)}
     .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,18,32,.25),rgba(11,18,32,.85));pointer-events:none}
     .hero-content{position:relative;margin-top:-110px;padding:0 0 32px;z-index:2}
     .hero-card{margin:0 auto;max-width:980px;border:1px solid var(--border);border-radius:20px;background:var(--card);padding:28px 32px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
@@ -68,10 +73,19 @@
     #calc-float{position:fixed;bottom:24px;right:24px;z-index:100;background:var(--orange);color:#000;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.4rem;box-shadow:0 8px 25px rgba(255,149,0,.4);cursor:pointer;transition:.3s}
     #calc-float:hover{transform:scale(1.1) rotate(15deg)}
 
-    footer{border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:14px;padding:24px 0}
+    /* Audio toggle */
+    #audio-toggle{
+      position:fixed;bottom:24px;left:24px;z-index:100; width:56px;height:56px;border-radius:50%;
+      background:rgba(255,255,255,.14);backdrop-filter:blur(6px);border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;color:var(--text);
+      opacity:0; transform:translateY(10px); transition:.25s;
+    }
+    #audio-toggle.show{opacity:1; transform:none}
+    #audio-toggle.on{background:rgba(42,161,152,.25);border-color:#2aa198}
 
-    .light .hero-overlay{background:linear-gradient(180deg,rgba(248,250,252,.1),rgba(248,250,252,.7))}
+    footer{border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:14px;padding:24px 0}
     .light header{background:rgba(248,250,252,.9)}
+    .light .hero-overlay{background:linear-gradient(180deg,rgba(248,250,252,.1),rgba(248,250,252,.7))}
   </style>
 </head>
 <body>
@@ -94,10 +108,14 @@
     </div>
   </header>
 
-  <!-- HERO -->
+  <!-- HERO (video background) -->
   <div class="hero-wrap">
     <div class="hero-media" aria-hidden="true">
-      <img src="/assets/aciwv_logo_body.png?v=5" alt="" loading="eager" style="opacity:.06;object-position:center;filter:blur(2px);">
+      <video id="hero-video" autoplay muted loop playsinline preload="auto"
+             poster="/assets/aciwv_hero_1080p_loop.jpg">
+        <source src="/assets/aciwv_hero_1080p_loop.webm" type="video/webm">
+        <source src="/assets/aciwv_hero_1080p_loop.mp4"  type="video/mp4">
+      </video>
       <div class="hero-overlay"></div>
     </div>
 
@@ -188,7 +206,7 @@
     <section id="contact" class="section anchor-spacer">
       <article class="card">
         <h2>Contact</h2>
-        <p class="muted">Questions? Ideas? Want to host?<br>We answer every email in <24 hours.</p>
+        <p class="muted">Questions? Ideas? Want to host?<br>We answer every email in &lt;24 hours.</p>
         <p><a class="btn primary" href="mailto:info@concrete-wv.org">info@concrete-wv.org</a></p>
       </article>
     </section>
@@ -197,33 +215,68 @@
   <!-- Floating Calculator -->
   <div id="calc-float" aria-label="Open calculator">🧮</div>
 
+  <!-- Background Music (WV song) -->
+  <audio id="anthem" src="/assets/wv-song.mp3" preload="auto" loop></audio>
+  <button id="audio-toggle" class="" aria-label="Toggle site audio" title="Toggle audio">🔈</button>
+
   <footer>
     © <span id="y"></span> ACI West Virginia Interest Group ·
     <a href="/">Home</a> · <a href="/topics/">Topics</a> · <a href="/wvdoh.html">WVDOH</a> · <a href="/calculators/">Calculators</a>
   </footer>
 
   <script>
-    // Year + theme + animations + floating calc
+    // Year + theme
     document.getElementById('y').textContent = new Date().getFullYear();
-    document.getElementById('theme-toggle').addEventListener('click', () => {
+    const themeBtn = document.getElementById('theme-toggle');
+    themeBtn.addEventListener('click', () => {
       document.body.classList.toggle('light');
-      document.getElementById('theme-toggle').textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
+      themeBtn.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
     });
 
-    const observer = new IntersectionObserver(e => e.forEach(en => en.isIntersecting && en.target.classList.add('visible')), {threshold: 0.1});
-    document.querySelectorAll('.card').forEach(c => observer.observe(c));
+    // Animate cards on scroll
+    const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('visible')), {threshold: .1});
+    document.querySelectorAll('.card').forEach(c => io.observe(c));
 
-    // Simple floating calc (you can expand later)
-    document.getElementById('calc-float').addEventListener('click', () => {
-      location.href = '/calculators/#volume';
-    });
+    // Floating calc
+    document.getElementById('calc-float').addEventListener('click', () => location.href = '/calculators/#volume');
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(()=>{});
+    // Service worker (ignore errors locally)
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(()=>{}); }
+
+    // --- Audio autoplay with graceful fallback ---
+    const audio = document.getElementById('anthem');
+    const audioBtn = document.getElementById('audio-toggle');
+    audio.volume = 0.35;
+
+    function setBtn(on) {
+      audioBtn.classList.toggle('on', on);
+      audioBtn.textContent = on ? '🔊' : '🔈';
     }
+    function attemptPlay() {
+      return audio.play()
+        .then(() => { setBtn(true); audioBtn.classList.add('show'); })
+        .catch(() => { setBtn(false); audioBtn.classList.add('show'); });
+    }
+
+    // Try immediately; if blocked, show button and start on first interaction
+    attemptPlay();
+    const kick = () => { attemptPlay(); window.removeEventListener('pointerdown', kick); window.removeEventListener('keydown', kick); };
+    window.addEventListener('pointerdown', kick);
+    window.addEventListener('keydown', kick);
+
+    // Toggle on click
+    audioBtn.addEventListener('click', async () => {
+      if (audio.paused) { try { await audio.play(); setBtn(true); } catch(_){} }
+      else { audio.pause(); setBtn(false); }
+    });
+
+    // Keep hero video looping cleanly
+    const hv = document.getElementById('hero-video');
+    hv.addEventListener('ended', () => hv.play().catch(()=>{}));
   </script>
 </body>
 </html>
+
 
 
 
