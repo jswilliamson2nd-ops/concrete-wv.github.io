@@ -57,10 +57,24 @@
     .hero-text h1{font-size:clamp(2rem,8vw,4rem);margin:0 0 .4rem;line-height:1.1;font-weight:900}
     .hero-text p{font-size:1.35rem;font-weight:600;letter-spacing:.3px}
 
-    .next-event-bar{background:var(--orange);color:#000;text-align:center;position:sticky;top:0;z-index:49;padding:14px 20px 20px;box-shadow:0 4px 20px rgba(255,149,0,.4)}
-    .next-event-bar img{height:56px;position:absolute;left:50%;transform:translateX(-50%);top:-28px;filter:drop-shadow(0 6px 20px rgba(0,0,0,.6))}
-    .next-event-bar .inner{max-width:1200px;margin:0 auto;display:flex;justify-content:center;align-items:center;gap:20px;flex-wrap:wrap;font-weight:700;font-size:1.1rem}
-    .next-event-bar a.btn{background:#000;color:#fff;padding:0.7rem 1.4rem;font-size:1rem;border-radius:12px}
+    /* FIXED ORANGE BAR + LOGO */
+    .next-event-bar{
+      background:var(--orange);color:#000;text-align:center;position:sticky;top:0;z-index:49;
+      padding:26px 20px 20px;box-shadow:0 4px 20px rgba(255,149,0,.4);
+      margin-top:-1px;
+    }
+    .next-event-bar img{
+      height:72px;position:absolute;left:50%;transform:translateX(-50%);top:-36px;
+      filter:drop-shadow(0 8px 20px rgba(0,0,0,.5));
+    }
+    .next-event-bar .inner{
+      max-width:1200px;margin:0 auto;display:flex;justify-content:center;align-items:center;
+      gap:20px;flex-wrap:wrap;font-weight:700;font-size:1.1rem;
+    }
+    .next-event-bar a.btn{
+      background:#000;color:#fff;padding:0.8rem 1.6rem;font-size:1rem;border-radius:12px;
+      box-shadow:0 4px 15px rgba(0,0,0,.3);
+    }
 
     .intro{padding:24px 0 0}
     .intro-card{margin:0 auto;max-width:980px;border:1px solid var(--border);border-radius:20px;background:var(--card);padding:28px 32px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
@@ -74,8 +88,8 @@
     .grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
     .card{border:1px solid var(--border);border-radius:20px;background:var(--card);padding:24px;box-shadow:var(--shadow);transition:.4s;opacity:0;transform:translateY(30px)}
     .card.visible{opacity:1;transform:none}
-    .kv{display:grid;gap:12px;grid-template-columns:46px 1fr;align-items:start}
-    .kv span{font-size:2.4rem;line-height:1}
+    .kv{display:grid;gap:12px;grid-template-columns:48px 1fr;align-items:start}
+    .kv span{font-size:2.6rem;line-height:1}
 
     .timeline{display:grid;gap:16px}
     .titem{display:grid;grid-template-columns:130px 1fr;gap:16px;align-items:start}
@@ -84,12 +98,12 @@
     .tline::before{content:'';position:absolute;left:-8.5px;top:2px;width:14px;height:14px;background:var(--bg-2);border:3px solid var(--accent);border-radius:50%}
 
     .strip{display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center;padding:20px 0}
-    .pbadge{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;border:1px solid var(--border);
+    .pbadge{display:inline-flex;align-items:center;gap:12px;padding:14px 20px;border-radius:12px;border:1px solid var(--border);
       background:linear-gradient(180deg,var(--bg-2),rgba(0,0,0,.06));font-weight:600;color:var(--text);box-shadow:var(--shadow);
-      min-width:156px;justify-content:center;font-size:1.1rem}
-    .pbadge span:first-child{font-size:2rem}
+      min-width:170px;justify-content:center;font-size:1.15rem}
+    .pbadge span:first-child{font-size:2.4rem}
 
-    #calc-float{position:fixed;bottom:24px;right:24px;z-index:100;background:var(--orange);color:#000;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.6rem;box-shadow:0 8px 25px rgba(255,149,0,.4);cursor:pointer;transition:.3s}
+    #calc-float{position:fixed;bottom:24px;right:24px;z-index:100;background:var(--orange);color:#000;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.8rem;box-shadow:0 8px 25px rgba(255,149,0,.4);cursor:pointer;transition:.3s}
     #calc-float:hover{transform:scale(1.1) rotate(15deg)}
 
     #audio-toggle{position:fixed;bottom:24px;left:24px;z-index:100;width:56px;height:56px;border-radius:50%;
@@ -120,6 +134,7 @@
     </div>
   </header>
 
+  <!-- ORANGE BAR WITH PERFECT LOGO -->
   <div class="next-event-bar">
     <img src="/assets/aciwv_logo_body.png" alt="ACI WV">
     <div class="inner">
@@ -158,9 +173,9 @@
   <main id="main" class="container">
     <section class="section">
       <div class="grid">
-        <article class="card kv"><span>Compass</span><div><h3>Connect Statewide</h3><p class="muted">One network for everyone in WV concrete.</p></div></article>
-        <article class="card kv"><span>Books</span><div><h3>Instant Resources</h3><p class="muted">Verification, specs, calculators — no digging.</p></div></article>
-        <article class="card kv"><span>Construction</span><div><h3>Real Events</h3><p class="muted">Plant tours & demos starting Jan 2026.</p></div></article>
+        <article class="card kv"><span>🧭</span><div><h3>Connect Statewide</h3><p class="muted">One network for everyone in WV concrete.</p></div></article>
+        <article class="card kv"><span>📚</span><div><h3>Instant Resources</h3><p class="muted">Verification, specs, calculators — no digging.</p></div></article>
+        <article class="card kv"><span>🏗️</span><div><h3>Real Events</h3><p class="muted">Plant tours & demos starting Jan 2026.</p></div></article>
       </div>
     </section>
 
@@ -218,10 +233,10 @@
       <div class="card">
         <p class="muted" style="text-align:center">Early supporters (more joining weekly)</p>
         <div class="strip" role="list">
-          <div class="pbadge" role="listitem"><span>Factory</span><span>Producer</span></div>
-          <div class="pbadge" role="listitem"><span>Tools</span><span>Contractor</span></div>
-          <div class="pbadge" role="listitem"><span>Test Tube</span><span>Lab</span></div>
-          <div class="pbadge" role="listitem"><span>Graduation Cap</span><span>Student</span></div>
+          <div class="pbadge" role="listitem"><span>🏭</span><span>Producer</span></div>
+          <div class="pbadge" role="listitem"><span>🛠️</span><span>Contractor</span></div>
+          <div class="pbadge" role="listitem"><span>🧪</span><span>Lab</span></div>
+          <div class="pbadge" role="listitem"><span>🎓</span><span>Student</span></div>
         </div>
       </div>
     </section>
@@ -235,10 +250,10 @@
     </section>
   </main>
 
-  <div id="calc-float" aria-label="Open calculator">Tools</div>
+  <div id="calc-float" aria-label="Open calculator">🧰</div>
 
   <audio id="anthem" src="/assets/wv-song.mp3" preload="auto" loop></audio>
-  <button id="audio-toggle" aria-label="Toggle site audio" title="Toggle audio">Speaker Off</button>
+  <button id="audio-toggle" aria-label="Toggle site audio" title="Toggle audio">🔈</button>
 
   <footer>
     <p class="memorial">In memory of Larry George Buchheit · January 12, 1947 — January 27, 2025</p>
@@ -251,7 +266,7 @@
     const themeBtn = document.getElementById('theme-toggle');
     themeBtn.addEventListener('click', () => {
       document.body.classList.toggle('light');
-      themeBtn.textContent = document.body.classList.contains('light') ? 'Sun' : 'Moon';
+      themeBtn.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
     });
     const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('visible')), {threshold:.1});
     document.querySelectorAll('.card').forEach(c => io.observe(c));
@@ -261,7 +276,7 @@
     const audio = document.getElementById('anthem');
     const audioBtn = document.getElementById('audio-toggle');
     audio.volume = 0.35;
-    function setBtn(on){audioBtn.classList.toggle('on',on);audioBtn.textContent=on?'Speaker':'Speaker Off'}
+    function setBtn(on){audioBtn.classList.toggle('on',on);audioBtn.textContent=on?'🔊':'🔈'}
     function attemptPlay(){audio.play().then(()=>{setBtn(true);audioBtn.classList.add('show')}).catch(()=>{setBtn(false);audioBtn.classList.add('show')})}
     attemptPlay();
     const kick = () => {attemptPlay();window.removeEventListener('pointerdown',kick);window.removeEventListener('keydown',kick)};
