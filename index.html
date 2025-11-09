@@ -41,50 +41,26 @@
     #theme-toggle{background:none;border:none;font-size:1.6rem;cursor:pointer;opacity:.85}
     #theme-toggle:hover{opacity:1;transform:scale(1.1)}
 
-    .skip{
-      position:absolute;left:12px;top:-100px;z-index:60;
-      background:var(--card);border:1px solid var(--border);color:var(--text);
-      padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);transition:top .2s;
-    }
+    .skip{position:absolute;left:12px;top:-100px;z-index:60;background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);transition:top .2s}
     .skip:focus-visible{top:12px;outline:3px solid var(--accent)}
 
     .hero-wrap{position:relative;isolation:isolate;border-bottom:1px solid var(--border)}
     @media (min-width: 1100px) {
-      .hero-wrap { 
-        margin: 0 calc(-50vw + 50%);
-        width: 100vw;
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
-      }
+      .hero-wrap{margin:0 calc(-50vw + 50%);width:100vw;position:relative;left:50%;transform:translateX(-50%)}
     }
     .hero-media{position:relative;aspect-ratio:16/9;max-height:62vh;overflow:hidden;background:#0d1626}
-    @media (min-width: 1100px) {
-      .hero-media { aspect-ratio: 2.4/1; max-height:80vh; }
-    }
+    @media (min-width: 1100px){.hero-media{aspect-ratio:2.4/1;max-height:80vh}}
     .hero-media video{width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:brightness(.9)}
     .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,18,32,.15),rgba(11,18,32,.85));pointer-events:none}
 
-    .hero-text{
-      position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
-      text-align:center;color:white;text-shadow:0 2px 20px rgba(0,0,0,.9);z-index:2;max-width:90%;
-    }
+    .hero-text{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);text-align:center;color:white;text-shadow:0 2px 20px rgba(0,0,0,.9);z-index:2;max-width:90%}
     .hero-text h1{font-size:clamp(2rem,8vw,4rem);margin:0 0 .4rem;line-height:1.1;font-weight:900}
     .hero-text p{font-size:1.35rem;font-weight:600;letter-spacing:.3px}
 
-    .next-event-bar{
-      background:var(--orange);color:#000;text-align:center;position:sticky;top:0;z-index:49;
-      padding:14px 20px 20px;box-shadow:0 4px 20px rgba(255,149,0,.4);
-    }
-    .next-event-bar img{
-      height:56px;position:absolute;left:50%;transform:translateX(-50%);top:-28px;
-      filter:drop-shadow(0 6px 20px rgba(0,0,0,.6));
-    }
-    .next-event-bar .inner{
-      max-width:1200px;margin:0 auto;display:flex;justify-content:center;align-items:center;
-      gap:20px;flex-wrap:wrap;font-weight:700;font-size:1.1rem;
-    }
-    .next-event-bar a.btn{background:#000;color:#fff;padding:0.7rem 1.4rem;font-size:1rem;border-radius:12px;}
+    .next-event-bar{background:var(--orange);color:#000;text-align:center;position:sticky;top:0;z-index:49;padding:14px 20px 20px;box-shadow:0 4px 20px rgba(255,149,0,.4)}
+    .next-event-bar img{height:56px;position:absolute;left:50%;transform:translateX(-50%);top:-28px;filter:drop-shadow(0 6px 20px rgba(0,0,0,.6))}
+    .next-event-bar .inner{max-width:1200px;margin:0 auto;display:flex;justify-content:center;align-items:center;gap:20px;flex-wrap:wrap;font-weight:700;font-size:1.1rem}
+    .next-event-bar a.btn{background:#000;color:#fff;padding:0.7rem 1.4rem;font-size:1rem;border-radius:12px}
 
     .intro{padding:24px 0 0}
     .intro-card{margin:0 auto;max-width:980px;border:1px solid var(--border);border-radius:20px;background:var(--card);padding:28px 32px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
@@ -98,8 +74,8 @@
     .grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
     .card{border:1px solid var(--border);border-radius:20px;background:var(--card);padding:24px;box-shadow:var(--shadow);transition:.4s;opacity:0;transform:translateY(30px)}
     .card.visible{opacity:1;transform:none}
-    .kv{display:grid;gap:10px;grid-template-columns:42px 1fr;align-items:start}
-    .kv span{font-size:2.2rem;line-height:1}
+    .kv{display:grid;gap:12px;grid-template-columns:46px 1fr;align-items:start}
+    .kv span{font-size:2.4rem}
 
     .timeline{display:grid;gap:16px}
     .titem{display:grid;grid-template-columns:130px 1fr;gap:16px;align-items:start}
@@ -108,29 +84,23 @@
     .tline::before{content:'';position:absolute;left:-8.5px;top:2px;width:14px;height:14px;background:var(--bg-2);border:3px solid var(--accent);border-radius:50%}
 
     .strip{display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center;padding:20px 0}
-    .pbadge{
-      display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;border:1px solid var(--border);
+    .pbadge{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;border:1px solid var(--border);
       background:linear-gradient(180deg,var(--bg-2),rgba(0,0,0,.06));font-weight:600;color:var(--text);box-shadow:var(--shadow);
-      min-width:150px;justify-content:center;font-size:1.1rem;
-    }
-    .pbadge span:first-child{font-size:1.8rem}
+      min-width:156px;justify-content:center;font-size:1.1rem}
+    .pbadge span:first-child{font-size:2rem}
 
     #calc-float{position:fixed;bottom:24px;right:24px;z-index:100;background:var(--orange);color:#000;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.6rem;box-shadow:0 8px 25px rgba(255,149,0,.4);cursor:pointer;transition:.3s}
     #calc-float:hover{transform:scale(1.1) rotate(15deg)}
 
-    #audio-toggle{
-      position:fixed;bottom:24px;left:24px;z-index:100;width:56px;height:56px;border-radius:50%;
+    #audio-toggle{position:fixed;bottom:24px;left:24px;z-index:100;width:56px;height:56px;border-radius:50%;
       background:rgba(255,255,255,.14);backdrop-filter:blur(6px);border:1px solid var(--border);
       display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;color:var(--text);
-      opacity:0;transform:translateY(10px);transition:.25s;
-    }
+      opacity:0;transform:translateY(10px);transition:.25s}
     #audio-toggle.show{opacity:1;transform:none}
     #audio-toggle.on{background:rgba(42,161,152,.25);border-color:#2aa198}
 
     footer{border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:14px;padding:24px 0}
     .memorial{color:var(--text-dim);font-style:italic;font-size:1.05rem;margin-bottom:8px;opacity:1;letter-spacing:.3px}
-    .light header{background:rgba(248,250,252,.9)}
-    .light .hero-overlay{background:linear-gradient(180deg,rgba(248,250,252,.1),rgba(248,250,252,.8))}
   </style>
 </head>
 <body>
@@ -180,20 +150,22 @@
         <div class="cta">
           <a class="btn" href="https://forms.gle/oMRrHjgExBBw3dXk8" target="_blank" rel="noopener">Join FREE (2 min)</a>
           <a class="btn primary" href="/wvdoh.html">WVDOH Info Corner</a>
-       .intro-card</div>
+        </div>
       </section>
     </div>
   </div>
 
   <main id="main" class="container">
+    <!-- VALUE PROPS - REAL EMOJIS THAT WORK EVERYWHERE -->
     <section class="section">
       <div class="grid">
-        <article class="card kv"><span role="img" aria-label="compass">Compass</span><div><h3>Connect Statewide</h3><p class="muted">One network for everyone in WV concrete.</p></div></article>
-        <article class="card kv"><span role="img" aria-label="books">Books</span><div><h3>Instant Resources</h3><p class="muted">Verification, specs, calculators — no digging.</p></div></article>
-        <article class="card kv"><span role="img" aria-label="construction">Construction</span><div><h3>Real Events</h3><p class="muted">Plant tours & demos starting Jan 2026.</p></div></article>
+        <article class="card kv"><span>Compass</span><div><h3>Connect Statewide</h3><p class="muted">One network for everyone in WV concrete.</p></div></article>
+        <article class="card kv"><span>Books</span><div><h3>Instant Resources</h3><p class="muted">Verification, specs, calculators — no digging.</p></div></article>
+        <article class="card kv"><span>Construction</span><div><h3>Real Events</h3><p class="muted">Plant tours & demos starting Jan 2026.</p></div></article>
       </div>
     </section>
 
+    <!-- VERIFY -->
     <section id="verify" class="section anchor-spacer">
       <div class="grid">
         <article class="card">
@@ -207,6 +179,7 @@
       </div>
     </section>
 
+    <!-- WHO SHOULD JOIN -->
     <section class="section">
       <h2>Who Should Join?</h2>
       <div class="grid">
@@ -217,6 +190,7 @@
       </div>
     </section>
 
+    <!-- TIMELINE -->
     <section class="section">
       <h2>What’s Next (2025–2028)</h2>
       <div class="card">
@@ -229,11 +203,12 @@
       </div>
     </section>
 
+    <!-- JOIN + STINGER BRIBE -->
     <section id="join" class="section anchor-spacer">
       <article class="card" style="text-align:center">
         <h2>Be Part of WV Concrete History</h2>
         <p class="muted" style="font-size:1.1rem;max-width:600px;margin:20px auto">Zero cost. Zero spam. Just events, resources, and shaping the future.</p>
-        <p style="font-size:1.15rem;background:#ff9500;color:#000;padding:14px 24px;border-radius:12px;display:inline-block;max-width:90%;">
+        <p style="font-size:1.15rem;background:#ff9500;color:#000;padding:14px 24px;border-radius:12px;display:inline-block;max-width:90%">
           First 100 members get a FREE limited-edition ACI-WV hard-hat sticker (mailed Jan 2026)
         </p>
         <a class="btn" href="https://forms.gle/oMRrHjgExBBw3dXk8" target="_blank" rel="noopener noreferrer" 
@@ -243,6 +218,7 @@
       </article>
     </section>
 
+    <!-- PARTNERS - REAL EMOJIS THAT WORK EVERYWHERE -->
     <section class="section">
       <h2>Built With West Virginia’s Concrete Leaders</h2>
       <div class="card">
@@ -256,6 +232,7 @@
       </div>
     </section>
 
+    <!-- CONTACT -->
     <section id="contact" class="section anchor-spacer">
       <article class="card">
         <h2>Contact</h2>
@@ -283,30 +260,22 @@
       document.body.classList.toggle('light');
       themeBtn.textContent = document.body.classList.contains('light') ? 'Sun' : 'Moon';
     });
-    const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('visible')), {threshold: .1});
+    const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('visible')), {threshold:.1});
     document.querySelectorAll('.card').forEach(c => io.observe(c));
     document.getElementById('calc-float').addEventListener('click', () => location.href = '/calculators/#volume');
-    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(()=>{}); }
+    if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{})}
 
     const audio = document.getElementById('anthem');
     const audioBtn = document.getElementById('audio-toggle');
     audio.volume = 0.35;
-    function setBtn(on) {
-      audioBtn.classList.toggle('on', on);
-      audioBtn.textContent = on ? 'Speaker' : 'Speaker Off';
-    }
-    function attemptPlay() {
-      return audio.play()
-        .then(() => { setBtn(true); audioBtn.classList.add('show'); })
-        .catch(() => { setBtn(false); audioBtn.classList.add('show'); });
-    }
+    function setBtn(on){audioBtn.classList.toggle('on',on);audioBtn.textContent=on?'Speaker':'Speaker Off'}
+    function attemptPlay(){audio.play().then(()=>{setBtn(true);audioBtn.classList.add('show')}).catch(()=>{setBtn(false);audioBtn.classList.add('show')})}
     attemptPlay();
-    const kick = () => { attemptPlay(); window.removeEventListener('pointerdown', kick); window.removeEventListener('keydown', kick); };
-    window.addEventListener('pointerdown', kick);
-    window.addEventListener('keydown', kick);
+    const kick = () => {attemptPlay();window.removeEventListener('pointerdown',kick);window.removeEventListener('keydown',kick)};
+    window.addEventListener('pointerdown',kick);window.addEventListener('keydown',kick);
     audioBtn.addEventListener('click', async () => {
-      if (audio.paused) { try { await audio.play(); setBtn(true); } catch(_){} }
-      else { audio.pause(); setBtn(false); }
+      if(audio.paused){try{await audio.play();setBtn(true)}catch(_){}}
+      else{audio.pause();setBtn(false)}
     });
     const hv = document.getElementById('hero-video');
     hv.addEventListener('ended', () => hv.play().catch(()=>{}));
