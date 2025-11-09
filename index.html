@@ -28,12 +28,17 @@
       --accent:#2aa198; --card:#101828; --shadow:0 6px 18px rgba(0,0,0,.25); --orange:#ff9500
     }
     .light{--bg:#f8fafc; --bg-2:#f1f5f9; --text:#0f172a; --text-dim:#475569; --card:#fff; --border:#e2e8f0; --accent:#0891b2}
-    *{box-sizing:border-box} html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);color:var(--text);line-height:1.6}
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);color:var(--text);line-height:1.6}
     a{color:var(--text);text-decoration:none} a:hover{color:var(--accent)}
     .container{width:min(1080px,92vw);margin:0 auto}
+
+    /* Header */
     header{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);background:rgba(11,18,32,.9)}
     .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;flex-wrap:wrap}
-    .logo-img{height:56px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.35))}
+    .logo-img{height:84px; /* bigger logo */
+      filter:drop-shadow(0 4px 12px rgba(0,0,0,.35))}
+    @media (max-width:640px){ .logo-img{height:56px} }
     nav{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
     nav a{color:var(--text-dim);padding:6px 2px;font-weight:500}
     nav a.active{color:var(--accent);font-weight:700;position:relative}
@@ -41,17 +46,28 @@
     #theme-toggle{background:none;border:none;font-size:1.6rem;cursor:pointer;opacity:.85}
     #theme-toggle:hover{opacity:1;transform:scale(1.1)}
 
+    /* Skip link: visually hidden until focus */
+    .skip{
+      position:absolute;left:12px;top:-100px;z-index:60;
+      background:var(--card);border:1px solid var(--border);color:var(--text);
+      padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);transition:top .2s;
+    }
+    .skip:focus-visible{top:12px;outline:3px solid var(--accent)}
+
+    /* HERO (video only, no overlay card) */
     .hero-wrap{position:relative;isolation:isolate;border-bottom:1px solid var(--border)}
     .hero-media{position:relative;aspect-ratio:16/9;max-height:62vh;overflow:hidden;background:#0d1626}
-    .hero-media video{width:100%;height:100%;object-fit:cover;filter:brightness(.78)}
-    .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,18,32,.25),rgba(11,18,32,.85));pointer-events:none}
-    .hero-content{position:relative;margin-top:-110px;padding:0 0 32px;z-index:2}
-    .hero-card{margin:0 auto;max-width:980px;border:1px solid var(--border);border-radius:20px;background:var(--card);padding:28px 32px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
-    .hero-card h1{margin:0 0 10px;font-size:2.4rem}
+    .hero-media video{width:100%;height:100%;object-fit:cover;filter:brightness(.9)}
+    .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,18,32,.15),rgba(11,18,32,.75));pointer-events:none}
+
+    /* Intro card now lives BELOW the video */
+    .intro{padding:24px 0 0}
+    .intro-card{margin:0 auto;max-width:980px;border:1px solid var(--border);border-radius:20px;background:var(--card);padding:28px 32px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
+    .intro-card h1{margin:0 0 10px;font-size:2.2rem}
     .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px}
-    .btn{padding:14px 28px;border-radius:12px;background:var(--orange);color:#000;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(255,149,0,.4);transition:.2s;font-size:1.1rem}
+    .btn{padding:14px 28px;border-radius:12px;background:var(--orange);color:#000;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(255,149,0,.4);transition:.2s;font-size:1.05rem}
     .btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(255,149,0,.5)}
-    .btn.primary{background:#163049;border:1px solid #2aa198}
+    .btn.primary{background:#163049;border:1px solid #2aa198;color:var(--text)}
 
     .section{padding:40px 0}
     .grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
@@ -66,9 +82,17 @@
     .tline{border-left:3px solid var(--accent);padding-left:16px;position:relative}
     .tline::before{content:'';position:absolute;left:-8.5px;top:2px;width:14px;height:14px;background:var(--bg-2);border:3px solid var(--accent);border-radius:50%}
 
-    .strip{display:flex;gap:24px;flex-wrap:wrap;align-items:center;justify-content:center;padding:20px 0}
-    .strip img{height:42px;filter:grayscale(100%) brightness(110%);transition:.4s}
-    .strip img:hover{filter:none;transform:scale(1.15)}
+    /* Partners: icon badges instead of images */
+    .strip{display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center;padding:20px 0}
+    .pbadge{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:10px 14px;border-radius:12px;border:1px solid var(--border);
+      background:linear-gradient(180deg,var(--bg-2),rgba(0,0,0,.06));
+      font-weight:600;color:var(--text);box-shadow:var(--shadow);
+      min-width:140px;justify-content:center;
+    }
+    .pbadge .ico{font-size:1.2rem;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+    .pbadge:hover{transform:translateY(-2px);transition:.2s}
 
     #calc-float{position:fixed;bottom:24px;right:24px;z-index:100;background:var(--orange);color:#000;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.4rem;box-shadow:0 8px 25px rgba(255,149,0,.4);cursor:pointer;transition:.3s}
     #calc-float:hover{transform:scale(1.1) rotate(15deg)}
@@ -84,6 +108,7 @@
     #audio-toggle.on{background:rgba(42,161,152,.25);border-color:#2aa198}
 
     footer{border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:14px;padding:24px 0}
+    .memorial{color:var(--text-dim);font-size:.95rem;margin-bottom:8px;opacity:.9;letter-spacing:.3px}
     .light header{background:rgba(248,250,252,.9)}
     .light .hero-overlay{background:linear-gradient(180deg,rgba(248,250,252,.1),rgba(248,250,252,.7))}
   </style>
@@ -94,7 +119,7 @@
   <header>
     <div class="container nav">
       <a href="/" class="logo-wrap" aria-label="ACI WV Home">
-        <img class="logo-img" src="/assets/aciwv_logo_body.png?v=5" alt="ACI West Virginia" height="56" width="56" decoding="async" />
+        <img class="logo-img" src="/assets/aciwv_logo_body.png?v=5" alt="ACI West Virginia" height="84" width="84" decoding="async" />
       </a>
       <nav aria-label="Primary">
         <a href="/" class="active">Home</a>
@@ -108,8 +133,8 @@
     </div>
   </header>
 
-  <!-- HERO (video background) -->
-  <div class="hero-wrap">
+  <!-- HERO (video only) -->
+  <div class="hero-wrap" aria-label="Bridge concreting footage">
     <div class="hero-media" aria-hidden="true">
       <video id="hero-video" autoplay muted loop playsinline preload="auto"
              poster="/assets/aciwv_hero_1080p_loop.jpg">
@@ -118,13 +143,16 @@
       </video>
       <div class="hero-overlay"></div>
     </div>
+  </div>
 
-    <div class="container hero-content">
-      <section class="hero-card">
+  <!-- Intro card BELOW the video -->
+  <div class="intro">
+    <div class="container">
+      <section class="intro-card">
         <h1>ACI West Virginia Interest Group</h1>
         <p>Connecting inspectors, technicians, engineers, producers, contractors, educators, and students to advance concrete knowledge, quality, and certification across West Virginia.</p>
         <div class="cta">
-          <a class="btn" href="https://forms.gle/oMRrHjgExBBw3dXk8" target="_blank">Join FREE (2 min)</a>
+          <a class="btn" href="https://forms.gle/oMRrHjgExBBw3dXk8" target="_blank" rel="noopener">Join FREE (2 min)</a>
           <a class="btn primary" href="/wvdoh.html">WVDOH Info Corner</a>
         </div>
       </section>
@@ -135,9 +163,9 @@
     <!-- Value Props -->
     <section class="section">
       <div class="grid">
-        <article class="card kv"><i>🧭</i><div><h3>Connect Statewide</h3><p class="muted">One network for everyone in WV concrete.</p></div></article>
-        <article class="card kv"><i>📚</i><div><h3>Instant Resources</h3><p class="muted">Verification, specs, calculators — no digging.</p></div></article>
-        <article class="card kv"><i>🏗️</i><div><h3>Real Events</h3><p class="muted">Plant tours & demos starting Jan 2026.</p></div></article>
+        <article class="card kv"><i aria-hidden="true">🧭</i><div><h3>Connect Statewide</h3><p class="muted">One network for everyone in WV concrete.</p></div></article>
+        <article class="card kv"><i aria-hidden="true">📚</i><div><h3>Instant Resources</h3><p class="muted">Verification, specs, calculators — no digging.</p></div></article>
+        <article class="card kv"><i aria-hidden="true">🏗️</i><div><h3>Real Events</h3><p class="muted">Plant tours & demos starting Jan 2026.</p></div></article>
       </div>
     </section>
 
@@ -184,20 +212,20 @@
       <article class="card" style="text-align:center">
         <h2>Be Part of WV Concrete History</h2>
         <p class="muted" style="font-size:1.1rem;max-width:600px;margin:20px auto">Zero cost. Zero spam. Just events, resources, and shaping the future.</p>
-        <a class="btn" href="https://forms.gle/oMRrHjgExBBw3dXk8" target="_blank" style="font-size:1.3rem;padding:18px 40px">YES — Count Me In (2 min)</a>
+        <a class="btn" href="https://forms.gle/oMRrHjgExBBw3dXk8" target="_blank" rel="noopener" style="font-size:1.2rem;padding:18px 40px">YES — Count Me In (2 min)</a>
       </article>
     </section>
 
-    <!-- Partners -->
+    <!-- Partners (icon badges, no images) -->
     <section class="section">
       <h2>Built With West Virginia’s Concrete Leaders</h2>
       <div class="card">
         <p class="muted" style="text-align:center">Early supporters (more joining weekly)</p>
-        <div class="strip">
-          <img src="https://via.placeholder.com/140x50/333/fff?text=Producer+1" alt="Producer">
-          <img src="https://via.placeholder.com/140x50/333/fff?text=Contractor+Co" alt="Contractor">
-          <img src="https://via.placeholder.com/140x50/333/fff?text=Lab+Inc" alt="Lab">
-          <img src="https://via.placeholder.com/140x50/333/fff?text=WVU+Tech" alt="WVU Tech">
+        <div class="strip" role="list">
+          <div class="pbadge" role="listitem"><span class="ico" aria-hidden="true">🏭</span><span>Producer</span></div>
+          <div class="pbadge" role="listitem"><span class="ico" aria-hidden="true">🛠️</span><span>Contractor</span></div>
+          <div class="pbadge" role="listitem"><span class="ico" aria-hidden="true">🧪</span><span>Lab</span></div>
+          <div class="pbadge" role="listitem"><span class="ico" aria-hidden="true">🎓</span><span>Student</span></div>
         </div>
       </div>
     </section>
@@ -220,6 +248,7 @@
   <button id="audio-toggle" class="" aria-label="Toggle site audio" title="Toggle audio">🔈</button>
 
   <footer>
+    <p class="memorial">In memory of Larry George Buchheit · January 12, 1947 — January 27, 2025</p>
     © <span id="y"></span> ACI West Virginia Interest Group ·
     <a href="/">Home</a> · <a href="/topics/">Topics</a> · <a href="/wvdoh.html">WVDOH</a> · <a href="/calculators/">Calculators</a>
   </footer>
@@ -276,6 +305,7 @@
   </script>
 </body>
 </html>
+
 
 
 
