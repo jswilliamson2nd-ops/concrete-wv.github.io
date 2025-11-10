@@ -825,105 +825,161 @@
     compute();
   }
 
-  // ====================== INSULATION (UPGRADED + REQUIRED R) ======================
-  function renderInsulation(params) {
-    titleNode.textContent = "Insulation / Blanket Estimator";
-    const s = {
-      area_ft2: "",
-      dT_F: "40",
-      R_value: "5",       // per layer
-      layers: "1",        // stacked layers
-      wet_pct: "0",       // performance reduction (%)
-      overlap_pct: "8",   // lap/waste (%)
-      blanket_w: "6",
-      blanket_l: "25",
-      target_Q_btu_hr: "" // target max heat loss (BTU/hr)
-    };
-    Object.assign(s, state.insulation || {});
-    Object.keys(s).forEach(k => params.has(k) && (s[k] = params.get(k)));
+// ====================== INSULATION (HOLD ABOVE MIN TEMP) ======================
+function renderInsulation(params) {
+  titleNode.textContent = "Insulation / Blankets — Hold Above Minimum Temp";
+  const s = {
+    area_ft2: "",
+    thickness_ft: "1.0",     // slab/wall thickness (ft)
+    T0_F: "65",              // initial concrete temp at placement/cover (°F)
+    Ta_F: "25",              // ambient under blankets (°F)
+    hold_h: "12",            // hours to hold above Tmin
+    Tmin_F: "50",            // minimum allowed concrete temp (°F)
 
-    mount.innerHTML = `
-      <div class="input-row">
-        ${L("Area (ft²)","in_area",`type="number" step="0.1" value="${s.area_ft2}"`)}
-        ${L("ΔT (°F)","in_dt",`type="number" step="0.1" value="${s.dT_F}"`)}
-        ${L("Blanket R (per layer)","in_R",`type="number" step="0.1" value="${s.R_value}"`)}
-      </div>
-      <div class="input-row">
-        ${L("Layers (stacked)","in_layers",`type="number" step="1" min="1" value="${s.layers}"`)}
-        ${L("Wet/snow penalty (%)","in_wet",`type="number" step="1" min="0" max="50" value="${s.wet_pct}"`)}
-        ${L("Overlap/waste (%)","in_ovlp",`type="number" step="1" min="0" max="25" value="${s.overlap_pct}"`)}
-      </div>
-      <div class="input-row">
-        ${L("Blanket width (ft)","in_bw",`type="number" step="0.1" value="${s.blanket_w}"`)}
-        ${L("Blanket length (ft)","in_bl",`type="number" step="0.1" value="${s.blanket_l}"`)}
-        ${L("Target max heat loss (BTU/hr, optional)","in_targetQ",`type="number" step="1" value="${s.target_Q_btu_hr}"`)}
-      </div>
-      <div class="out" id="in_summary">Enter values</div>
-    `;
+    R_value: "5.0",          // blanket R per layer
+    wet_pct: "0",            // % performance reduction
+    overlap_pct: "8",        // % lap/waste
+    layers_override: "",     // optional: try N layers and see predicted Tmin
+    blanket_w: "6",
+    blanket_l: "25"
+  };
+  Object.assign(s, state.insulation || {});
+  Object.keys(s).forEach(k => params.has(k) && (s[k] = params.get(k)));
 
-    const compute = () => {
-      const A   = toNum($("in_area").value)  || 0;
-      const dT  = toNum($("in_dt").value)    || 0;
-      const R1  = Math.max(0.1, toNum($("in_R").value) || 0.1);
-      const n   = Math.max(1, Math.round(toNum($("in_layers").value) || 1));
-      const wet = clamp(toNum($("in_wet").value) || 0, 0, 50) / 100;
-      const ovp = clamp(toNum($("in_ovlp").value) || 0, 0, 25) / 100;
-      const Bw  = toNum($("in_bw").value)  || 6;
-      const Bl  = toNum($("in_bl").value)  || 25;
-      const Qmax = toNum($("in_targetQ").value);
+  mount.innerHTML = `
+    <div class="input-row">
+      ${L("Area (ft²)", "in_area", `type="number" step="0.1" value="${s.area_ft2}"`)}
+      ${L("Thickness (ft)", "in_thk", `type="number" step="0.1" min="0.5" value="${s.thickness_ft}"`)}
+      ${L("Initial concrete (°F)", "in_T0", `type="number" step="0.1" value="${s.T0_F}"`)}
+    </div>
+    <div class="input-row">
+      ${L("Ambient under blankets (°F)", "in_Ta", `type="number" step="0.1" value="${s.Ta_F}"`)}
+      ${L("Hold time (h)", "in_th", `type="number" step="0.5" value="${s.hold_h}"`)}
+      ${L("Minimum allowed (°F)", "in_Tmin", `type="number" step="0.1" value="${s.Tmin_F}"`)}
+    </div>
+    <div class="input-row">
+      ${L("Blanket R (per layer)", "in_R", `type="number" step="0.1" value="${s.R_value}"`)}
+      ${L("Wet/snow penalty (%)", "in_wet", `type="number" step="1" min="0" max="50" value="${s.wet_pct}"`)}
+      ${L("Overlap/waste (%)", "in_ovlp", `type="number" step="1" min="0" max="25" value="${s.overlap_pct}"`)}
+    </div>
+    <div class="input-row">
+      ${L("Blanket width (ft)", "in_bw", `type="number" step="0.1" value="${s.blanket_w}"`)}
+      ${L("Blanket length (ft)", "in_bl", `type="number" step="0.1" value="${s.blanket_l}"`)}
+      ${L("Try N layers (optional)", "in_layers_try", `type="number" step="1" min="0" value="${s.layers_override}"`)}
+    </div>
+    <div class="out" id="in_summary">Enter values</div>
+  `;
 
-      const R_eff_dry = R1 * n;
-      const R_eff = R_eff_dry * (1 - wet);
+  const compute = () => {
+    const A   = toNum($("in_area").value)     || 0;
+    const h   = Math.max(0.25, toNum($("in_thk").value) || 1.0); // ft
+    const T0  = toNum($("in_T0").value)       || 0;
+    const Ta  = toNum($("in_Ta").value)       || 0;
+    const t_h = Math.max(0.25, toNum($("in_th").value) || 12);
+    const Tmin= toNum($("in_Tmin").value)     || 0;
 
-      const Q_btu_hr = (R_eff > 0 ? (A * dT) / R_eff : NaN);
-      const Q_kW = Q_btu_hr * 0.000293071;
+    const R1  = Math.max(0.1, toNum($("in_R").value) || 5.0);
+    const wet = clamp(toNum($("in_wet").value) || 0, 0, 50) / 100;
+    const ovp = clamp(toNum($("in_ovlp").value) || 0, 0, 25) / 100;
+    const Bw  = toNum($("in_bw").value)        || 6;
+    const Bl  = toNum($("in_bl").value)        || 25;
+    const Ntry= toNum($("in_layers_try").value);
 
-      const usablePerBlanket = Bw * Bl * (1 - ovp);
-      const blanketsPerLayer = usablePerBlanket > 0 ? Math.ceil(A / usablePerBlanket) : 0;
-      const totalBlankets = blanketsPerLayer * n;
+    // Areal heat capacity C' ≈ 33 * h   [BTU/ft²·°F]
+    const Cprime = 33 * h;
 
-      const lines = [];
-      lines.push(`Layers: ${n}  •  R (per layer): ${fmt(R1,1)} → R_eff (dry): ${fmt(R_eff_dry,1)}  •  Wet penalty: ${fmt(wet*100,0)}%`);
-      lines.push(`<strong>Effective R in place: ${fmt(R_eff,1)}</strong>`);
-      lines.push(`Heat loss with current layers: <strong>${fmt(Q_btu_hr,0)} BTU/hr</strong>  (≈ ${fmt(Q_kW,2)} kW)`);
-      lines.push(`Blanket ${fmt(Bw,1)}×${fmt(Bl,1)} ft with ${fmt(ovp*100,0)}% lap → usable ${fmt(usablePerBlanket,1)} ft² each`);
-      lines.push(`Blankets per layer: ${blanketsPerLayer}  •  Total blankets (all layers): <strong>${totalBlankets}</strong>`);
+    const lines = [];
+    // Quick feasibility checks
+    if (Tmin <= Ta) {
+      lines.push(`Target Tmin ≤ ambient ⇒ No insulation needed for steady hold.`);
+    }
+    if (T0 <= Tmin) {
+      lines.push(`⚠️ Initial concrete (${fmt(T0,1)} °F) ≤ Tmin (${fmt(Tmin,1)} °F). Preheat mix, add heat, or raise Tmin.`);
+    }
 
-      if (Number.isFinite(Qmax) && Qmax > 0) {
-        const R_req_total = (A * dT) / Qmax;
-        const perLayerEffR = R1 * (1 - wet);
-        const layers_req = perLayerEffR > 0 ? Math.ceil(R_req_total / perLayerEffR) : NaN;
-        const totalBlankets_req = Number.isFinite(layers_req) ? layers_req * blanketsPerLayer : NaN;
+    // Required R_eff to satisfy Tmin after t_h
+    // R_req >= t / (C' * ln( (T0 - Ta) / (Tmin - Ta) ))
+    let Rreq = NaN;
+    const num = (T0 - Ta);
+    const den = (Tmin - Ta);
+    if (num > 0 && den > 0 && num > den) {
+      Rreq = t_h / (Cprime * Math.log(num / den));
+    }
 
-        lines.push(`<hr>`);
-        lines.push(`Target max heat loss: <strong>${fmt(Qmax,0)} BTU/hr</strong>`);
-        lines.push(`Required total R to meet target: <strong>${fmt(R_req_total,1)}</strong>`);
-        lines.push(`Required layers (with ${fmt(wet*100,0)}% wet penalty): <strong>${layers_req}</strong>`);
-        if (Number.isFinite(totalBlankets_req)) {
-          lines.push(`Blankets per layer: ${blanketsPerLayer} → Total blankets needed at required layers: <strong>${totalBlankets_req}</strong>`);
-        }
-        if (Number.isFinite(Q_btu_hr)) {
-          lines.push(Q_btu_hr <= Qmax
-            ? `✅ Current setup meets the target (Q=${fmt(Q_btu_hr,0)} ≤ ${fmt(Qmax,0)} BTU/hr).`
-            : `❌ Current setup does NOT meet the target. Add layers until ≥ ${layers_req}.`);
-        }
-      } else {
-        const suggest = Q_btu_hr * 1.3;
-        lines.push(`Sizing hint: plan ≈ ${fmt(suggest,0)} BTU/hr (includes ~30% contingency).`);
+    // Effective per-layer R with wet penalty
+    const R_per_layer_eff = R1 * (1 - wet);
+
+    // Required layers
+    const Nreq = Number.isFinite(Rreq) && R_per_layer_eff > 0
+      ? Math.max(0, Math.ceil(Rreq / R_per_layer_eff))
+      : NaN;
+
+    // Blanket counts (per layer & total)
+    const usablePerBlanket = Bw * Bl * (1 - ovp);
+    const blanketsPerLayer = usablePerBlanket > 0 && A > 0 ? Math.ceil(A / usablePerBlanket) : 0;
+    const totalBlankets = Number.isFinite(Nreq) ? Nreq * blanketsPerLayer : NaN;
+
+    // Predict Tmin if user wants to "try" N layers
+    let Tmin_pred = NaN;
+    if (Number.isFinite(Ntry) && Ntry >= 0) {
+      const Reff_try = Ntry * R_per_layer_eff;
+      // T(t)-Ta = (T0-Ta)*exp(-t/(Reff*C'))
+      const dropFactor = Math.exp(-t_h / (Math.max(0.001, Reff_try) * Cprime));
+      Tmin_pred = Ta + (T0 - Ta) * dropFactor;
+    }
+
+    lines.push(`Thickness: ${fmt(h,2)} ft  •  C′ ≈ ${fmt(Cprime,1)} BTU/ft²·°F`);
+    lines.push(`Hold: ${fmt(t_h,1)} h  •  Ambient: ${fmt(Ta,1)} °F  •  Initial: ${fmt(T0,1)} °F  •  Tmin: ${fmt(Tmin,1)} °F`);
+    lines.push(`Blanket R (per layer): ${fmt(R1,1)}  •  Wet penalty: ${fmt(wet*100,0)}% → per-layer effective R: ${fmt(R_per_layer_eff,2)}`);
+
+    if (Number.isFinite(Rreq)) {
+      lines.push(`<strong>Required total R to hold ≥ Tmin: ${fmt(Rreq,2)}</strong>`);
+      lines.push(`<strong>Required layers: ${fmt(Nreq,0)}</strong>`);
+      lines.push(`Blankets per layer: ${blanketsPerLayer}  •  Total blankets: ${Number.isFinite(totalBlankets)? totalBlankets : "—"}`);
+      if (Number.isFinite(Nreq) && Nreq === 0 && Tmin > Ta) {
+        lines.push(`Note: Very thick section and/or short hold; mass alone may suffice.`);
       }
+    } else {
+      lines.push(`❌ Not solvable with given inputs (log term ≤ 0). Raise initial temp, lower Tmin, or add heat.`);
+    }
 
-      $("in_summary").innerHTML = lines.join("<br>");
+    if (Number.isFinite(Tmin_pred)) {
+      lines.push(`<hr>`);
+      lines.push(`Try layers = ${fmt(Ntry,0)} ⇒ Predicted minimum after ${fmt(t_h,1)} h: <strong>${fmt(Tmin_pred,1)} °F</strong>`);
+      if (Tmin_pred >= Tmin) {
+        lines.push(`✅ Meets Tmin.`);
+      } else {
+        lines.push(`❌ Below Tmin by ${fmt(Tmin - Tmin_pred,1)} °F — add layers or raise T₀.`);
+      }
+    }
 
-      state.insulation = {
-        area_ft2: $("in_area").value, dT_F: $("in_dt").value, R_value: $("in_R").value,
-        layers: $("in_layers").value, wet_pct: $("in_wet").value, overlap_pct: $("in_ovlp").value,
-        blanket_w: $("in_bw").value, blanket_l: $("in_bl").value, target_Q_btu_hr: $("in_targetQ").value
-      };
-      saveState(state); writeHash("#insulation", state.insulation);
+    // Blanket sizing detail
+    lines.push(`<hr>`);
+    lines.push(`Blanket ${fmt(Bw,1)}×${fmt(Bl,1)} ft with ${fmt(ovp*100,0)}% lap → usable ${fmt(usablePerBlanket,1)} ft² each.`);
+    $("in_summary").innerHTML = lines.join("<br>");
+
+    state.insulation = {
+      area_ft2: $("in_area").value,
+      thickness_ft: $("in_thk").value,
+      T0_F: $("in_T0").value,
+      Ta_F: $("in_Ta").value,
+      hold_h: $("in_th").value,
+      Tmin_F: $("in_Tmin").value,
+      R_value: $("in_R").value,
+      wet_pct: $("in_wet").value,
+      overlap_pct: $("in_ovlp").value,
+      layers_override: $("in_layers_try").value,
+      blanket_w: $("in_bw").value,
+      blanket_l: $("in_bl").value
     };
-    inputsListen(mount, compute);
-    compute();
-  }
+    saveState(state);
+    writeHash("#insulation", state.insulation);
+  };
+
+  inputsListen(mount, compute);
+  compute();
+}
+
 
   // ====================== STRENGTH GAIN ======================
   function renderStrength(params) {
