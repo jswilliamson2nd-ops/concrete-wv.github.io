@@ -12,218 +12,226 @@
   <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <meta name="description" content="Central access to WVDOH references: Standard Specifications, Construction Manual, Design Directives, Materials Procedures, and Approved Sources." />
+  <!-- SEO / Social -->
+  <meta name="description" content="One place for WVDOH spec books, construction manual, design directives, materials procedures, approved sources, traffic control, erosion control, and standard details." />
   <meta property="og:title" content="WVDOH Information Corner · ACI West Virginia Interest Group" />
-  <meta property="og:description" content="One place for WVDOH spec books, construction manual, design directives, materials procedures, and approved sources." />
+  <meta property="og:description" content="Central access to WVDOH references the field actually uses." />
   <meta property="og:image" content="https://concrete-wv.org/assets/aciwv_logo_white_square.png" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://concrete-wv.org/wvdoh.html" />
-  <meta property="og:site_name" content="ACI West Virginia Interest Group" />
   <meta name="twitter:card" content="summary_large_image" />
 
   <style>
-    :root{ --bg:#0b1220; --bg-2:#0f172a; --border:#1f2a44; --text:#e6edf3; --text-dim:#b9c4d0; --accent:#2aa198; --card:#101828; --shadow:0 6px 18px rgba(0,0,0,.25) }
-    *{box-sizing:border-box} html,body{height:100%}
+    :root{
+      --bg:#0b1220; --bg-2:#0f172a; --border:#1f2a44; --text:#e6edf3; --text-dim:#b9c4d0;
+      --accent:#2aa198; --card:#101828; --shadow:0 6px 18px rgba(0,0,0,.25); --orange:#ff9500
+    }
+    .light{--bg:#f8fafc; --bg-2:#f1f5f9; --text:#0f172a; --text-dim:#475569; --card:#fff; --border:#e2e8f0; --accent:#0891b2}
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);color:var(--text);line-height:1.6}
     a{color:var(--text);text-decoration:none} a:hover{color:var(--accent)}
     .container{width:min(1080px,92vw);margin:0 auto}
-    header{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);background:rgba(11,18,32,.7)}
-    .nav{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:8px 0;flex-wrap:wrap}
-    .logo-wrap{display:inline-flex;align-items:flex-end;gap:12px;margin-left:-4px}
-    .logo-img{height:60px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.35))}
-    nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    nav a{color:var(--text-dim);padding:6px 2px} nav a.active{color:var(--accent);font-weight:600}
-    .hero{text-align:center;padding:30px 0 10px}
-    .hero h1{margin:0 0 6px}
-    .hero p{margin:0 auto 8px;max-width:72ch;color:var(--text-dim)}
-    .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin:24px 0 46px}
-    .card{border:1px solid var(--border);border-radius:16px;background:var(--card);padding:18px;box-shadow:var(--shadow)}
-    .card h2,.card h3{margin:0 0 8px}
+
+    /* Header */
+    header{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);background:rgba(11,18,32,.9)}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;flex-wrap:wrap}
+    .logo-img{height:84px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.35))}
+    @media (max-width:640px){ .logo-img{height:56px} }
+    nav{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    nav a{color:var(--text-dim);padding:6px 2px;font-weight:500}
+    nav a.active{color:var(--accent);font-weight:700;position:relative}
+    nav a.active::after{content:'';position:absolute;bottom:-9px;left:0;right:0;height:3px;background:var(--accent);border-radius:2px}
+    #theme-toggle{background:none;border:none;padding:6px 10px;border-radius:10px;cursor:pointer}
+
+    /* Skip link */
+    .skip{
+      position:absolute;left:12px;top:-100px;z-index:60;
+      background:var(--card);border:1px solid var(--border);color:var(--text);
+      padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);transition:top .2s;
+    }
+    .skip:focus-visible{top:12px;outline:3px solid var(--accent)}
+
+    /* Orange announcement bar */
+    .next-event-bar{
+      background:var(--orange);color:#000;position:relative;
+      padding:18px 20px 22px 96px;display:flex;align-items:center;
+      gap:24px;flex-wrap:wrap;box-shadow:0 4px 20px rgba(255,149,0,.4);
+    }
+    .next-event-bar img{
+      height:66px;position:absolute;left:20px;top:50%;transform:translateY(-50%);
+      filter:drop-shadow(0 4px 12px rgba(0,0,0,.5));
+    }
+    .next-event-bar .text{font-weight:700;font-size:1.12rem;flex:1;min-width:300px}
+    .next-event-bar .btn{
+      background:#000;color:#fff;padding:.9rem 1.8rem;font-size:1.05rem;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.4)
+    }
+
+    /* Page hero */
+    .page-hero{padding:28px 0 6px;text-align:center}
+    .breadcrumb{font-size:14px;margin:0 auto 12px;color:var(--text-dim);text-align:left}
+    .page-sub{color:var(--text-dim);max-width:72ch;margin:8px auto 0}
+
+    /* Cards */
+    .grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin:24px 0 46px}
+    .card{border:1px solid var(--border);border-radius:16px;background:var(--card);padding:18px;box-shadow:var(--shadow);opacity:0;transform:translateY(20px);transition:.35s}
+    .card.visible{opacity:1;transform:none}
     .muted{color:var(--text-dim)}
     .links{display:grid;gap:10px}
-    .note{font-size:13px;color:var(--text-dim);margin-top:8px}
+    .btn{display:inline-block;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,var(--bg-2),rgba(0,0,0,.06));color:var(--text);text-align:center;cursor:pointer;box-shadow:var(--shadow)}
+    .btn.primary{background:#163049;border-color:#2aa198}
     .badge{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--border);color:var(--text-dim)}
-    footer{border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:14px;padding:20px 0}
-    .breadcrumb{font-size:14px;margin:8px 0 0;color:var(--text-dim)}
-    .input-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
-    .input-row label{font-size:13px;color:var(--text-dim)}
-    input[type="number"], select{
-      width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:#0e1627;color:var(--text)
-    }
-    .out{padding:10px;border-radius:10px;background:#0e1627;border:1px dashed var(--border);font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
-    .ok{color:#7bd389}.warn{color:#ffd166}.bad{color:#ff6b6b}
-    .small{font-size:12px;color:var(--text-dim)}
-    .btn{display:inline-block;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#0e1627;color:var(--text);text-align:center;cursor:pointer;transition:.15s transform, .15s background}
-    .btn:hover{transform:translateY(-1px)}
-    .btn.primary{background:linear-gradient(180deg,#0f2230,#0b1b29);border-color:#163049}
-    @media (max-width:520px){ .input-row{grid-template-columns:1fr} }
+
+    /* Emoji title row */
+    .title{display:flex;align-items:center;gap:10px;margin:0 0 8px}
+    .emoji{font-size:1.4rem;line-height:1}
+    footer{border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:14px;padding:24px 0}
+    .memorial{color:var(--text-dim);font-style:italic;font-size:1.05rem;margin-bottom:8px}
   </style>
 </head>
 <body>
+  <a class="skip" href="#main">Skip to content</a>
+
   <header>
     <div class="container nav">
-      <a href="/" class="logo-wrap" aria-label="ACI WV Home">
-        <img class="logo-img" src="/assets/aciwv_logo_body.png?v=5" alt="ACI West Virginia" height="60" width="60" decoding="async" />
+      <a href="/" aria-label="ACI WV Home">
+        <img class="logo-img" src="/assets/aciwv_logo_body.png?v=5" alt="ACI West Virginia" height="84" width="84" decoding="async">
       </a>
       <nav aria-label="Primary">
         <a href="/">Home</a>
         <a href="/topics/">Topics</a>
-        <a href="/#join">Join</a>
-        <a href="/#verify">Verify</a>
         <a href="/wvdoh.html" class="active">WVDOH Info Corner</a>
         <a href="/calculators/">Calculators</a>
+        <a href="/#verify">Verify</a>
         <a href="/#contact">Contact</a>
       </nav>
+      <button id="theme-toggle" aria-label="Toggle light/dark mode">🌙</button>
     </div>
   </header>
 
-  <main class="container">
+  <!-- Orange bar -->
+  <div class="next-event-bar">
+    <img src="/assets/aciwv_logo_body.png?v=5" alt="ACI WV">
+    <div class="text">
+      Jan 23, 2026 @ 11:00 AM — Kickoff Zoom Call (agenda drops Dec 20)
+    </div>
+    <a href="https://calendar.google.com/calendar/u/0/r/eventedit?text=ACI+WV+Kickoff+Call&dates=20260123T160000Z/20260123T170000Z&details=First+official+ACI+West+Virginia+Interest+Group+meeting.+Zoom+link+in+email.&location=Zoom" target="_blank" rel="noopener" class="btn">Add to Calendar</a>
+  </div>
+
+  <main id="main" class="container">
     <div class="breadcrumb"><a href="/">Home</a> ▸ <strong>WVDOH Information Corner</strong></div>
 
-    <section class="hero">
+    <section class="page-hero">
       <h1>WVDOH Information Corner</h1>
-      <p>Central access to WVDOH references the field actually uses: <strong>Standard Specifications</strong>, the <strong>Construction Manual</strong>, <strong>Design Directives</strong>, <strong>Materials Procedures</strong>, and <strong>Approved Sources</strong>. One page, fewer clicks.</p>
-      <button id="installBtn" class="btn" style="margin:10px 0 0">Install WVDOH App</button>
+      <p class="page-sub">
+        Central access to WVDOH references the field actually uses: <strong>Standard Specifications</strong>, the <strong>Construction Manual</strong>, <strong>Design Directives</strong>, <strong>Materials Procedures</strong>, <strong>Approved Sources</strong>, plus <strong>Traffic Control</strong>, <strong>Erosion &amp; Sediment Control</strong>, and <strong>Standard Details</strong>.
+      </p>
     </section>
 
-    <!-- Core WVDOH groups -->
+    <!-- WVDOH resources -->
     <section class="grid" aria-label="WVDOH link groups">
+      <!-- Traffic Control Manual -->
+      <article class="card">
+        <div class="title"><span class="emoji" aria-hidden="true">🚧</span><h2>Temporary Traffic Control Manual <span class="badge">PDF</span></h2></div>
+        <div class="links">
+          <a class="btn primary" href="https://transportation.wv.gov/highways/traffic/Documents/TemporaryTrafficControlManual2006.pdf" target="_blank" rel="noopener">Open Manual (PDF)</a>
+          <p class="muted">Work zone signing, channelization, tapers, and flagging layouts.</p>
+        </div>
+      </article>
+
+      <!-- Erosion & Sediment Control -->
+      <article class="card">
+        <div class="title"><span class="emoji" aria-hidden="true">🌿</span><h2>Erosion &amp; Sediment Control</h2></div>
+        <div class="links">
+          <a class="btn primary" href="https://transportation.wv.gov/highways/TechnicalSupport/Pages/Erosion_and_Sediment_Control.aspx" target="_blank" rel="noopener">Open E&amp;SC Page</a>
+          <p class="muted">Policies, manuals, and standard practices for erosion/sediment control.</p>
+        </div>
+      </article>
+
+      <!-- Standard Details -->
+      <article class="card">
+        <div class="title"><span class="emoji" aria-hidden="true">📐</span><h2>Standard Details</h2></div>
+        <div class="links">
+          <a class="btn primary" href="https://transportation.wv.gov/highways/TechnicalSupport/Pages/Details.aspx" target="_blank" rel="noopener">Open Standard Details</a>
+          <p class="muted">Current roadway and structure details used across WV projects.</p>
+        </div>
+      </article>
+
+      <!-- Spec Book -->
       <article class="card" id="card-specs">
-        <h2>Standard Specifications <span class="badge">Spec Book</span></h2>
+        <div class="title"><span class="emoji" aria-hidden="true">📘</span><h2>Standard Specifications <span class="badge">Spec Book</span></h2></div>
         <div class="links">
           <a class="btn primary" href="https://transportation.wv.gov/highways/TechnicalSupport/specifications/Pages/default.aspx" target="_blank" rel="noopener">Current Spec Book</a>
           <a class="btn" href="https://transportation.wv.gov/highways/TechnicalSupport/specifications/Documents/2025%20Supplemental%20Specifications_20241209.pdf" target="_blank" rel="noopener">2025 Supplemental Specifications (PDF)</a>
-          <span class="note">Governing specifications and the latest supplement.</span>
+          <p class="muted">Governing specifications and the latest supplement.</p>
         </div>
       </article>
 
+      <!-- Construction Manual -->
       <article class="card" id="card-const">
-        <h2>Construction Manual</h2>
+        <div class="title"><span class="emoji" aria-hidden="true">🛠️</span><h2>Construction Manual</h2></div>
         <div class="links">
           <a class="btn primary" href="https://transportation.wv.gov/highways/TechnicalSupport/specifications/ConstManual/Pages/default.aspx" target="_blank" rel="noopener">Construction Manual (Index)</a>
-          <span class="note">Procedures, inspection methods, and administration.</span>
+          <p class="muted">Procedures, inspection methods, and administration.</p>
         </div>
       </article>
 
+      <!-- Design Directives -->
       <article class="card" id="card-design">
-        <h2>Design Directives</h2>
+        <div class="title"><span class="emoji" aria-hidden="true">🧭</span><h2>Design Directives</h2></div>
         <div class="links">
           <a class="btn primary" href="https://transportation.wv.gov/highways/TechnicalSupport/Pages/Design-Directives.aspx" target="_blank" rel="noopener">Design Directives Index</a>
           <a class="btn" href="https://transportation.wv.gov/highways/engineering/files/WVBDML%202006.pdf" target="_blank" rel="noopener">Bridge Design Memo List (PDF)</a>
-          <span class="note">Policies and standards for roadway/bridge design.</span>
+          <p class="muted">Policies and standards for roadway/bridge design.</p>
         </div>
       </article>
 
+      <!-- Materials Procedures -->
       <article class="card" id="card-mp">
-        <h2>Materials Procedures <span class="badge">MPs</span></h2>
+        <div class="title"><span class="emoji" aria-hidden="true">🧪</span><h2>Materials Procedures <span class="badge">MPs</span></h2></div>
         <div class="links">
           <a class="btn primary" href="https://transportation.wv.gov/highways/mcst/Pages/WVDOH-Materials-Procedures.aspx" target="_blank" rel="noopener">Materials Procedures (Home)</a>
-          <span class="note">Detailed test and acceptance procedures.</span>
+          <p class="muted">Detailed test and acceptance procedures.</p>
         </div>
       </article>
 
+      <!-- Approved Sources -->
       <article class="card" id="card-approved">
-        <h2>Approved Sources</h2>
+        <div class="title"><span class="emoji" aria-hidden="true">✅</span><h2>Approved Sources</h2></div>
         <div class="links">
           <a class="btn primary" href="https://transportation.wv.gov/highways/mcst/Pages/APL_By_Number.aspx" target="_blank" rel="noopener">Approved Products &amp; Sources</a>
-          <span class="note">Prequalified products, suppliers, and producers.</span>
+          <p class="muted">Prequalified products, suppliers, and producers.</p>
         </div>
       </article>
     </section>
 
-    <!-- Quick References (keep page lean: Evaporation inline; link to full calculators) -->
-    <section aria-label="Quick references" style="margin:10px 0 50px">
-      <h2 style="margin:10px 0 12px">Quick References</h2>
-      <p class="muted" style="margin:0 0 14px">Live tool below. For more, open the full calculators page.</p>
-
-      <p><a class="btn primary" href="/calculators/#volume">Open Concrete Calculators →</a></p>
-
-      <div class="grid">
-        <!-- Evaporation Rate (live) -->
-        <article class="card" id="calc-evap">
-          <h3>Evaporation Rate (beta)</h3>
-          <div class="input-row">
-            <label>Concrete temp Tc (°F)<br><input id="ev_tc_f" type="number" step="0.1" inputmode="decimal" placeholder="e.g., 70"></label>
-            <label>Air temp Ta (°F)<br><input id="ev_ta_f" type="number" step="0.1" inputmode="decimal" placeholder="e.g., 70"></label>
-          </div>
-          <div class="input-row">
-            <label>Wind speed V (mph)<br><input id="ev_v_mph" type="number" step="0.1" min="0" inputmode="decimal" placeholder="e.g., 10"></label>
-            <label>Relative humidity RH (%)<br><input id="ev_rh" type="number" step="0.1" min="0" max="100" inputmode="decimal" placeholder="e.g., 40"></label>
-          </div>
-          <div class="out" id="ev_out" aria-live="polite">Enter Tc, Ta, wind, RH.</div>
-          <p class="small">Advisory only. Compare to the common caution threshold of <strong>0.2 lb/ft²/hr</strong>.</p>
-        </article>
-      </div>
-
-      <p class="muted" style="margin-top:8px">Have a link we should include? Email <a href="mailto:info@concrete-wv.org">info@concrete-wv.org</a>.</p>
-    </section>
-
-    <p class="muted">Suggestions or corrections? Email <a href="mailto:info@concrete-wv.org">info@concrete-wv.org</a>. We’ll keep this page current.</p>
-
+    <p class="muted">Have a link we should include? Email <a href="mailto:info@concrete-wv.org">info@concrete-wv.org</a>.</p>
     <p><a href="/">← Back to Home</a> · <a href="/topics/">Topics</a></p>
   </main>
 
   <footer>
+    <p class="memorial">In memory of Larry George Buchheit · January 12, 1947 — January 27, 2025</p>
     © <span id="y"></span> ACI West Virginia Interest Group ·
-    <a href="/">Home</a> · <a href="/#join">Join</a> ·
-    <a href="/#verify">Verify</a> · <a href="/wvdoh.html">WVDOH Info Corner</a> ·
-    <a href="/calculators/">Calculators</a>
+    <a href="/">Home</a> · <a href="/topics/">Topics</a> ·
+    <a href="/wvdoh.html">WVDOH</a> · <a href="/calculators/">Calculators</a>
   </footer>
 
   <script>
-  // ---------- Boilerplate ----------
-  (function(){ const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear(); })();
-  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(()=>{}); }
-  (function(){
-    let deferredPrompt; const btn=document.getElementById("installBtn");
-    if (btn) btn.style.display="none";
-    window.addEventListener("beforeinstallprompt",(e)=>{ e.preventDefault(); deferredPrompt=e; if(btn) btn.style.display="inline-block"; });
-    if (btn) btn.addEventListener("click", async()=>{ if(!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; btn.style.display="none"; });
-  })();
+    // Year + theme toggle
+    document.getElementById('y').textContent = new Date().getFullYear();
+    const themeBtn = document.getElementById('theme-toggle');
+    themeBtn?.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+      themeBtn.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
+    });
 
-  // ---------- Evaporation calculator ----------
-  (function(){
-    const $ = id => document.getElementById(id);
-    const fmt = (n, d=2) => (typeof n==='number' && isFinite(n)) ? n.toFixed(d) : '—';
-    const toNum = (val) => {
-      if (val == null) return null;
-      const s = String(val).trim().replace(/,/g,'');
-      const n = Number(s);
-      return (typeof n === 'number' && !isNaN(n)) ? n : null;
-    };
-    const readNum = (el) => !el ? null : (Number.isFinite(el.valueAsNumber) ? el.valueAsNumber : toNum(el.value));
-    const on = (el, evts, fn) => el && evts.forEach(e => el.addEventListener(e, fn, { passive: true }));
+    // Animate cards on scroll
+    const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('visible')), {threshold:.1});
+    document.querySelectorAll('.card').forEach(c => io.observe(c));
 
-    const eTc=$('ev_tc_f'), eTa=$('ev_ta_f'), eV=$('ev_v_mph'), eRH=$('ev_rh'), eOut=$('ev_out');
-    function computeEvap(){
-      if(!eOut) return;
-      const TcF=readNum(eTc), TaF=readNum(eTa), Vmph=readNum(eV), RHin=readNum(eRH);
-      if([TcF,TaF,Vmph,RHin].some(v=>v===null)){ eOut.textContent="Enter Tc, Ta, wind, RH."; return; }
-
-      const RH=Math.min(100,Math.max(0,RHin));
-      const Vkmh=Math.max(0,Vmph)*1.60934;      // mph → km/h
-      const Tc=(TcF-32)*5/9, Ta=(TaF-32)*5/9;   // °F → °C
-
-      // Tuned nomograph-style fit (advisory)
-      const sat=tC=>Math.pow(Math.max(0,tC+18),2.5);
-      const base=Math.max(0, sat(Tc) - (RH/100)*sat(Ta));
-      const wind=1 + 0.4*Vkmh;
-
-      const E_kgm2h=Math.max(0, 1e-6 * base * wind);
-      const E_lbft2h=E_kgm2h * 0.204816;
-
-      const risk=E_lbft2h>=0.20?"bad":(E_lbft2h>=0.15?"warn":"ok");
-      const label=E_lbft2h>=0.20?"≥ 0.20 caution":(E_lbft2h>=0.15?"0.15–0.20 watch":"< 0.15 lower risk");
-
-      eOut.innerHTML=`Evap rate: ${fmt(E_kgm2h,2)} kg/m²/h | ${fmt(E_lbft2h,3)} lb/ft²/hr · <span class="${risk}">${label}</span><br>
-        <span class="small">Advisory only. Confirm with official charts/instruments onsite.</span>`;
-    }
-    [eTc,eTa,eV,eRH].forEach(el=>on(el,['input','change','keyup','blur'],computeEvap));
-    computeEvap();
-  })();
+    // SW (quiet fail OK)
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(()=>{}); }
   </script>
 </body>
 </html>
