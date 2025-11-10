@@ -57,7 +57,7 @@
       .header-countdown .cd-sub{font-size:.8rem}
     }
 
-    /* Orange bar */
+    /* Announcement bar */
     .next-event-bar{
       background:var(--orange);color:#000;position:relative;
       padding:18px 20px 22px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;
@@ -92,7 +92,7 @@
 
   <header>
     <div class="container nav">
-      <!-- Countdown on the left -->
+      <!-- Countdown replaces logo -->
       <div class="header-countdown" aria-live="polite" title="WV Concrete kickoff countdown">
         <div class="cd-num" id="countdown">74</div>
         <div>
@@ -113,7 +113,7 @@
     </div>
   </header>
 
-  <!-- Orange bar -->
+  <!-- Announcement bar -->
   <div class="next-event-bar">
     <div class="text">Jan 23, 2026 @ 11:00 AM — Kickoff Zoom Call (agenda drops Dec 20)</div>
     <a href="https://calendar.google.com/calendar/u/0/r/eventedit?text=ACI+WV+Kickoff+Call&dates=20260123T160000Z/20260123T170000Z&details=First+official+ACI+West+Virginia+Interest+Group+meeting.+Zoom+link+in+email.&location=Zoom" target="_blank" rel="noopener" class="btn">Add to Calendar</a>
@@ -149,8 +149,18 @@
       <article class="card">
         <div class="title"><span class="emoji" aria-hidden="true">📐</span><h2>Standard Details</h2></div>
         <div class="links">
-          <a class="btn primary" href="https://transportation.wv.org/highways/TechnicalSupport/Pages/Details.aspx" target="_blank" rel="noopener">Open Standard Details</a>
+          <a class="btn primary" href="https://transportation.wv.gov/highways/TechnicalSupport/Pages/Details.aspx" target="_blank" rel="noopener">Open Standard Details</a>
           <p class="muted">Current roadway and structure details used across WV projects.</p>
+        </div>
+      </article>
+
+      <!-- NEW: TRET + Certified Technicians card -->
+      <article class="card">
+        <div class="title"><span class="emoji" aria-hidden="true">🧑‍🏭</span><h2>WVDOH TRET &amp; Certifications</h2></div>
+        <div class="links">
+          <a class="btn primary" href="https://webapps.transportation.wv.gov/TechnicianCertificationDirectory" target="_blank" rel="noopener">WVDOH TRET Directory</a>
+          <a class="btn" href="https://webapps.transportation.wv.gov/materialsdir/" target="_blank" rel="noopener">Certified Technicians &amp; Inspectors</a>
+          <p class="muted">Look up WVDOH training/certification records and active technician/inspector listings.</p>
         </div>
       </article>
 
@@ -217,49 +227,39 @@
       themeBtn.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
     });
 
-    // Countdown (D:HH:MM mode near the date)
+    // Adaptive countdown
     (function(){
       const target = new Date('2026-01-23T11:00:00-05:00').getTime();
       const el = document.getElementById('countdown');
-      const fmt = n => String(Math.max(0,n)).padStart(2,'0');
-
+      function fmt(n){ return String(Math.max(0, n)).padStart(2,'0'); }
       function render(){
         if(!el) return;
         const ms = target - Date.now();
-        if (ms <= 0) { el.textContent = '0d 00h 00m'; el.setAttribute('aria-label','Kickoff has started'); return; }
-
-        const totalMin = Math.floor(ms/60000);
-        const totalHrs = Math.floor(ms/3600000);
-        const days = Math.floor(ms/86400000);
+        if (ms <= 0) { el.textContent = '0d 00h 00m'; el.setAttribute('aria-label','Kickoff is live'); return; }
+        const totalMin = Math.floor(ms / 60000);
+        const totalHrs = Math.floor(ms / 3600000);
+        const days = Math.floor(ms / 86400000);
         const hrs  = totalHrs % 24;
         const mins = totalMin % 60;
-
-        if (days > 3) {
-          el.textContent = String(days);
-          el.setAttribute('aria-label', days + ' days until kickoff');
-        } else if (days >= 1) {
-          el.textContent = `${days}d ${fmt(hrs)}h ${fmt(mins)}m`;
-          el.setAttribute('aria-label', `${days} days, ${hrs} hours, ${mins} minutes until kickoff`);
-        } else {
-          el.textContent = `${fmt(totalHrs)}h ${fmt(mins)}m`;
-          el.setAttribute('aria-label', `${totalHrs} hours, ${mins} minutes until kickoff`);
-        }
+        if (days > 3){ el.textContent = String(days); }
+        else if (days >= 1){ el.textContent = `${days}d ${fmt(hrs)}h ${fmt(mins)}m`; }
+        else { el.textContent = `${fmt(totalHrs)}h ${fmt(mins)}m`; }
       }
-
       render();
       const startDelay = 60000 - (Date.now() % 60000);
-      setTimeout(() => { render(); setInterval(render, 60000); }, startDelay);
+      setTimeout(()=>{ render(); setInterval(render, 60000); }, startDelay);
     })();
 
     // Animate cards
     const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('visible')), {threshold:.1});
     document.querySelectorAll('.card').forEach(c => io.observe(c));
 
-    // SW (quiet fail OK)
+    // SW (quiet)
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(()=>{}); }
   </script>
 </body>
 </html>
+
 
 
 
