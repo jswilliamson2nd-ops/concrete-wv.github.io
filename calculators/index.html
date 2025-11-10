@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
 
-  <meta name="description" content="Field-ready concrete calculators: volume, trucks, yield, w/cm, moisture adjust, evaporation rate, fresh temp, cylinders, rebar, joints, slope, pump, cycle, coverage, insulation, strength, unit converter." />
+  <meta name="description" content="Field-ready concrete calculators: volume, trucks, yield, w/cm, moisture adjust, evaporation rate, fresh temp, cylinders, rebar, joints, slope, pump, cycle, coverage, insulation, strength, unit converter, max temperature (mass concrete)." />
 
   <style>
     :root{
@@ -63,7 +63,6 @@
     .input-row{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));margin:16px 0}
     label{display:block;font-size:14px;color:var(--dim);margin-bottom:6px}
 
-    /* Theme-aware fields */
     input,select{
       width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);
       background:var(--card);color:var(--text);font-size:16px
@@ -87,7 +86,7 @@
 <body>
   <header>
     <div class="container nav">
-      <a href="/" aria-label="Home"><img class="logo" src="/assets/aciwv_logo_body.png?v=5" alt="ACI WV" /></a>
+      <a href="/" aria-label="Home"><img class="logo" src="/assets/aciwv_logo_body.png?v=6" alt="ACI WV" /></a>
       <nav aria-label="Primary">
         <a href="/">Home</a>
         <a href="/topics/">Topics</a>
@@ -110,10 +109,10 @@
     <div class="grid">
       <article class="card"><h2>Volume (yd³) <span class="badge">NEW</span></h2><p>Slab • Trench • Column + waste + trucks</p><a class="btn" href="#volume">Open</a></article>
       <article class="card"><h2>Truck Loads</h2><p>9.0 / 9.5 / 10.0 comparison</p><a class="btn" href="#trucks">Open</a></article>
-      <article class="card"><h2>Yield &amp; Relative Yield</h2><p>ASTM C138</p><a class="btn" href="#yield">Open</a></article>
+      <article class="card"><h2>Yield &amp; Rel. Yield</h2><p>Bucket factor • batch totals • theoretical air</p><a class="btn" href="#yield">Open</a></article>
       <article class="card"><h2>w/c • w/cm</h2><p>With SCM</p><a class="btn" href="#wcm">Open</a></article>
       <article class="card"><h2>Moisture Adjust</h2><p>Water add/remove + new w/cm</p><a class="btn" href="#water">Open</a></article>
-      <article class="card"><h2>Evaporation Rate</h2><p>≥ 0.20 caution</p><a class="btn" href="#evap">Open</a></article>
+      <article class="card"><h2>Evaporation Rate</h2><p>≥ 0.20 caution (ACI/PCA)</p><a class="btn" href="#evap">Open</a></article>
       <article class="card"><h2>Fresh Temp</h2><p>Component estimate</p><a class="btn" href="#temp">Open</a></article>
       <article class="card"><h2>Cylinder Planner</h2><p>7/14/28 or custom</p><a class="btn" href="#cylinders">Open</a></article>
       <article class="card"><h2>Rebar Takeoff</h2><p>Count • length • weight</p><a class="btn" href="#rebar">Open</a></article>
@@ -122,9 +121,10 @@
       <article class="card"><h2>Pump Time</h2><p>yd³/hr pacing</p><a class="btn" href="#pump">Open</a></article>
       <article class="card"><h2>Truck Cycle</h2><p>Fleet supply check</p><a class="btn" href="#cycle">Open</a></article>
       <article class="card"><h2>Coverage</h2><p>ft² → gallons</p><a class="btn" href="#coverage">Open</a></article>
-      <article class="card"><h2>Insulation</h2><p>ΔT + blankets</p><a class="btn" href="#insulation">Open</a></article>
+      <article class="card"><h2>Insulation</h2><p>ΔT + layers + Required R</p><a class="btn" href="#insulation">Open</a></article>
       <article class="card"><h2>Strength Gain</h2><p>Heuristic curve</p><a class="btn" href="#strength">Open</a></article>
       <article class="card"><h2>Unit Converter</h2><p>psi • MPa • pcf • kg/m³ • °F • °C</p><a class="btn" href="#convert">Open</a></article>
+      <article class="card"><h2>Max Temperature</h2><p>Mass concrete peak + ΔT check</p><a class="btn" href="#maxtemp">Open</a></article>
     </div>
 
     <section id="tool" class="tool" aria-live="polite">
@@ -179,6 +179,7 @@
   <script src="./calcs.js" defer></script>
 </body>
 </html>
+
 
 
 
