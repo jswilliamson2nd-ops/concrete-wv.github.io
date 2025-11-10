@@ -37,36 +37,34 @@
     /* Header */
     header{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);background:rgba(11,18,32,.9)}
     .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;flex-wrap:wrap}
-    .logo-img{height:84px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.35))}
-    @media (max-width:640px){ .logo-img{height:56px} }
     nav{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
     nav a{color:var(--text-dim);padding:6px 2px;font-weight:500}
     nav a.active{color:var(--accent);font-weight:700;position:relative}
     nav a.active::after{content:'';position:absolute;bottom:-9px;left:0;right:0;height:3px;background:var(--accent);border-radius:2px}
     #theme-toggle{background:none;border:none;padding:6px 10px;border-radius:10px;cursor:pointer}
 
-    /* Skip link */
-    .skip{
-      position:absolute;left:12px;top:-100px;z-index:60;
-      background:var(--card);border:1px solid var(--border);color:var(--text);
-      padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);transition:top .2s;
+    /* Countdown */
+    .header-countdown{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+      color:var(--text);font-weight:900;letter-spacing:.5px;line-height:1.15;
     }
-    .skip:focus-visible{top:12px;outline:3px solid var(--accent)}
+    .header-countdown .cd-num{font-size:1.6rem;color:#ff9500;min-width:2ch;text-align:right;text-shadow:0 2px 10px rgba(0,0,0,.35);white-space:nowrap}
+    .header-countdown .cd-label{font-size:.95rem}
+    .header-countdown .cd-sub{font-size:.85rem;opacity:.9;font-weight:700}
+    @media (max-width:520px){
+      .header-countdown .cd-num{font-size:1.3rem}
+      .header-countdown .cd-label{font-size:.85rem}
+      .header-countdown .cd-sub{font-size:.8rem}
+    }
 
-    /* Orange announcement bar */
+    /* Orange bar */
     .next-event-bar{
       background:var(--orange);color:#000;position:relative;
-      padding:18px 20px 22px 96px;display:flex;align-items:center;
-      gap:24px;flex-wrap:wrap;box-shadow:0 4px 20px rgba(255,149,0,.4);
-    }
-    .next-event-bar img{
-      height:66px;position:absolute;left:20px;top:50%;transform:translateY(-50%);
-      filter:drop-shadow(0 4px 12px rgba(0,0,0,.5));
+      padding:18px 20px 22px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;
+      box-shadow:0 4px 20px rgba(255,149,0,.4);
     }
     .next-event-bar .text{font-weight:700;font-size:1.12rem;flex:1;min-width:300px}
-    .next-event-bar .btn{
-      background:#000;color:#fff;padding:.9rem 1.8rem;font-size:1.05rem;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.4)
-    }
+    .next-event-bar .btn{background:#000;color:#fff;padding:.9rem 1.8rem;font-size:1.05rem;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.4)}
 
     /* Page hero */
     .page-hero{padding:28px 0 6px;text-align:center}
@@ -82,10 +80,9 @@
     .btn{display:inline-block;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,var(--bg-2),rgba(0,0,0,.06));color:var(--text);text-align:center;cursor:pointer;box-shadow:var(--shadow)}
     .btn.primary{background:#163049;border-color:#2aa198}
     .badge{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--border);color:var(--text-dim)}
-
-    /* Emoji title row */
     .title{display:flex;align-items:center;gap:10px;margin:0 0 8px}
     .emoji{font-size:1.4rem;line-height:1}
+
     footer{border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:14px;padding:24px 0}
     .memorial{color:var(--text-dim);font-style:italic;font-size:1.05rem;margin-bottom:8px}
   </style>
@@ -95,9 +92,15 @@
 
   <header>
     <div class="container nav">
-      <a href="/" aria-label="ACI WV Home">
-        <img class="logo-img" src="/assets/aciwv_logo_body.png?v=5" alt="ACI West Virginia" height="84" width="84" decoding="async">
-      </a>
+      <!-- Countdown on the left -->
+      <div class="header-countdown" aria-live="polite" title="WV Concrete kickoff countdown">
+        <div class="cd-num" id="countdown">74</div>
+        <div>
+          <div class="cd-label">DAYS UNTIL WV CONCRETE HISTORY</div>
+          <div class="cd-sub">Jan 23 Kickoff Call — 11 AM EST</div>
+        </div>
+      </div>
+
       <nav aria-label="Primary">
         <a href="/">Home</a>
         <a href="/topics/">Topics</a>
@@ -112,10 +115,7 @@
 
   <!-- Orange bar -->
   <div class="next-event-bar">
-    <img src="/assets/aciwv_logo_body.png?v=5" alt="ACI WV">
-    <div class="text">
-      Jan 23, 2026 @ 11:00 AM — Kickoff Zoom Call (agenda drops Dec 20)
-    </div>
+    <div class="text">Jan 23, 2026 @ 11:00 AM — Kickoff Zoom Call (agenda drops Dec 20)</div>
     <a href="https://calendar.google.com/calendar/u/0/r/eventedit?text=ACI+WV+Kickoff+Call&dates=20260123T160000Z/20260123T170000Z&details=First+official+ACI+West+Virginia+Interest+Group+meeting.+Zoom+link+in+email.&location=Zoom" target="_blank" rel="noopener" class="btn">Add to Calendar</a>
   </div>
 
@@ -129,9 +129,7 @@
       </p>
     </section>
 
-    <!-- WVDOH resources -->
     <section class="grid" aria-label="WVDOH link groups">
-      <!-- Traffic Control Manual -->
       <article class="card">
         <div class="title"><span class="emoji" aria-hidden="true">🚧</span><h2>Temporary Traffic Control Manual <span class="badge">PDF</span></h2></div>
         <div class="links">
@@ -140,7 +138,6 @@
         </div>
       </article>
 
-      <!-- Erosion & Sediment Control -->
       <article class="card">
         <div class="title"><span class="emoji" aria-hidden="true">🌿</span><h2>Erosion &amp; Sediment Control</h2></div>
         <div class="links">
@@ -149,16 +146,14 @@
         </div>
       </article>
 
-      <!-- Standard Details -->
       <article class="card">
         <div class="title"><span class="emoji" aria-hidden="true">📐</span><h2>Standard Details</h2></div>
         <div class="links">
-          <a class="btn primary" href="https://transportation.wv.gov/highways/TechnicalSupport/Pages/Details.aspx" target="_blank" rel="noopener">Open Standard Details</a>
+          <a class="btn primary" href="https://transportation.wv.org/highways/TechnicalSupport/Pages/Details.aspx" target="_blank" rel="noopener">Open Standard Details</a>
           <p class="muted">Current roadway and structure details used across WV projects.</p>
         </div>
       </article>
 
-      <!-- Spec Book -->
       <article class="card" id="card-specs">
         <div class="title"><span class="emoji" aria-hidden="true">📘</span><h2>Standard Specifications <span class="badge">Spec Book</span></h2></div>
         <div class="links">
@@ -168,7 +163,6 @@
         </div>
       </article>
 
-      <!-- Construction Manual -->
       <article class="card" id="card-const">
         <div class="title"><span class="emoji" aria-hidden="true">🛠️</span><h2>Construction Manual</h2></div>
         <div class="links">
@@ -177,7 +171,6 @@
         </div>
       </article>
 
-      <!-- Design Directives -->
       <article class="card" id="card-design">
         <div class="title"><span class="emoji" aria-hidden="true">🧭</span><h2>Design Directives</h2></div>
         <div class="links">
@@ -187,7 +180,6 @@
         </div>
       </article>
 
-      <!-- Materials Procedures -->
       <article class="card" id="card-mp">
         <div class="title"><span class="emoji" aria-hidden="true">🧪</span><h2>Materials Procedures <span class="badge">MPs</span></h2></div>
         <div class="links">
@@ -196,7 +188,6 @@
         </div>
       </article>
 
-      <!-- Approved Sources -->
       <article class="card" id="card-approved">
         <div class="title"><span class="emoji" aria-hidden="true">✅</span><h2>Approved Sources</h2></div>
         <div class="links">
@@ -211,7 +202,7 @@
   </main>
 
   <footer>
-    <p class="memorial"></p>
+    <p class="memorial">In memory of Larry George Buchheit · January 12, 1947 — January 27, 2025</p>
     © <span id="y"></span> ACI West Virginia Interest Group ·
     <a href="/">Home</a> · <a href="/topics/">Topics</a> ·
     <a href="/wvdoh.html">WVDOH</a> · <a href="/calculators/">Calculators</a>
@@ -226,7 +217,41 @@
       themeBtn.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
     });
 
-    // Animate cards on scroll
+    // Countdown (D:HH:MM mode near the date)
+    (function(){
+      const target = new Date('2026-01-23T11:00:00-05:00').getTime();
+      const el = document.getElementById('countdown');
+      const fmt = n => String(Math.max(0,n)).padStart(2,'0');
+
+      function render(){
+        if(!el) return;
+        const ms = target - Date.now();
+        if (ms <= 0) { el.textContent = '0d 00h 00m'; el.setAttribute('aria-label','Kickoff has started'); return; }
+
+        const totalMin = Math.floor(ms/60000);
+        const totalHrs = Math.floor(ms/3600000);
+        const days = Math.floor(ms/86400000);
+        const hrs  = totalHrs % 24;
+        const mins = totalMin % 60;
+
+        if (days > 3) {
+          el.textContent = String(days);
+          el.setAttribute('aria-label', days + ' days until kickoff');
+        } else if (days >= 1) {
+          el.textContent = `${days}d ${fmt(hrs)}h ${fmt(mins)}m`;
+          el.setAttribute('aria-label', `${days} days, ${hrs} hours, ${mins} minutes until kickoff`);
+        } else {
+          el.textContent = `${fmt(totalHrs)}h ${fmt(mins)}m`;
+          el.setAttribute('aria-label', `${totalHrs} hours, ${mins} minutes until kickoff`);
+        }
+      }
+
+      render();
+      const startDelay = 60000 - (Date.now() % 60000);
+      setTimeout(() => { render(); setInterval(render, 60000); }, startDelay);
+    })();
+
+    // Animate cards
     const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('visible')), {threshold:.1});
     document.querySelectorAll('.card').forEach(c => io.observe(c));
 
@@ -235,6 +260,7 @@
   </script>
 </body>
 </html>
+
 
 
 
