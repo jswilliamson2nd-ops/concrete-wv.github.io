@@ -12,15 +12,13 @@
   <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
-
-  <!-- NEW HERO IMAGE (8K SEGMENTAL BRIDGE SUNRISE) -->
-  <link rel="preload" as="image" href="https://i.imgur.com/7kX9mP2.jpg">
+  <link rel="preload" as="image" href="/assets/aciwv_hero_1080p_loop.jpg">
 
   <!-- SEO / Social -->
   <meta name="description" content="ACI West Virginia Interest Group — building a statewide community to advance concrete knowledge, quality, and certification." />
   <meta property="og:title" content="ACI West Virginia Interest Group" />
   <meta property="og:description" content="Advancing concrete knowledge, quality, and certification across West Virginia." />
-  <meta property="og:image" content="https://i.imgur.com/Zp9kF4g.jpg" />
+  <meta property="og:image" content="https://concrete-wv.org/assets/aciwv_logo_white_square.png" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://concrete-wv.org/" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -36,6 +34,7 @@
     a{color:var(--text);text-decoration:none} a:hover{color:var(--accent)}
     .container{width:min(1080px,92vw);margin:0 auto}
 
+    /* Header */
     header{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);background:rgba(11,18,32,.9)}
     .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;flex-wrap:wrap}
     .logo-img{height:84px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.35))}
@@ -46,9 +45,15 @@
     nav a.active::after{content:'';position:absolute;bottom:-9px;left:0;right:0;height:3px;background:var(--accent);border-radius:2px}
     #theme-toggle{background:none;border:none;font-size:1.1rem;cursor:pointer;padding:6px 10px;border-radius:10px}
 
-    .skip{position:absolute;left:12px;top:-100px;z-index:60;background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);transition:top .2s}
+    /* Skip link */
+    .skip{
+      position:absolute;left:12px;top:-100px;z-index:60;
+      background:var(--card);border:1px solid var(--border);color:var(--text);
+      padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);transition:top .2s;
+    }
     .skip:focus-visible{top:12px;outline:3px solid var(--accent)}
 
+    /* Orange bar */
     .next-event-bar{
       background:var(--orange);color:#000;position:relative;
       padding:18px 20px 22px 96px;display:flex;align-items:center;
@@ -58,22 +63,30 @@
       height:66px;position:absolute;left:20px;top:50%;transform:translateY(-50%);
       filter:drop-shadow(0 4px 12px rgba(0,0,0,.5));
     }
-    .next-event-bar .text{font-weight:700;font-size:1.12rem;flex:1;min-width:300px;}
+    .next-event-bar .text{
+      font-weight:700;
+      font-size:1.12rem; /* fixed: removed erroneous font-size::700; */
+      flex:1;min-width:300px;
+    }
     .next-event-bar a.btn{
       background:#000;color:#fff;padding:0.9rem 1.8rem;font-size:1.05rem;
       border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.4);
     }
 
+    /* Hero */
     .hero-wrap{position:relative;isolation:isolate;border-bottom:1px solid var(--border)}
-    @media (min-width:1100px){.hero-wrap{margin:0 calc(-50vw + 50%);width:100vw;position:relative;left:50%;transform:translateX(-50%)}}
+    @media (min-width:1100px){
+      .hero-wrap{margin:0 calc(-50vw + 50%);width:100vw;position:relative;left:50%;transform:translateX(-50%)}
+    }
     .hero-media{position:relative;aspect-ratio:16/9;max-height:62vh;overflow:hidden;background:#0d1626}
     @media (min-width:1100px){.hero-media{aspect-ratio:2.4/1;max-height:80vh}}
     .hero-media video{width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:brightness(.9)}
     .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,18,32,.15),rgba(11,18,32,.85));pointer-events:none}
     .hero-text{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);text-align:center;color:white;text-shadow:0 2px 20px rgba(0,0,0,.9);z-index:2;max-width:90%}
-    .hero-text h1{font-size:clamp(2rem,8vw,4.5rem);margin:0 0 .4rem;line-height:1.1;font-weight:900}
-    .hero-text p{font-size:1.4rem;font-weight:600;letter-spacing:.3px}
+    .hero-text h1{font-size:clamp(2rem,8vw,4rem);margin:0 0 .4rem;line-height:1.1;font-weight:900}
+    .hero-text p{font-size:1.35rem;font-weight:600;letter-spacing:.3px}
 
+    /* Intro card under hero */
     .intro{padding:24px 0 0}
     .intro-card{margin:0 auto;max-width:980px;border:1px solid var(--border);border-radius:20px;background:var(--card);padding:28px 32px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
     .intro-card h1{margin:0 0 10px;font-size:2.2rem}
@@ -86,14 +99,19 @@
     .grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
     .card{border:1px solid var(--border);border-radius:20px;background:var(--card);padding:24px;box-shadow:var(--shadow);transition:.4s;opacity:0;transform:translateY(30px)}
     .card.visible{opacity:1;transform:none}
+
+    /* Value props with emoji icons */
     .kv{display:grid;gap:12px;grid-template-columns:48px 1fr;align-items:start}
     .kv .emoji{font-size:2.6rem;line-height:1}
+
+    /* Partner badges with emojis */
     .strip{display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center;padding:20px 0}
     .pbadge{display:inline-flex;align-items:center;gap:12px;padding:14px 20px;border-radius:12px;border:1px solid var(--border);
       background:linear-gradient(180deg,var(--bg-2),rgba(0,0,0,.06));font-weight:600;color:var(--text);box-shadow:var(--shadow);
       min-width:170px;justify-content:center;font-size:1.15rem}
     .pbadge .emoji{font-size:1.6rem}
 
+    /* Floating buttons */
     #calc-float{position:fixed;bottom:24px;right:24px;z-index:100;background:var(--orange);color:#000;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 8px 25px rgba(255,149,0,.4);cursor:pointer;transition:.3s}
     #calc-float:hover{transform:scale(1.1) rotate(15deg)}
     #audio-toggle{position:fixed;bottom:24px;left:24px;z-index:100;width:56px;height:56px;border-radius:50%;
@@ -123,11 +141,11 @@
         <a href="#verify">Verify</a>
         <a href="#contact">Contact</a>
       </nav>
-      <button id="theme-toggle" aria-label="Toggle light/dark mode">Moon</button>
+      <button id="theme-toggle" aria-label="Toggle light/dark mode">🌙</button>
     </div>
   </header>
 
-  <!-- ORANGE BAR -->
+  <!-- Orange announcement bar -->
   <div class="next-event-bar">
     <img src="/assets/aciwv_logo_body.png?v=5" alt="ACI WV">
     <div class="text">
@@ -136,22 +154,22 @@
     <a href="https://calendar.google.com/calendar/u/0/r/eventedit?text=ACI+WV+Kickoff+Call&dates=20260123T160000Z/20260123T170000Z&details=First+official+ACI+West+Virginia+Interest+Group+meeting.+Zoom+link+in+email.&location=Zoom" target="_blank" rel="noopener" class="btn">Add to Calendar</a>
   </div>
 
-  <!-- NEW HERO: SEGMENTAL BRIDGE SUNRISE -->
-  <div class="hero-wrap" aria-label="Segmental concrete bridge sunrise">
+  <!-- HERO -->
+  <div class="hero-wrap" aria-label="Bridge concreting footage">
     <div class="hero-media" aria-hidden="true">
-      <video id="hero-video" autoplay muted loop playsinline preload="auto" 
-             poster="https://i.imgur.com/7kX9mP2.jpg">
+      <video id="hero-video" autoplay muted loop playsinline preload="auto" poster="/assets/aciwv_hero_1080p_loop.jpg">
         <source src="/assets/aciwv_hero_1080p_loop.webm" type="video/webm">
         <source src="/assets/aciwv_hero_1080p_loop.mp4" type="video/mp4">
       </video>
       <div class="hero-overlay"></div>
       <div class="hero-text">
-        <h1>West Virginia Just Built Its Future in Concrete</h1>
-        <p>Zero cost. Zero spam. Real events → Jan 2026.</p>
+        <h1>West Virginia Concrete Just Got Its Own Playbook</h1>
+        <p>Zero cost. Zero spam. Real events starting Jan 2026.</p>
       </div>
     </div>
   </div>
 
+  <!-- Intro card BELOW the video -->
   <div class="intro">
     <div class="container">
       <section class="intro-card">
@@ -166,23 +184,25 @@
   </div>
 
   <main id="main" class="container">
+    <!-- Value Props -->
     <section class="section">
       <div class="grid">
         <article class="card kv">
-          <div class="emoji" aria-hidden="true">Compass</div>
+          <div class="emoji" aria-hidden="true">🧭</div>
           <div><h3>Connect Statewide</h3><p class="muted">One network for everyone in WV concrete.</p></div>
         </article>
         <article class="card kv">
-          <div class="emoji" aria-hidden="true">Books</div>
+          <div class="emoji" aria-hidden="true">📚</div>
           <div><h3>Instant Resources</h3><p class="muted">Verification, specs, calculators — no digging.</p></div>
         </article>
         <article class="card kv">
-          <div class="emoji" aria-hidden="true">Construction</div>
+          <div class="emoji" aria-hidden="true">🏗️</div>
           <div><h3>Real Events</h3><p class="muted">Plant tours & demos starting Jan 2026.</p></div>
         </article>
       </div>
     </section>
 
+    <!-- Verify -->
     <section id="verify" class="section anchor-spacer">
       <div class="grid">
         <article class="card">
@@ -196,6 +216,7 @@
       </div>
     </section>
 
+    <!-- Who Should Join -->
     <section class="section">
       <h2>Who Should Join?</h2>
       <div class="grid">
@@ -206,6 +227,7 @@
       </div>
     </section>
 
+    <!-- Timeline -->
     <section class="section">
       <h2>What’s Next (2025–2028)</h2>
       <div class="card">
@@ -218,12 +240,13 @@
       </div>
     </section>
 
+    <!-- Join -->
     <section id="join" class="section anchor-spacer">
       <article class="card" style="text-align:center">
         <h2>Be Part of WV Concrete History</h2>
         <p class="muted" style="font-size:1.1rem;max-width:600px;margin:20px auto">Zero cost. Zero spam. Just events, resources, and shaping the future.</p>
         <p style="font-size:1.15rem;background:#ff9500;color:#000;padding:14px 24px;border-radius:12px;display:inline-block;max-width:90%">
-          First 100 members get a FREE limited-edition ACI-WV chrome sticker (mailed Jan 2026)
+          First 100 members get a FREE limited-edition ACI-WV hard-hat sticker (mailed Jan 2026)
         </p>
         <a class="btn" href="https://forms.gle/oMRrHjgExBBw3dXk8" target="_blank" rel="noopener"
            style="font-size:1.3rem;padding:20px 48px;margin-top:16px;display:inline-block">
@@ -232,19 +255,21 @@
       </article>
     </section>
 
+    <!-- Partners (emoji badges) -->
     <section class="section">
       <h2>Built With West Virginia’s Concrete Leaders</h2>
       <div class="card">
         <p class="muted" style="text-align:center">Early supporters (more joining weekly)</p>
         <div class="strip" role="list">
-          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true">Factory</span><span>Producer</span></div>
-          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true">Tools</span><span>Contractor</span></div>
-          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true">Test Tube</span><span>Lab</span></div>
-          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true">Graduation Cap</span><span>Student</span></div>
+          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true">🏭</span><span>Producer</span></div>
+          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true">🛠️</span><span>Contractor</span></div>
+          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true">🧪</span><span>Lab</span></div>
+          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true">🎓</span><span>Student</span></div>
         </div>
       </div>
     </section>
 
+    <!-- Contact -->
     <section id="contact" class="section anchor-spacer">
       <article class="card">
         <h2>Contact</h2>
@@ -254,10 +279,12 @@
     </section>
   </main>
 
-  <div id="calc-float" aria-label="Open calculator">Calculator</div>
+  <!-- Floating Calculator -->
+  <div id="calc-float" aria-label="Open calculator">🧮</div>
 
+  <!-- Background Music (WV song) -->
   <audio id="anthem" src="/assets/wv-song.mp3" preload="auto" loop></audio>
-  <button id="audio-toggle" aria-label="Toggle site audio" title="Toggle audio">Speaker Off</button>
+  <button id="audio-toggle" aria-label="Toggle site audio" title="Toggle audio">🔈</button>
 
   <footer>
     <p class="memorial">In memory of Larry George Buchheit · January 12, 1947 — January 27, 2025</p>
@@ -266,34 +293,44 @@
   </footer>
 
   <script>
+    // Year + theme
     document.getElementById('y').textContent = new Date().getFullYear();
     const themeBtn = document.getElementById('theme-toggle');
     themeBtn.addEventListener('click', () => {
       document.body.classList.toggle('light');
-      themeBtn.textContent = document.body.classList.contains('light') ? 'Sun' : 'Moon';
+      themeBtn.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
     });
+
+    // Animate cards on scroll
     const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('visible')), {threshold:.1});
     document.querySelectorAll('.card').forEach(c => io.observe(c));
+
+    // Floating calc
     document.getElementById('calc-float').addEventListener('click', () => location.href = '/calculators/#volume');
+
+    // Service worker
     if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{})}
 
+    // Audio autoplay with fallback
     const audio = document.getElementById('anthem');
     const audioBtn = document.getElementById('audio-toggle');
     audio.volume = 0.35;
-    function setBtn(on){audioBtn.classList.toggle('on',on);audioBtn.textContent=on?'Speaker':'Speaker Off'}
+    function setBtn(on){audioBtn.classList.toggle('on',on);audioBtn.textContent=on?'🔊':'🔈'}
     function attemptPlay(){audio.play().then(()=>{setBtn(true);audioBtn.classList.add('show')}).catch(()=>{setBtn(false);audioBtn.classList.add('show')})}
     attemptPlay();
     const kick = () => {attemptPlay();window.removeEventListener('pointerdown',kick);window.removeEventListener('keydown',kick)};
     window.addEventListener('pointerdown',kick);window.addEventListener('keydown',kick);
     audioBtn.addEventListener('click', async () => {
-      if(audio.paused){try{await audio.play();setBtn(true)}catch(_){}}
-      else{audio.pause();setBtn(false)}
+      if(audio.paused){try{await audio.play();setBtn(true)}catch(_){}} else {audio.pause();setBtn(false)}
     });
+
+    // Keep hero video looping cleanly
     const hv = document.getElementById('hero-video');
     hv.addEventListener('ended', () => hv.play().catch(()=>{}));
   </script>
 </body>
 </html>
+
 
 
 
