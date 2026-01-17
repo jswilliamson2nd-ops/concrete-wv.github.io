@@ -29,43 +29,141 @@
       --accent:#2aa198; --card:#101828; --shadow:0 6px 18px rgba(0,0,0,.25); --orange:#ff9500
     }
     .light{--bg:#f8fafc; --bg-2:#f1f5f9; --text:#0f172a; --text-dim:#475569; --card:#fff; --border:#e2e8f0; --accent:#0891b2}
+
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);color:var(--text);line-height:1.6}
-    a{color:var(--text);text-decoration:none} a:hover{color:var(--accent)}
+    html,body{
+      height:100%;margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);
+      color:var(--text);line-height:1.6
+    }
+    a{color:var(--text);text-decoration:none}
+    a:hover{color:var(--accent)}
     .container{width:min(1080px,92vw);margin:0 auto}
 
-    /* Header */
-    header{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);background:rgba(11,18,32,.9)}
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;flex-wrap:wrap}
-    nav{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-    nav a{color:var(--text-dim);padding:6px 2px;font-weight:500}
-    nav a.active{color:var(--accent);font-weight:700;position:relative}
-    nav a.active::after{content:'';position:absolute;bottom:-9px;left:0;right:0;height:3px;background:var(--accent);border-radius:2px}
-    #theme-toggle{background:none;border:none;font-size:1.6rem;cursor:pointer;padding:6px;border-radius:10px}
+    /* Skip link */
+    .skip{
+      position:absolute;left:12px;top:-100px;z-index:60;
+      background:var(--card);border:1px solid var(--border);color:var(--text);
+      padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);transition:top .2s
+    }
+    .skip:focus-visible{top:12px;outline:3px solid var(--accent)}
 
-    /* Countdown */
-    .header-countdown{display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:var(--text);font-weight:900;letter-spacing:.5px;line-height:1.15}
-    .header-countdown .cd-num{font-size:1.6rem;color:var(--orange);min-width:2ch;text-align:right;text-shadow:0 2px 10px rgba(0,0,0,.35); white-space:nowrap;}
-    .header-countdown .cd-label{font-size:.95rem}
-    .header-countdown .cd-sub{font-size:.85rem;opacity:.9;font-weight:700}
-    @media (max-width:520px){
-      .header-countdown .cd-num{font-size:1.3rem}
-      .header-countdown .cd-label{font-size:.85rem}
-      .header-countdown .cd-sub{font-size:.8rem}
+    /* Header (tight + responsive) */
+    header{
+      position:sticky;top:0;z-index:50;
+      border-bottom:1px solid var(--border);
+      backdrop-filter:blur(12px);
+      background:rgba(11,18,32,.9);
+    }
+    body.light header{background:rgba(248,250,252,.92)}
+    .nav{
+      display:grid;
+      grid-template-columns:1fr auto; /* left cluster + theme button */
+      gap:12px;
+      align-items:center;
+      padding:10px 0;
     }
 
-    /* Skip link */
-    .skip{position:absolute;left:12px;top:-100px;z-index:60;background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);transition:top .2s}
-    .skip:focus-visible{top:12px;outline:3px solid var(--accent)}
+    /* Left cluster: logo+countdown + nav */
+    .leftbar{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      min-width:0; /* allows shrinking */
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+      flex:0 1 auto;
+    }
+    .brand a{display:flex;align-items:center}
+    .brand img{
+      height:40px;width:auto;display:block;
+      border-radius:10px;
+      box-shadow:0 6px 18px rgba(0,0,0,.20);
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+    }
+
+    /* Countdown */
+    .header-countdown{
+      display:flex;align-items:center;gap:10px;flex-wrap:nowrap;
+      color:var(--text);font-weight:900;letter-spacing:.4px;line-height:1.1;
+      white-space:nowrap;
+    }
+    .header-countdown .cd-num{
+      font-size:1.35rem;color:var(--orange);
+      min-width:2ch;text-align:right;
+      text-shadow:0 2px 10px rgba(0,0,0,.35);
+    }
+    .header-countdown .cd-label{font-size:.88rem}
+    .header-countdown .cd-sub{font-size:.80rem;opacity:.92;font-weight:800;color:var(--text-dim)}
+    @media (max-width:880px){
+      .header-countdown .cd-label{display:none} /* tighten */
+      .header-countdown .cd-sub{font-size:.80rem}
+    }
+
+    /* Nav links */
+    nav{
+      display:flex;align-items:center;gap:12px;flex-wrap:nowrap;
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+    }
+    nav::-webkit-scrollbar{display:none}
+    nav a{
+      color:var(--text-dim);
+      padding:6px 8px;
+      font-weight:600;
+      border-radius:10px;
+      white-space:nowrap;
+    }
+    nav a:hover{color:var(--text)}
+    nav a.active{
+      color:var(--text);
+      background:rgba(42,161,152,.18);
+      border:1px solid rgba(42,161,152,.35);
+    }
+
+    /* Theme toggle */
+    #theme-toggle{
+      background:rgba(255,255,255,.08);
+      border:1px solid var(--border);
+      font-size:1.25rem;
+      cursor:pointer;
+      padding:10px 12px;
+      border-radius:14px;
+      color:var(--text);
+      box-shadow:0 6px 18px rgba(0,0,0,.18);
+    }
+    body.light #theme-toggle{background:rgba(15,23,42,.06);color:var(--text)}
+    #theme-toggle:active{transform:translateY(1px)}
+
+    /* Mobile header layout: two rows, super clean */
+    @media (max-width:720px){
+      .nav{grid-template-columns:1fr auto}
+      .leftbar{flex-direction:column;align-items:flex-start;gap:10px}
+      nav{width:100%}
+      .brand img{height:38px}
+      .header-countdown .cd-num{font-size:1.25rem}
+    }
+    @media (max-width:420px){
+      .brand img{height:34px}
+      .header-countdown .cd-sub{font-size:.78rem}
+    }
 
     /* Announcement bar */
     .next-event-bar{
       background:var(--orange);color:#000;position:relative;
-      padding:18px 20px 22px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;
+      padding:16px 20px 18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;
       box-shadow:0 4px 20px rgba(255,149,0,.4);
     }
-    .next-event-bar .text{font-weight:700;font-size:1.12rem;flex:1;min-width:300px}
-    .next-event-bar a.btn{background:#000;color:#fff;padding:.9rem 1.8rem;font-size:1.05rem;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.4)}
+    .next-event-bar .text{font-weight:800;font-size:1.06rem;flex:1;min-width:260px}
+    .next-event-bar a.btn{background:#000;color:#fff;padding:.85rem 1.4rem;font-size:1.02rem;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.35)}
 
     /* Hero */
     .hero-wrap{position:relative;isolation:isolate;border-bottom:1px solid var(--border)}
@@ -76,89 +174,140 @@
     @media (min-width:1100px){.hero-media{aspect-ratio:2.4/1;max-height:80vh}}
     .hero-media video{width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:brightness(.9)}
     .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,18,32,.15),rgba(11,18,32,.85));pointer-events:none}
-    .hero-text{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);text-align:center;color:white;text-shadow:0 2px 20px rgba(0,0,0,.9);z-index:2;max-width:90%}
+    .hero-text{
+      position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+      text-align:center;color:white;text-shadow:0 2px 20px rgba(0,0,0,.9);
+      z-index:2;max-width:90%;
+      padding:14px 18px;border-radius:18px;background:rgba(0,0,0,.18);backdrop-filter:blur(6px);
+    }
     .hero-text h1{font-size:clamp(2rem,8vw,4rem);margin:0 0 .4rem;line-height:1.1;font-weight:900}
-    .hero-text p{font-size:1.35rem;font-weight:600;letter-spacing:.3px}
+    .hero-text p{font-size:1.15rem;font-weight:700;letter-spacing:.2px;margin:0}
 
     /* Intro card */
     .intro{padding:24px 0 0}
-    .intro-card{margin:0 auto;max-width:980px;border:1px solid var(--border);border-radius:20px;background:var(--card);padding:28px 32px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
+    .intro-card{
+      margin:0 auto;max-width:980px;border:1px solid var(--border);
+      border-radius:20px;background:var(--card);padding:28px 32px;
+      box-shadow:var(--shadow);backdrop-filter:blur(8px)
+    }
     .intro-card h1{margin:0 0 10px;font-size:2.2rem}
     .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px}
-    .btn{padding:14px 28px;border-radius:12px;background:var(--orange);color:#000;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(255,149,0,.4);transition:.2s;font-size:1.05rem}
+    .btn{
+      padding:14px 28px;border-radius:12px;background:var(--orange);color:#000;
+      font-weight:800;cursor:pointer;box-shadow:0 4px 15px rgba(255,149,0,.4);
+      transition:.2s;font-size:1.05rem;display:inline-flex;align-items:center;justify-content:center;gap:.5rem
+    }
     .btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(255,149,0,.5)}
     .btn.primary{background:#163049;border:1px solid #2aa198;color:var(--text)}
 
     /* Cards */
     .section{padding:40px 0}
     .grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
-    .card{border:1px solid var(--border);border-radius:20px;background:var(--card);padding:24px;box-shadow:var(--shadow);transition:.4s;opacity:0;transform:translateY(30px)}
+    .card{
+      border:1px solid var(--border);border-radius:20px;background:var(--card);
+      padding:24px;box-shadow:var(--shadow);transition:.4s;
+      opacity:0;transform:translateY(30px)
+    }
     .card.visible{opacity:1;transform:none}
     .kv{display:grid;gap:12px;grid-template-columns:48px 1fr;align-items:start}
     .kv .emoji{font-size:2.6rem;line-height:1}
 
     .strip{display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center;padding:20px 0}
-    .pbadge{display:inline-flex;align-items:center;gap:12px;padding:14px 20px;border-radius:12px;border:1px solid var(--border);
-      background:linear-gradient(180deg,var(--bg-2),rgba(0,0,0,.06));font-weight:600;color:var(--text);box-shadow:var(--shadow);
-      min-width:170px;justify-content:center;font-size:1.15rem}
+    .pbadge{
+      display:inline-flex;align-items:center;gap:12px;padding:14px 20px;border-radius:12px;border:1px solid var(--border);
+      background:linear-gradient(180deg,var(--bg-2),rgba(0,0,0,.06));
+      font-weight:700;color:var(--text);box-shadow:var(--shadow);
+      min-width:170px;justify-content:center;font-size:1.05rem
+    }
     .pbadge .emoji{font-size:1.6rem}
 
     /* Floating buttons */
-    #calc-float{position:fixed;bottom:24px;right:24px;z-index:100;background:var(--orange);color:#000;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 8px 25px rgba(255,149,0,.4);cursor:pointer;transition:.3s}
+    #calc-float{
+      position:fixed;bottom:24px;right:24px;z-index:100;background:var(--orange);color:#000;
+      width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+      font-size:2rem;box-shadow:0 8px 25px rgba(255,149,0,.4);cursor:pointer;transition:.3s
+    }
     #calc-float:hover{transform:scale(1.1) rotate(15deg)}
-    #audio-toggle{position:fixed;bottom:24px;left:24px;z-index:100;width:56px;height:56px;border-radius:50%;
+    #audio-toggle{
+      position:fixed;bottom:24px;left:24px;z-index:100;width:56px;height:56px;border-radius:50%;
       background:rgba(255,255,255,.14);backdrop-filter:blur(6px);border:1px solid var(--border);
       display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;color:var(--text);
-      opacity:0;transform:translateY(10px);transition:.25s}
+      opacity:0;transform:translateY(10px);transition:.25s
+    }
     #audio-toggle.show{opacity:1;transform:none}
     #audio-toggle.on{background:rgba(42,161,152,.25);border-color:#2aa198}
 
     footer{border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:14px;padding:24px 0}
     .memorial{color:var(--text-dim);font-style:italic;font-size:1.05rem;margin-bottom:8px}
 
-    /* --- Button layout polish (equal width / responsive) --- */
+    /* Button layout polish (equal width / responsive) */
     .btn-row{display:flex;flex-direction:column;gap:10px}
-    .btn-row .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
-      min-height:48px;padding:12px 18px;width:100%;
-    }
-    .btn-row .btn::after{content:"↗";font-weight:700}
+    .btn-row .btn{min-height:48px;padding:12px 18px;width:100%}
+    .btn-row .btn::after{content:"↗";font-weight:800}
     @media (min-width:720px){
       .btn-row{flex-direction:row}
       .btn-row .btn{flex:1 1 0}
     }
+
+    /* Missing classes you referenced */
+    .muted{color:var(--text-dim)}
+    .anchor-spacer{scroll-margin-top:92px}
+
+    .timeline{display:grid;gap:14px}
+    .titem{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start}
+    .tdate{font-weight:900;color:var(--accent)}
+    .tline{border-left:3px solid var(--border);padding-left:14px}
+    @media (max-width:640px){
+      .titem{grid-template-columns:1fr}
+      .tline{border-left:none;padding-left:0;border-top:3px solid var(--border);padding-top:10px}
+    }
   </style>
 </head>
+
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
   <header>
     <div class="container nav">
-      <!-- Countdown replaces logo -->
-      <div class="header-countdown" aria-live="polite" title="WV Concrete kickoff countdown">
-        <div class="cd-num" id="countdown">74</div>
-        <div>
-          <div class="cd-label">DAYS UNTIL WV CONCRETE HISTORY</div>
-          <div class="cd-sub">Jan 23 Kickoff Call — 10 AM EST</div>
+      <div class="leftbar">
+        <div class="brand" aria-label="Site header brand">
+          <a href="/" aria-label="ACI West Virginia Interest Group home">
+            <img src="/assets/aciwv_logo_white_square.png"
+                 alt="ACI West Virginia Interest Group logo"
+                 loading="eager" decoding="async">
+          </a>
+
+          <div class="header-countdown" title="WV Concrete kickoff countdown">
+            <div class="cd-num" id="countdown">74</div>
+            <div>
+              <div class="cd-label">DAYS UNTIL WV CONCRETE HISTORY</div>
+              <div class="cd-sub">Jan 23 Kickoff Call — 10 AM EST</div>
+            </div>
+          </div>
         </div>
+
+        <nav aria-label="Primary">
+          <a href="/" class="active">Home</a>
+          <a href="/topics/">Topics</a>
+          <a href="/wvdoh.html">WVDOH Info Corner</a>
+          <a href="/calculators/">Calculators</a>
+          <a href="#verify">Verify</a>
+          <a href="#contact">Contact</a>
+        </nav>
       </div>
 
-      <nav aria-label="Primary">
-        <a href="/" class="active">Home</a>
-        <a href="/topics/">Topics</a>
-        <a href="/wvdoh.html">WVDOH Info Corner</a>
-        <a href="/calculators/">Calculators</a>
-        <a href="#verify">Verify</a>
-        <a href="#contact">Contact</a>
-      </nav>
       <button id="theme-toggle" aria-label="Toggle light/dark mode">🌙</button>
     </div>
   </header>
 
   <!-- Announcement bar -->
   <div class="next-event-bar">
-    <div class="text">Jan 23, 2026 @ 11:00 AM — Kickoff Zoom Call (agenda drops Dec 20)</div>
-    <a href="https://calendar.google.com/calendar/u/0/r/eventedit?text=ACI+WV+Kickoff+Call&dates=20260123T160000Z/20260123T170000Z&details=First+official+ACI+West+Virginia+Interest+Group+meeting.+Zoom+link+in+email.&location=Zoom" target="_blank" rel="noopener" class="btn">Add to Calendar</a>
+    <div class="text">Jan 23, 2026 @ 10:00 AM — Kickoff Zoom Call (agenda drops Dec 20)</div>
+    <a
+      href="https://calendar.google.com/calendar/u/0/r/eventedit?text=ACI+WV+Kickoff+Call&dates=20260123T150000Z/20260123T160000Z&details=First+official+ACI+West+Virginia+Interest+Group+meeting.+Zoom+link+in+email.&location=Zoom"
+      target="_blank" rel="noopener"
+      class="btn"
+    >Add to Calendar</a>
   </div>
 
   <!-- HERO -->
@@ -251,10 +400,22 @@
       <h2>What’s Next (2025–2028)</h2>
       <div class="card">
         <div class="timeline">
-          <div class="titem"><div class="tdate">Dec 2025</div><div class="tline"><strong>Statewide Outreach</strong><div class="muted">Collecting hosts for 2026 tours.</div></div></div>
-          <div class="titem"><div class="tdate">Jan 2026</div><div class="tline"><strong>Kickoff Call</strong><div class="muted">Virtual meeting — agenda soon.</div></div></div>
-          <div class="titem"><div class="tdate">2026–2027</div><div class="tline"><strong>Events Roll Out</strong><div class="muted">Tours, competitions, recert classes.</div></div></div>
-          <div class="titem"><div class="tdate">2028 Goal</div><div class="tline"><strong>Official ACI WV Chapter</strong><div class="muted">Full charter, scholarships, conference.</div></div></div>
+          <div class="titem">
+            <div class="tdate">Dec 2025</div>
+            <div class="tline"><strong>Statewide Outreach</strong><div class="muted">Collecting hosts for 2026 tours.</div></div>
+          </div>
+          <div class="titem">
+            <div class="tdate">Jan 2026</div>
+            <div class="tline"><strong>Kickoff Call</strong><div class="muted">Virtual meeting — agenda soon.</div></div>
+          </div>
+          <div class="titem">
+            <div class="tdate">2026–2027</div>
+            <div class="tline"><strong>Events Roll Out</strong><div class="muted">Tours, competitions, recert classes.</div></div>
+          </div>
+          <div class="titem">
+            <div class="tdate">2028 Goal</div>
+            <div class="tline"><strong>Official ACI WV Chapter</strong><div class="muted">Full charter, scholarships, conference.</div></div>
+          </div>
         </div>
       </div>
     </section>
@@ -301,7 +462,7 @@
   <!-- Floating Calculator -->
   <div id="calc-float" aria-label="Open calculator">🧮</div>
 
-  <!-- Background Music -->
+  <!-- Background Music (opt-in) -->
   <audio id="anthem" src="/assets/wv-song.mp3" preload="auto" loop></audio>
   <button id="audio-toggle" aria-label="Toggle site audio" title="Toggle audio">🔈</button>
 
@@ -320,9 +481,9 @@
       themeBtn.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
     });
 
-    // Adaptive countdown
+    // Adaptive countdown (Kickoff: Jan 23, 2026 @ 10:00 AM EST)
     (function(){
-      const target = new Date('2026-01-23T11:00:00-05:00').getTime();
+      const target = new Date('2026-01-23T10:00:00-05:00').getTime();
       const el = document.getElementById('countdown');
       function fmt(n){ return String(Math.max(0, n)).padStart(2,'0'); }
       function render(){
@@ -334,6 +495,7 @@
         const days = Math.floor(ms / 86400000);
         const hrs  = totalHrs % 24;
         const mins = totalMin % 60;
+
         if (days > 3){
           el.textContent = String(days);
           el.setAttribute('aria-label', days + ' days until kickoff');
@@ -360,17 +522,24 @@
     // Service worker
     if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{})}
 
-    // Audio autoplay with fallback
+    // Audio (opt-in)
     const audio = document.getElementById('anthem');
     const audioBtn = document.getElementById('audio-toggle');
     audio.volume = 0.35;
-    function setBtn(on){audioBtn.classList.toggle('on',on);audioBtn.textContent=on?'🔊':'🔈'}
-    function attemptPlay(){audio.play().then(()=>{setBtn(true);audioBtn.classList.add('show')}).catch(()=>{setBtn(false);audioBtn.classList.add('show')})}
-    attemptPlay();
-    const kick = () => {attemptPlay();window.removeEventListener('pointerdown',kick);window.removeEventListener('keydown',kick)};
-    window.addEventListener('pointerdown',kick);window.addEventListener('keydown',kick);
+
+    function setBtn(on){
+      audioBtn.classList.toggle('on', on);
+      audioBtn.textContent = on ? '🔊' : '🔈';
+    }
+    audioBtn.classList.add('show');
+    setBtn(false);
+
     audioBtn.addEventListener('click', async () => {
-      if(audio.paused){try{await audio.play();setBtn(true)}catch(_){}} else {audio.pause();setBtn(false)}
+      if (audio.paused){
+        try { await audio.play(); setBtn(true); } catch (_) {}
+      } else {
+        audio.pause(); setBtn(false);
+      }
     });
 
     // Keep hero looping
@@ -379,6 +548,7 @@
   </script>
 </body>
 </html>
+
 
 
 
