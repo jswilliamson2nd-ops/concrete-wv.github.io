@@ -17,8 +17,7 @@
   <meta name="description" content="ACI West Virginia Interest Group — building a statewide community to advance concrete knowledge, quality, and certification." />
   <meta property="og:title" content="ACI West Virginia Interest Group" />
   <meta property="og:description" content="Advancing concrete knowledge, quality, and certification across West Virginia." />
-  <!-- IMPORTANT: spaces must be URL-encoded -->
-  <meta property="og:image" content="https://concrete-wv.org/assets/Logo%20white%20ACI.png" />
+  <meta property="og:image" content="https://concrete-wv.org/assets/Logo-white-ACI.png" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://concrete-wv.org/" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -63,7 +62,7 @@
       line-height:1.6;
     }
 
-    /* Background (updated now that hero is removed) */
+    /* Background (hero removed) */
     body{
       background:
         radial-gradient(900px 520px at 50% -10%, rgba(0,123,193,.18), transparent 60%),
@@ -90,14 +89,14 @@
     }
     .skip:focus-visible{top:12px;outline:3px solid var(--accent-2)}
 
-    /* Header */
+    /* Header (ACI-style: steady, boring-on-purpose) */
     header{
       position:sticky;top:0;z-index:50;
       border-bottom:1px solid var(--border);
-      backdrop-filter:blur(12px);
-      background:rgba(11,18,32,.88);
+      backdrop-filter:blur(10px);
+      background:rgba(11,18,32,.96);
     }
-    body.light header{background:rgba(248,250,252,.92)}
+    body.light header{background:rgba(248,250,252,.96)}
 
     .nav{
       display:grid;
@@ -107,19 +106,44 @@
       padding:10px 0;
     }
 
-    .brand{display:flex;align-items:center;gap:10px;min-width:0}
-    .brand img{
-      height:52px;
+    .brand{display:flex;align-items:center;min-width:0}
+    .brand-link{display:flex;align-items:center;gap:10px;min-width:0}
+
+    /* Logo: small, crisp, consistent (like concrete.org) */
+    .brand-logo{
+      height:34px;
       width:auto;
-      max-width:340px;
-      padding:0;
-      background:none;
-      border:none;
       display:block;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.28));
+      max-width:220px;
+      filter:none;
     }
-    @media (max-width:980px){
-      .brand img{height:46px;max-width:280px}
+    @media (min-width:900px){
+      .brand-logo{height:38px;max-width:260px}
+    }
+    @media (max-width:480px){
+      .brand-logo{height:32px;max-width:200px}
+    }
+
+    /* Optional "Interest Group" pill (subtle, official-feeling) */
+    .brand-tag{
+      display:inline-flex;
+      align-items:center;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--text-dim);
+      font-weight:850;
+      font-size:.78rem;
+      letter-spacing:.2px;
+      white-space:nowrap;
+    }
+    body.light .brand-tag{
+      border-color:rgba(2,8,23,.14);
+      background:rgba(15,23,42,.04);
+    }
+    @media (max-width:700px){
+      .brand-tag{display:none;}
     }
 
     nav{
@@ -132,7 +156,8 @@
     nav a{
       color:var(--text-dim);
       padding:7px 10px;
-      font-weight:750;
+      font-weight:800;
+      font-size:.95rem;
       border-radius:12px;
       white-space:nowrap;
       border:1px solid transparent;
@@ -256,7 +281,7 @@
       .next-event-bar a.btn{width:100%;text-align:center;justify-content:center}
     }
 
-    /* Intro card (now the "hero") */
+    /* Intro card (page "hero") */
     .intro{padding:26px 0 0}
     .intro-card{
       margin:0 auto;
@@ -271,8 +296,16 @@
     body.light .intro-card{
       background:linear-gradient(180deg, rgba(0,83,155,.05), rgba(245,130,31,.04)) , var(--card);
     }
-    .intro-card h1{margin:0 0 10px;font-size:2.2rem}
+    .intro-card h1{margin:0 0 10px;font-size:2.05rem;line-height:1.2}
     .intro-card .muted{margin-top:6px}
+
+    /* Sub-brand line (keeps identity without shouting) */
+    .brand-sub{
+      margin:0 0 10px;
+      color:var(--text-dim);
+      font-weight:850;
+      letter-spacing:.2px;
+    }
 
     /* Buttons */
     .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px}
@@ -392,13 +425,15 @@
   <header>
     <div class="container nav">
       <div class="brand">
-        <a href="/" aria-label="ACI West Virginia Interest Group home">
+        <a href="/" class="brand-link" aria-label="ACI West Virginia Interest Group home">
           <img
-            src="/assets/Logo%20white%20ACI.png"
+            src="/assets/Logo-white-ACI.png"
             alt="ACI West Virginia Interest Group"
+            class="brand-logo"
             loading="eager"
             decoding="async"
           />
+          <span class="brand-tag">Interest Group</span>
         </a>
       </div>
 
@@ -434,12 +469,12 @@
     >Add to Calendar</a>
   </div>
 
-  <!-- HERO REMOVED -->
-
   <div class="intro">
     <div class="container">
       <section class="intro-card">
-        <h1>ACI West Virginia Interest Group</h1>
+        <h1>Concrete knowledge, quality, and certification — statewide in West Virginia.</h1>
+        <p class="brand-sub">ACI West Virginia Interest Group</p>
+
         <p>Connecting inspectors, technicians, engineers, producers, contractors, educators, and students to advance concrete knowledge, quality, and certification across West Virginia.</p>
         <p class="muted"><strong>Zero cost.</strong> Zero spam. Real events starting Jan 2026.</p>
 
@@ -665,6 +700,7 @@ We answer every email in less than 24 hours.</p>
   </script>
 </body>
 </html>
+
 
 
 
