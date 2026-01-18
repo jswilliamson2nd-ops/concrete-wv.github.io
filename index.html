@@ -103,28 +103,47 @@
       grid-template-columns:auto 1fr auto;
       gap:14px;
       align-items:center;
-      padding:10px 0;
+      padding:16px 0; /* Increased vertical padding for larger logo */
     }
 
     .brand{display:flex;align-items:center;min-width:0}
     .brand-link{display:flex;align-items:center;gap:10px;min-width:0}
 
-    /* Logo: small, crisp, consistent (like concrete.org) */
+    /* Larger, more prominent logo – main change */
     .brand-logo{
-      height:34px;
+      height:64px;
       width:auto;
       display:block;
-      max-width:220px;
+      max-width:380px;
       filter:none;
     }
+
     @media (min-width:900px){
-      .brand-logo{height:38px;max-width:260px}
-    }
-    @media (max-width:480px){
-      .brand-logo{height:32px;max-width:200px}
+      .brand-logo{
+        height:72px;
+        max-width:420px;
+      }
     }
 
-    /* Optional "Interest Group" pill (subtle, official-feeling) */
+    @media (max-width:480px){
+      .brand-logo{
+        height:52px;
+        max-width:320px;
+      }
+    }
+
+    /* Give brand container breathing room */
+    .brand{
+      padding:12px 0;
+    }
+
+    @media (min-width:981px){
+      .brand{
+        margin-right:40px; /* Space between logo and nav on desktop */
+      }
+    }
+
+    /* Optional "Interest Group" pill – hide on desktop to emphasize logo */
     .brand-tag{
       display:inline-flex;
       align-items:center;
@@ -142,6 +161,14 @@
       border-color:rgba(2,8,23,.14);
       background:rgba(15,23,42,.04);
     }
+
+    /* Hide tag on larger screens so logo stands out more */
+    @media (min-width:900px){
+      .brand-tag{
+        display:none;
+      }
+    }
+
     @media (max-width:700px){
       .brand-tag{display:none;}
     }
@@ -700,7 +727,6 @@ We answer every email in less than 24 hours.</p>
   </script>
 </body>
 </html>
-
 
 
 
