@@ -18,7 +18,7 @@
   <meta name="description" content="ACI West Virginia Interest Group — building a statewide community to advance concrete knowledge, quality, and certification." />
   <meta property="og:title" content="ACI West Virginia Interest Group" />
   <meta property="og:description" content="Advancing concrete knowledge, quality, and certification across West Virginia." />
-  <meta property="og:image" content="https://concrete-wv.org/assets/aciwv_logo_white_square.png" />
+  <meta property="og:image" content="https://concrete-wv.org/assets/ACI_WV_Interest_Group_Primary.png" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://concrete-wv.org/" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -35,9 +35,9 @@
       --shadow:0 6px 18px rgba(0,0,0,.25);
 
       /* ACI-ish palette */
-      --aci-blue:#00539B;   /* PMS 287 vibe */
-      --aci-blue-2:#007BC1; /* PMS 3005 vibe */
-      --aci-orange:#F5821F; /* PMS 144 vibe */
+      --aci-blue:#00539B;
+      --aci-blue-2:#007BC1;
+      --aci-orange:#F5821F;
 
       --accent:var(--aci-blue);
       --accent-2:var(--aci-blue-2);
@@ -99,8 +99,12 @@
       height:40px;width:auto;display:block;
       border-radius:12px;
       border:1px solid var(--border);
-      background:rgba(255,255,255,.06);
+      background:#ffffff; /* helps full-color logo on dark header */
+      padding:6px;        /* gives breathing room */
       box-shadow:0 6px 18px rgba(0,0,0,.20);
+    }
+    body.light .brand img{
+      background:#ffffff;
     }
 
     nav{
@@ -134,7 +138,7 @@
       display:flex;align-items:center;gap:10px;justify-content:flex-end;
     }
 
-    /* Compact countdown badge (status, not headline) */
+    /* Compact countdown badge */
     .count-badge{
       display:flex;align-items:center;gap:10px;
       padding:8px 10px;
@@ -167,7 +171,7 @@
       color:var(--text-dim);
     }
     @media (max-width:980px){
-      .count-badge{display:none;} /* keep header clean */
+      .count-badge{display:none;}
     }
 
     #theme-toggle{
@@ -202,12 +206,12 @@
       }
     }
 
-    /* Announcement bar (less dominant, still urgent) */
+    /* Announcement bar (less dominant) */
     .next-event-bar{
       background:var(--orange);
       color:#000;
       position:relative;
-      padding:10px 16px; /* slimmer */
+      padding:10px 16px;
       display:flex;
       align-items:center;
       gap:12px;
@@ -223,7 +227,7 @@
     .next-event-bar a.btn{
       background:var(--accent);
       color:#fff;
-      padding:.65rem 1.05rem; /* smaller */
+      padding:.65rem 1.05rem;
       font-size:.95rem;
       border-radius:12px;
       box-shadow:0 6px 18px rgba(0,83,155,.22);
@@ -265,14 +269,14 @@
       .hero-media video{object-position:center 45%}
     }
 
-    /* Softer overlay (less heavy) */
+    /* Softer overlay */
     .hero-overlay{
       position:absolute;inset:0;
       background:linear-gradient(180deg,rgba(11,18,32,.08),rgba(11,18,32,.72));
       pointer-events:none
     }
 
-    /* Hero text (less modal-y) */
+    /* Hero text */
     .hero-text{
       position:absolute;
       bottom:2rem;left:50%;
@@ -340,7 +344,7 @@
     }
     .btn.primary:hover{background:var(--accent-2);box-shadow:0 10px 30px rgba(0,123,193,.22)}
 
-    /* Cards + sections */
+    /* Sections/cards */
     .section{padding:40px 0}
     .grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
     .card{
@@ -367,7 +371,7 @@
     }
     .pbadge .emoji{font-size:1.6rem}
 
-    /* Missing classes you referenced */
+    /* Missing classes referenced */
     .muted{color:var(--text-dim)}
     .anchor-spacer{scroll-margin-top:110px}
 
@@ -389,7 +393,7 @@
       .btn-row .btn{flex:1 1 0}
     }
 
-    /* Floating buttons (hidden until scroll) */
+    /* Floating buttons hidden until scroll */
     #calc-float{
       position:fixed;bottom:24px;right:24px;z-index:100;
       background:var(--orange);color:#000;
@@ -401,9 +405,7 @@
       opacity:0;transform:translateY(10px) scale(.98);
       pointer-events:none;
     }
-    #calc-float.show{
-      opacity:1;transform:none;pointer-events:auto;
-    }
+    #calc-float.show{opacity:1;transform:none;pointer-events:auto}
     #calc-float:hover{transform:scale(1.08) rotate(10deg)}
 
     #audio-toggle{
@@ -416,9 +418,7 @@
       opacity:0;transform:translateY(10px);transition:.25s;
       pointer-events:none;
     }
-    #audio-toggle.show{
-      opacity:1;transform:none;pointer-events:auto;
-    }
+    #audio-toggle.show{opacity:1;transform:none;pointer-events:auto}
     #audio-toggle.on{
       background:rgba(0,123,193,.18);
       border-color:rgba(0,123,193,.50);
@@ -442,9 +442,12 @@
     <div class="container nav">
       <div class="brand">
         <a href="/" aria-label="ACI West Virginia Interest Group home">
-          <img src="/assets/aciwv_logo_white_square.png"
-               alt="ACI West Virginia Interest Group logo"
-               loading="eager" decoding="async">
+          <img
+            src="/assets/ACI_WV_Interest_Group_Primary.png"
+            alt="ACI West Virginia Interest Group logo"
+            loading="eager"
+            decoding="async"
+          />
         </a>
       </div>
 
@@ -458,7 +461,6 @@
       </nav>
 
       <div class="header-right">
-        <!-- Compact status badge -->
         <div class="count-badge" title="Kickoff countdown">
           <div class="num" id="countdown-badge">--</div>
           <div class="meta">
@@ -472,7 +474,6 @@
     </div>
   </header>
 
-  <!-- Announcement bar -->
   <div class="next-event-bar">
     <div class="text">Jan 23, 2026 @ 10:00 AM — Kickoff Zoom Call (agenda drops Dec 20)</div>
     <a
@@ -482,7 +483,6 @@
     >Add to Calendar</a>
   </div>
 
-  <!-- HERO -->
   <div class="hero-wrap" aria-label="Bridge concreting footage">
     <div class="hero-media" aria-hidden="true">
       <video id="hero-video" autoplay muted loop playsinline preload="auto" poster="/assets/aciwv_hero_1080p_loop.jpg">
@@ -497,7 +497,6 @@
     </div>
   </div>
 
-  <!-- Intro card -->
   <div class="intro">
     <div class="container">
       <section class="intro-card">
@@ -512,7 +511,6 @@
   </div>
 
   <main id="main" class="container">
-    <!-- Value Props -->
     <section class="section">
       <div class="grid">
         <article class="card kv">
@@ -530,7 +528,6 @@
       </div>
     </section>
 
-    <!-- Verify -->
     <section id="verify" class="section anchor-spacer">
       <div class="grid">
         <article class="card">
@@ -556,7 +553,6 @@
       </div>
     </section>
 
-    <!-- Who Should Join -->
     <section class="section">
       <h2>Who Should Join?</h2>
       <div class="grid">
@@ -567,7 +563,6 @@
       </div>
     </section>
 
-    <!-- Timeline -->
     <section class="section">
       <h2>What’s Next (2025–2028)</h2>
       <div class="card">
@@ -592,7 +587,6 @@
       </div>
     </section>
 
-    <!-- Join -->
     <section id="join" class="section anchor-spacer">
       <article class="card" style="text-align:center">
         <h2>Be Part of WV Concrete History</h2>
@@ -607,7 +601,6 @@
       </article>
     </section>
 
-    <!-- Partners -->
     <section class="section">
       <h2>Built With West Virginia’s Concrete Leaders</h2>
       <div class="card">
@@ -621,7 +614,6 @@
       </div>
     </section>
 
-    <!-- Contact -->
     <section id="contact" class="section anchor-spacer">
       <article class="card">
         <h2>Contact</h2>
@@ -631,10 +623,8 @@
     </section>
   </main>
 
-  <!-- Floating Calculator -->
   <div id="calc-float" aria-label="Open calculator">🧮</div>
 
-  <!-- Background Music (opt-in) -->
   <audio id="anthem" src="/assets/wv-song.mp3" preload="auto" loop></audio>
   <button id="audio-toggle" aria-label="Toggle site audio" title="Toggle audio">🔈</button>
 
@@ -665,7 +655,7 @@
     // Kickoff: Jan 23, 2026 @ 10:00 AM EST
     const KICKOFF_MS = new Date('2026-01-23T10:00:00-05:00').getTime();
 
-    // Countdown badge (status)
+    // Countdown badge
     (function(){
       const el = document.getElementById('countdown-badge');
       if(!el) return;
@@ -680,10 +670,7 @@
         const hrs  = totalHrs % 24;
         const mins = totalMin % 60;
 
-        // Keep it short in the header
-        if (days >= 1) el.textContent = `${days}d`;
-        else el.textContent = `${totalHrs}h`;
-
+        el.textContent = (days >= 1) ? `${days}d` : `${totalHrs}h`;
         el.setAttribute('aria-label', `${days} days, ${hrs} hours, ${mins} minutes until kickoff`);
       }
 
@@ -699,7 +686,7 @@
     );
     document.querySelectorAll('.card').forEach(c => io.observe(c));
 
-    // Floating calc + audio appear after a little scroll (keeps hero clean)
+    // Floaters appear after a bit of scroll
     const calcBtn = document.getElementById('calc-float');
     const audioBtn = document.getElementById('audio-toggle');
 
@@ -711,7 +698,6 @@
     window.addEventListener('scroll', revealFloaters, {passive:true});
     setTimeout(revealFloaters, 1200);
 
-    // Floating calc action
     calcBtn.addEventListener('click', () => location.href = '/calculators/#volume');
 
     // Service worker
@@ -741,6 +727,7 @@
   </script>
 </body>
 </html>
+
 
 
 
