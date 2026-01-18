@@ -89,12 +89,13 @@
     }
     .skip:focus-visible{top:12px;outline:3px solid var(--accent-2)}
 
-    /* Header (ACI-style) */
+    /* Header (ACI-style stacked rhythm) */
     header{
       position:sticky;top:0;z-index:50;
       border-bottom:1px solid var(--border);
       backdrop-filter:blur(10px);
       background:rgba(11,18,32,.96);
+      box-shadow:0 1px 0 rgba(0,0,0,.35);
     }
     body.light header{background:rgba(248,250,252,.96)}
 
@@ -103,13 +104,13 @@
       grid-template-columns:auto 1fr auto;
       gap:14px;
       align-items:center;
-      padding:10px 0;
+      padding:6px 0; /* tuned to ~56px header band */
     }
 
     .brand{display:flex;align-items:center;min-width:0}
     .brand-link{display:flex;align-items:center;min-width:0}
 
-    /* Logo: present, but does NOT drive header height */
+    /* Logo: present, but doesn't drive header height */
     .brand-logo{
       height:44px;
       width:auto;
@@ -230,38 +231,38 @@
       }
     }
 
-    /* Announcement bar */
+    /* ACI-style utility layer (stacked inside header) */
     .next-event-bar{
       background:var(--orange);
       color:#000;
-      position:relative;
-      padding:10px 16px;
+      padding:6px 16px; /* tuned to ~36px band */
       display:flex;
       align-items:center;
       gap:12px;
       flex-wrap:wrap;
-      box-shadow:0 4px 14px rgba(245,130,31,.22);
-      border-bottom:1px solid rgba(0,0,0,.12);
+      border-bottom:1px solid rgba(0,0,0,.22);
+      box-shadow:none;
     }
     .next-event-bar .text{
-      font-weight:850;
-      font-size:1.0rem;
+      font-weight:800;
+      font-size:.9rem;
+      line-height:1.2;
       flex:1;
       min-width:260px;
     }
     .next-event-bar a.btn{
       background:var(--accent);
       color:#fff;
-      padding:.65rem 1.05rem;
-      font-size:.95rem;
-      border-radius:12px;
-      box-shadow:0 6px 18px rgba(0,83,155,.22);
-      border:1px solid rgba(255,255,255,.18);
+      padding:.4rem .8rem;
+      font-size:.85rem;
+      border-radius:8px;
+      box-shadow:none;
+      border:1px solid rgba(255,255,255,.25);
       display:inline-flex;align-items:center;justify-content:center;
     }
     .next-event-bar a.btn:hover{background:var(--accent-2)}
     @media (max-width:560px){
-      .next-event-bar{padding:10px 12px}
+      .next-event-bar{padding:8px 12px}
       .next-event-bar a.btn{width:100%;text-align:center;justify-content:center}
     }
 
@@ -440,16 +441,17 @@
         <button id="theme-toggle" aria-label="Toggle light/dark mode"></button>
       </div>
     </div>
-  </header>
 
-  <div class="next-event-bar">
-    <div class="text">Jan 23, 2026 @ 10:00 AM — Kickoff Zoom Call (agenda drops Dec 20)</div>
-    <a
-      href="https://calendar.google.com/calendar/u/0/r/eventedit?text=ACI+WV+Kickoff+Call&dates=20260123T150000Z/20260123T160000Z&details=First+official+ACI+West+Virginia+Interest+Group+meeting.+Zoom+link+in+email.&location=Zoom"
-      target="_blank" rel="noopener"
-      class="btn"
-    >Add to Calendar</a>
-  </div>
+    <!-- Utility layer INSIDE header (ACI rhythm) -->
+    <div class="next-event-bar">
+      <div class="text">Jan 23, 2026 @ 10:00 AM — Kickoff Zoom Call (agenda drops Dec 20)</div>
+      <a
+        href="https://calendar.google.com/calendar/u/0/r/eventedit?text=ACI+WV+Kickoff+Call&dates=20260123T150000Z/20260123T160000Z&details=First+official+ACI+West+Virginia+Interest+Group+meeting.+Zoom+link+in+email.&location=Zoom"
+        target="_blank" rel="noopener"
+        class="btn"
+      >Add to Calendar</a>
+    </div>
+  </header>
 
   <div class="intro">
     <div class="container">
@@ -704,6 +706,7 @@ We answer every email in less than 24 hours.</p>
   </script>
 </body>
 </html>
+
 
 
 
