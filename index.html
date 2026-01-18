@@ -89,7 +89,7 @@
     }
     .skip:focus-visible{top:12px;outline:3px solid var(--accent-2)}
 
-    /* Header (ACI-style: steady, boring-on-purpose) */
+    /* Header (ACI-style) */
     header{
       position:sticky;top:0;z-index:50;
       border-bottom:1px solid var(--border);
@@ -103,78 +103,34 @@
       grid-template-columns:auto 1fr auto;
       gap:14px;
       align-items:center;
-      padding:16px 0; /* Increased vertical padding for larger logo */
+      padding:10px 0;
     }
 
     .brand{display:flex;align-items:center;min-width:0}
-    .brand-link{display:flex;align-items:center;gap:10px;min-width:0}
+    .brand-link{display:flex;align-items:center;min-width:0}
 
-    /* Larger, more prominent logo – main change */
+    /* Logo: present, but does NOT drive header height */
     .brand-logo{
-      height:64px;
+      height:44px;
       width:auto;
       display:block;
-      max-width:380px;
+      max-width:320px;
       filter:none;
     }
-
     @media (min-width:900px){
-      .brand-logo{
-        height:72px;
-        max-width:420px;
-      }
+      .brand-logo{height:48px;max-width:360px}
     }
-
     @media (max-width:480px){
-      .brand-logo{
-        height:52px;
-        max-width:320px;
-      }
+      .brand-logo{height:38px;max-width:260px}
     }
 
-    /* Give brand container breathing room */
-    .brand{
-      padding:12px 0;
-    }
-
-    @media (min-width:981px){
-      .brand{
-        margin-right:40px; /* Space between logo and nav on desktop */
-      }
-    }
-
-    /* Optional "Interest Group" pill – hide on desktop to emphasize logo */
-    .brand-tag{
-      display:inline-flex;
-      align-items:center;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.06);
-      color:var(--text-dim);
-      font-weight:850;
-      font-size:.78rem;
-      letter-spacing:.2px;
-      white-space:nowrap;
-    }
-    body.light .brand-tag{
-      border-color:rgba(2,8,23,.14);
-      background:rgba(15,23,42,.04);
-    }
-
-    /* Hide tag on larger screens so logo stands out more */
-    @media (min-width:900px){
-      .brand-tag{
-        display:none;
-      }
-    }
-
-    @media (max-width:700px){
-      .brand-tag{display:none;}
-    }
-
+    /* Nav: flush right like ACI */
     nav{
-      display:flex;align-items:center;gap:10px;flex-wrap:nowrap;
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:nowrap;
       overflow:auto;
       -webkit-overflow-scrolling:touch;
       scrollbar-width:none;
@@ -269,6 +225,7 @@
       .header-right{grid-column:2/3}
       nav{
         grid-column:1/3;
+        justify-content:flex-start; /* mobile: read left-to-right */
         padding-top:4px;
       }
     }
@@ -308,7 +265,7 @@
       .next-event-bar a.btn{width:100%;text-align:center;justify-content:center}
     }
 
-    /* Intro card (page "hero") */
+    /* Intro card (page hero) */
     .intro{padding:26px 0 0}
     .intro-card{
       margin:0 auto;
@@ -326,7 +283,6 @@
     .intro-card h1{margin:0 0 10px;font-size:2.05rem;line-height:1.2}
     .intro-card .muted{margin-top:6px}
 
-    /* Sub-brand line (keeps identity without shouting) */
     .brand-sub{
       margin:0 0 10px;
       color:var(--text-dim);
@@ -460,7 +416,6 @@
             loading="eager"
             decoding="async"
           />
-          <span class="brand-tag">Interest Group</span>
         </a>
       </div>
 
@@ -617,6 +572,28 @@
       </div>
     </section>
 
+    <!-- Optional ACI membership link (NOT in hero; keeps "open to all" message intact) -->
+    <section class="section">
+      <article class="card">
+        <h2>Do I need to be an ACI member to join?</h2>
+        <p class="muted">
+          No. Participation in the ACI West Virginia Interest Group is open to everyone —
+          students, technicians, inspectors, contractors, producers, engineers, and educators.
+        </p>
+        <p class="muted">
+          ACI International membership is optional and may be useful for those interested in
+          national committees, publications, and additional benefits.
+        </p>
+        <p style="margin-top:12px">
+          <a class="btn primary"
+             href="https://www.concrete.org/getinvolved/membership.aspx"
+             target="_blank" rel="noopener">
+            Learn about ACI Membership
+          </a>
+        </p>
+      </article>
+    </section>
+
     <section id="contact" class="section anchor-spacer">
       <article class="card">
         <h2>Contact</h2>
@@ -727,6 +704,7 @@ We answer every email in less than 24 hours.</p>
   </script>
 </body>
 </html>
+
 
 
 
