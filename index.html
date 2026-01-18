@@ -1,5 +1,4 @@
-<!doctype html>
-<html lang="en">
+<!doctype html><html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -12,6 +11,7 @@
   <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+  <link rel="preload" as="image" href="/assets/aciwv_hero_1080p_loop.jpg">
 
   <!-- SEO / Social -->
   <meta name="description" content="ACI West Virginia Interest Group — building a statewide community to advance concrete knowledge, quality, and certification." />
@@ -23,444 +23,725 @@
   <meta name="twitter:card" content="summary_large_image" />
 
   <style>
-    :root {
-      --bg: #0b1220;
-      --bg-2: #0f172a;
-      --card: #101828;
-      --border: #1f2a44;
-      --text: #e6edf3;
-      --text-dim: #b9c4d0;
-      --shadow: 0 6px 18px rgba(0,0,0,.25);
+    :root{
+      --bg:#0b1220;
+      --bg-2:#0f172a;
+      --card:#101828;
+      --border:#1f2a44;
+      --text:#e6edf3;
+      --text-dim:#b9c4d0;
+      --shadow:0 6px 18px rgba(0,0,0,.25);
 
-      --aci-blue: #00539B;
-      --aci-blue-2: #007BC1;
-      --aci-orange: #F5821F;
+      /* ACI-ish palette */
+      --aci-blue:#00539B;
+      --aci-blue-2:#007BC1;
+      --aci-orange:#F5821F;
 
-      --accent: var(--aci-blue);
-      --accent-2: var(--aci-blue-2);
-      --orange: var(--aci-orange);
+      --accent:var(--aci-blue);
+      --accent-2:var(--aci-blue-2);
+      --orange:var(--aci-orange);
 
-      --radius: 20px;
+      --radius:20px;
+    }
+    .light{
+      --bg:#f8fafc;
+      --bg-2:#f1f5f9;
+      --card:#ffffff;
+      --border:#e2e8f0;
+      --text:#0f172a;
+      --text-dim:#475569;
     }
 
-    .light {
-      --bg: #f8fafc;
-      --bg-2: #f1f5f9;
-      --card: #ffffff;
-      --border: #e2e8f0;
-      --text: #0f172a;
-      --text-dim: #475569;
+    *{box-sizing:border-box}
+    html,body{
+      height:100%;margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);
+      color:var(--text);line-height:1.6
     }
 
-    * { box-sizing: border-box; }
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
-      color: var(--text);
-      line-height: 1.6;
-    }
+    a{color:var(--text);text-decoration:none}
+    a:hover{color:var(--accent-2)}
+    .container{width:min(1080px,92vw);margin:0 auto}
 
-    a { color: var(--text); text-decoration: none; }
-    a:hover { color: var(--accent-2); }
-
-    .container {
-      width: min(1080px, 92vw);
-      margin: 0 auto;
-      padding: 0 16px;
+    /* Skip link */
+    .skip{
+      position:absolute;left:12px;top:-100px;z-index:60;
+      background:var(--card);border:1px solid var(--border);color:var(--text);
+      padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);transition:top .2s
     }
-
-    /* Skip link - improved visibility */
-    .skip {
-      position: absolute;
-      left: 16px;
-      top: -100px;
-      z-index: 100;
-      background: var(--card);
-      border: 2px solid var(--accent-2);
-      color: var(--text);
-      padding: 12px 18px;
-      border-radius: 999px;
-      box-shadow: var(--shadow);
-      transition: top 0.3s, outline 0.2s;
-      font-weight: 700;
-    }
-    .skip:focus-visible {
-      top: 16px;
-      outline: 4px solid var(--accent-2);
-      outline-offset: 4px;
-    }
+    .skip:focus-visible{top:12px;outline:3px solid var(--accent-2)}
 
     /* Header */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(12px);
-      background: rgba(11,18,32,.88);
-      -webkit-backdrop-filter: blur(12px);
+    header{
+      position:sticky;top:0;z-index:50;
+      border-bottom:1px solid var(--border);
+      backdrop-filter:blur(12px);
+      background:rgba(11,18,32,.88);
     }
-    body.light header {
-      background: rgba(248,250,252,.92);
+    body.light header{background:rgba(248,250,252,.92)}
+
+    .nav{
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      gap:14px;
+      align-items:center;
+      padding:10px 0;
     }
 
-    .nav {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 16px;
-      align-items: center;
-      padding: 12px 0;
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    .brand img{
+      height:52px;
+      width:auto;
+      max-width:320px;
+      padding:0;
+      background:none;
+      border:none;
+      display:block;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
+    }
+    @media (max-width:980px){
+      .brand img{height:46px;max-width:260px}
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
+    nav{
+      display:flex;align-items:center;gap:10px;flex-wrap:nowrap;
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
     }
-    .brand img {
-      height: 54px;
-      width: auto;
-      max-width: 340px;
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,.4));
+    nav::-webkit-scrollbar{display:none}
+    nav a{
+      color:var(--text-dim);
+      padding:7px 10px;
+      font-weight:750;
+      border-radius:12px;
+      white-space:nowrap;
+      border:1px solid transparent;
+      transition:.15s;
     }
-    @media (max-width: 980px) {
-      .brand img { height: 48px; max-width: 280px; }
+    nav a:hover{
+      color:var(--text);
+      border-color:rgba(0,123,193,.35);
+      background:rgba(0,123,193,.10);
     }
-
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    nav::-webkit-scrollbar { display: none; }
-    nav a {
-      color: var(--text-dim);
-      padding: 8px 14px;
-      font-weight: 750;
-      border-radius: 12px;
-      white-space: nowrap;
-      border: 1px solid transparent;
-      transition: all 0.2s ease;
-    }
-    nav a:hover {
-      color: var(--text);
-      border-color: rgba(0,123,193,.4);
-      background: rgba(0,123,193,.12);
-    }
-    nav a.active {
-      color: var(--text);
-      background: rgba(0,83,155,.28);
-      border-color: rgba(0,83,155,.5);
+    nav a.active{
+      color:var(--text);
+      background:rgba(0,83,155,.22);
+      border:1px solid rgba(0,83,155,.45);
     }
 
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      justify-content: flex-end;
+    .header-right{
+      display:flex;align-items:center;gap:10px;justify-content:flex-end;
     }
 
     /* Countdown badge */
-    .count-badge {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 14px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      box-shadow: 0 6px 20px rgba(0,0,0,.2);
-      white-space: nowrap;
-      max-width: 300px;
+    .count-badge{
+      display:flex;align-items:center;gap:10px;
+      padding:8px 10px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.05);
+      box-shadow:0 6px 18px rgba(0,0,0,.16);
+      white-space:nowrap;
+      max-width:280px;
     }
-    .count-badge .num {
-      font-weight: 950;
-      color: var(--orange);
-      font-size: 1.15rem;
-      min-width: 3.5ch;
-      text-align: right;
+    .count-badge .num{
+      font-weight:950;
+      color:var(--orange);
+      font-size:1.05rem;
+      min-width:3ch;
+      text-align:right;
     }
-    @media (max-width: 980px) {
-      .count-badge { display: none; }
+    .count-badge .meta{
+      display:flex;flex-direction:column;line-height:1.1;
     }
-
-    #theme-toggle {
-      background: rgba(255,255,255,.1);
-      border: 1px solid var(--border);
-      font-size: 1.2rem;
-      cursor: pointer;
-      padding: 10px 14px;
-      border-radius: 14px;
-      color: var(--text);
-      box-shadow: 0 6px 18px rgba(0,0,0,.18);
-      transition: all .2s;
+    .count-badge .meta .top{
+      font-weight:900;
+      font-size:.82rem;
+      color:var(--text);
+      letter-spacing:.2px;
     }
-    #theme-toggle:hover {
-      border-color: rgba(0,123,193,.5);
-      background: rgba(0,123,193,.15);
+    .count-badge .meta .sub{
+      font-weight:800;
+      font-size:.78rem;
+      color:var(--text-dim);
     }
-    body.light #theme-toggle {
-      background: rgba(15,23,42,.08);
+    @media (max-width:980px){
+      .count-badge{display:none;}
     }
 
-    /* Mobile header */
-    @media (max-width: 980px) {
-      .nav {
-        grid-template-columns: 1fr auto;
-        grid-template-rows: auto auto;
+    #theme-toggle{
+      background:rgba(255,255,255,.08);
+      border:1px solid var(--border);
+      font-size:1.15rem;
+      cursor:pointer;
+      padding:10px 12px;
+      border-radius:14px;
+      color:var(--text);
+      box-shadow:0 6px 18px rgba(0,0,0,.18);
+      transition:.15s;
+    }
+    #theme-toggle:hover{
+      border-color:rgba(0,123,193,.45);
+      background:rgba(0,123,193,.10);
+    }
+    body.light #theme-toggle{background:rgba(15,23,42,.06);color:var(--text)}
+    #theme-toggle:active{transform:translateY(1px)}
+
+    /* Mobile header layout */
+    @media (max-width:980px){
+      .nav{
+        grid-template-columns:1fr auto;
+        grid-template-rows:auto auto;
       }
-      .brand { grid-column: 1; }
-      .header-right { grid-column: 2; }
-      nav { grid-column: 1 / 3; padding-top: 6px; }
+      .brand{grid-column:1/2}
+      .header-right{grid-column:2/3}
+      nav{
+        grid-column:1/3;
+        padding-top:4px;
+      }
     }
 
     /* Announcement bar */
-    .next-event-bar {
-      background: var(--orange);
-      color: #000;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      box-shadow: 0 4px 16px rgba(245,130,31,.28);
+    .next-event-bar{
+      background:var(--orange);
+      color:#000;
+      position:relative;
+      padding:10px 16px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      box-shadow:0 4px 14px rgba(245,130,31,.22);
     }
-    .next-event-bar .text {
-      font-weight: 850;
-      font-size: 1.05rem;
-      flex: 1;
-      min-width: 260px;
+    .next-event-bar .text{
+      font-weight:850;
+      font-size:1.0rem;
+      flex:1;
+      min-width:260px;
     }
-    .next-event-bar a.btn {
-      background: var(--accent);
-      color: white;
-      padding: 0.7rem 1.3rem;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(0,83,155,.25);
-      border: 1px solid rgba(255,255,255,.2);
+    .next-event-bar a.btn{
+      background:var(--accent);
+      color:#fff;
+      padding:.65rem 1.05rem;
+      font-size:.95rem;
+      border-radius:12px;
+      box-shadow:0 6px 18px rgba(0,83,155,.22);
+      border:1px solid rgba(255,255,255,.18);
+      display:inline-flex;align-items:center;justify-content:center;
     }
-    .next-event-bar a.btn:hover { background: var(--accent-2); }
+    .next-event-bar a.btn:hover{background:var(--accent-2)}
+    @media (max-width:560px){
+      .next-event-bar{padding:10px 12px}
+      .next-event-bar a.btn{width:100%;text-align:center;justify-content:center}
+    }
 
     /* Hero */
-    .hero-wrap {
-      position: relative;
-      isolation: isolate;
-      border-bottom: 1px solid var(--border);
+    .hero-wrap{position:relative;isolation:isolate;border-bottom:1px solid var(--border)}
+    @media (min-width:1100px){
+      .hero-wrap{margin:0 calc(-50vw + 50%);width:100vw;position:relative;left:50%;transform:translateX(-50%)}
     }
 
-    .hero-media {
-      position: relative;
-      aspect-ratio: 16 / 9;
-      max-height: 54vh;
-      overflow: hidden;
-      background: #0d1626 url('/assets/aciwv_hero_1080p_loop.jpg') center/cover no-repeat;
+    .hero-media{
+      position:relative;
+      aspect-ratio:16/9;
+      max-height:54vh;
+      overflow:hidden;
+      background:#0d1626;
     }
-    @media (min-width: 1100px) {
-      .hero-media { aspect-ratio: 2.6 / 1; max-height: 66vh; }
-    }
-
-    .hero-media video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center 55%;
-      filter: brightness(0.58) contrast(1.05) saturate(0.8);
+    @media (min-width:1100px){
+      .hero-media{
+        aspect-ratio:2.6/1;
+        max-height:66vh;
+      }
     }
 
-    /* Respect reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      .hero-media video { display: none; }
+    .hero-media video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center 55%;
+      filter: brightness(.58) contrast(1.05) saturate(.80);
     }
 
-    /* Mobile / data-saver fallback */
-    @media (max-width: 860px), (hover: none) {
-      .hero-media video { display: none; }
+    .hero-overlay{
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(900px 420px at 50% 70%, rgba(0,0,0,.06), rgba(0,0,0,.60)),
+        linear-gradient(180deg, rgba(11,18,32,.55), rgba(11,18,32,.90));
+      pointer-events:none;
     }
 
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: 
-        radial-gradient(900px 420px at 50% 70%, rgba(0,0,0,.08), rgba(0,0,0,.65)),
-        linear-gradient(180deg, rgba(11,18,32,.6), rgba(11,18,32,.92));
-      pointer-events: none;
+    .hero-text{
+      position:absolute;
+      bottom:2rem;left:50%;
+      transform:translateX(-50%);
+      text-align:center;
+      color:white;
+      text-shadow:0 2px 18px rgba(0,0,0,.75);
+      z-index:2;
+      max-width:min(980px,92%);
+      padding:16px 18px;
+      border-radius:18px;
+      background:rgba(0,0,0,.08);
+      backdrop-filter:blur(4px);
+      border:1px solid rgba(255,255,255,.10);
     }
 
-    .hero-text {
-      position: absolute;
-      bottom: 2.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      color: white;
-      text-shadow: 0 3px 20px rgba(0,0,0,.8);
-      z-index: 2;
-      max-width: min(980px, 92%);
-      padding: 20px 24px;
-      border-radius: 20px;
-      background: rgba(0,0,0,.12);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255,255,255,.12);
+    /* Transparent logo in hero (no white badge) */
+    .hero-logo{
+      width:min(520px, 90%);
+      height:auto;
+      display:block;
+      margin:0 auto 18px;
+      filter: drop-shadow(0 18px 36px rgba(0,0,0,.55));
+    }
+    @media (max-width:520px){
+      .hero-logo{width:min(380px, 92%);margin-bottom:14px}
     }
 
-    .hero-logo {
-      width: min(520px, 90%);
-      height: auto;
-      margin: 0 auto 20px;
-      filter: drop-shadow(0 20px 40px rgba(0,0,0,.6));
+    .hero-text h1{
+      font-size:clamp(2rem,7vw,3.6rem);
+      margin:0 0 .35rem;
+      line-height:1.08;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+    .hero-text p{
+      font-size:1.05rem;
+      font-weight:800;
+      letter-spacing:.2px;
+      margin:0;
+      color:rgba(255,255,255,.92);
     }
 
-    .hero-text h1 {
-      font-size: clamp(2.2rem, 7.5vw, 3.8rem);
-      margin: 0 0 0.4rem;
-      line-height: 1.05;
-      font-weight: 950;
-      letter-spacing: 0.5px;
+    /* Intro card */
+    .intro{padding:24px 0 0}
+    .intro-card{
+      margin:0 auto;
+      max-width:980px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:var(--card);
+      padding:28px 32px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(8px);
     }
-    .hero-text p {
-      font-size: 1.15rem;
-      font-weight: 800;
-      margin: 0;
-      color: rgba(255,255,255,.94);
+    .intro-card h1{margin:0 0 10px;font-size:2.2rem}
+
+    /* Buttons */
+    .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px}
+    .btn{
+      padding:14px 28px;
+      border-radius:12px;
+      background:var(--orange);
+      color:#000;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 4px 15px rgba(245,130,31,.26);
+      transition:.2s;
+      font-size:1.05rem;
+      display:inline-flex;align-items:center;justify-content:center;gap:.5rem
+    }
+    .btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(245,130,31,.34)}
+    .btn.primary{
+      background:var(--accent);
+      color:#fff;
+      border:1px solid rgba(0,123,193,.40);
+      box-shadow:0 6px 18px rgba(0,83,155,.22);
+    }
+    .btn.primary:hover{background:var(--accent-2);box-shadow:0 10px 30px rgba(0,123,193,.22)}
+
+    /* Sections/cards */
+    .section{padding:40px 0}
+    .grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+    .card{
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:var(--card);
+      padding:24px;
+      box-shadow:var(--shadow);
+      transition:.4s;
+      opacity:0;
+      transform:translateY(30px);
+    }
+    .card.visible{opacity:1;transform:none}
+    .kv{display:grid;gap:12px;grid-template-columns:48px 1fr;align-items:start}
+    .kv .emoji{font-size:2.6rem;line-height:1}
+
+    .strip{display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center;padding:20px 0}
+    .pbadge{
+      display:inline-flex;align-items:center;gap:12px;
+      padding:14px 20px;border-radius:12px;border:1px solid var(--border);
+      background:linear-gradient(180deg,var(--bg-2),rgba(0,0,0,.06));
+      font-weight:850;color:var(--text);box-shadow:var(--shadow);
+      min-width:170px;justify-content:center;font-size:1.05rem
+    }
+    .pbadge .emoji{font-size:1.6rem}
+
+    .muted{color:var(--text-dim)}
+    .anchor-spacer{scroll-margin-top:110px}
+
+    .timeline{display:grid;gap:14px}
+    .titem{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start}
+    .tdate{font-weight:950;color:var(--accent-2)}
+    .tline{border-left:3px solid var(--border);padding-left:14px}
+    @media (max-width:640px){
+      .titem{grid-template-columns:1fr}
+      .tline{border-left:none;padding-left:0;border-top:3px solid var(--border);padding-top:10px}
     }
 
-    /* Cards & Grid */
-    .section { padding: 48px 0; }
-    .grid {
-      display: grid;
-      gap: 24px;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    .btn-row{display:flex;flex-direction:column;gap:10px}
+    .btn-row .btn{min-height:48px;padding:12px 18px;width:100%}
+    .btn-row .btn::after{content:"";font-weight:900}
+    @media (min-width:720px){
+      .btn-row{flex-direction:row}
+      .btn-row .btn{flex:1 1 0}
     }
 
-    .card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--card);
-      padding: 28px;
-      box-shadow: var(--shadow);
-      opacity: 0;
-      transform: translateY(36px);
-      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Floating buttons */
+    #calc-float{
+      position:fixed;bottom:24px;right:24px;z-index:100;
+      background:var(--orange);color:#000;
+      width:64px;height:64px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:2rem;
+      box-shadow:0 8px 25px rgba(245,130,31,.26);
+      cursor:pointer;transition:.25s;
+      opacity:0;transform:translateY(10px) scale(.98);
+      pointer-events:none;
+    }
+    #calc-float.show{opacity:1;transform:none;pointer-events:auto}
+    #calc-float:hover{transform:scale(1.08) rotate(10deg)}
+
+    #audio-toggle{
+      position:fixed;bottom:24px;left:24px;z-index:100;
+      width:56px;height:56px;border-radius:50%;
+      background:rgba(255,255,255,.14);backdrop-filter:blur(6px);
+      border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.2rem;cursor:pointer;color:var(--text);
+      opacity:0;transform:translateY(10px);transition:.25s;
+      pointer-events:none;
+    }
+    #audio-toggle.show{opacity:1;transform:none;pointer-events:auto}
+    #audio-toggle.on{
+      background:rgba(0,123,193,.18);
+      border-color:rgba(0,123,193,.50);
     }
 
-    .card.visible {
-      opacity: 1;
-      transform: translateY(0);
+    footer{
+      border-top:1px solid var(--border);
+      text-align:center;
+      color:var(--text-dim);
+      font-size:14px;
+      padding:24px 0;
     }
-
-    /* Staggered entrance */
-    .grid > :nth-child(1) { transition-delay: 100ms; }
-    .grid > :nth-child(2) { transition-delay: 200ms; }
-    .grid > :nth-child(3) { transition-delay: 300ms; }
-    .grid > :nth-child(4) { transition-delay: 400ms; }
-
-    /* Rest of your styles (CTA, buttons, timeline, etc.) remain mostly unchanged */
-    /* ... (keeping original button, timeline, footer, floaters styles) ... */
-
-    /* Final small touches */
-    footer {
-      border-top: 1px solid var(--border);
-      text-align: center;
-      color: var(--text-dim);
-      font-size: 0.95rem;
-      padding: 32px 0;
-    }
+    .memorial{color:var(--text-dim);font-style:italic;font-size:1.05rem;margin-bottom:8px}
   </style>
 </head>
-<body>
 
-  <a class="skip" href="#main">Skip to main content</a>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
 
   <header>
     <div class="container nav">
       <div class="brand">
-        <a href="/" aria-label="ACI West Virginia Interest Group home page">
-          <img src="/assets/aci_wv_primary_logo_web_trans.png" alt="" loading="eager" decoding="async" />
+        <a href="/" aria-label="ACI West Virginia Interest Group home">
+          <img
+            src="/assets/aci_wv_primary_logo_web_trans.png"
+            alt="ACI West Virginia Interest Group"
+            loading="eager"
+            decoding="async"
+          />
         </a>
       </div>
 
-      <nav aria-label="Primary navigation">
-        <a href="/" class="active">Home</a>
-        <a href="/topics/">Topics</a>
-        <a href="/wvdoh.html">WVDOH Info Corner</a>
-        <a href="/calculators/">Calculators</a>
-        <a href="#verify">Verify</a>
-        <a href="#contact">Contact</a>
-      </nav>
+  <nav aria-label="Primary">
+    <a href="/" class="active">Home</a>
+    <a href="/topics/">Topics</a>
+    <a href="/wvdoh.html">WVDOH Info Corner</a>
+    <a href="/calculators/">Calculators</a>
+    <a href="#verify">Verify</a>
+    <a href="#contact">Contact</a>
+  </nav>
 
-      <div class="header-right">
-        <div class="count-badge" title="Days until kickoff">
-          <div class="num" id="countdown-badge">--</div>
-          <div class="meta">
-            <div class="top">Kickoff</div>
-            <div class="sub">Jan 23 • 10:00 AM EST</div>
-          </div>
-        </div>
-        <button id="theme-toggle" aria-label="Toggle between light and dark mode">🌙</button>
+  <div class="header-right">
+    <div class="count-badge" title="Kickoff countdown">
+      <div class="num" id="countdown-badge">--</div>
+      <div class="meta">
+        <div class="top">Kickoff: Jan 23</div>
+        <div class="sub">10:00 AM EST</div>
       </div>
     </div>
-  </header>
 
-  <!-- Rest of your HTML structure remains the same -->
-  <!-- Just make sure hero-media contains video + poster fallback -->
+    <button id="theme-toggle" aria-label="Toggle light/dark mode"></button>
+  </div>
+</div>  </header>
 
-  <div class="hero-wrap" aria-label="Bridge concreting construction footage">
+  <div class="next-event-bar">
+    <div class="text">Jan 23, 2026 @ 10:00 AM — Kickoff Zoom Call (agenda drops Dec 20)</div>
+    <a
+      href="https://calendar.google.com/calendar/u/0/r/eventedit?text=ACI+WV+Kickoff+Call&dates=20260123T150000Z/20260123T160000Z&details=First+official+ACI+West+Virginia+Interest+Group+meeting.+Zoom+link+in+email.&location=Zoom"
+      target="_blank" rel="noopener"
+      class="btn"
+    >Add to Calendar</a>
+  </div>
+
+  <div class="hero-wrap" aria-label="Bridge concreting footage">
     <div class="hero-media" aria-hidden="true">
-      <video id="hero-video" autoplay muted loop playsinline preload="metadata" poster="/assets/aciwv_hero_1080p_loop.jpg">
+      <video id="hero-video" autoplay muted loop playsinline preload="auto" poster="/assets/aciwv_hero_1080p_loop.jpg">
         <source src="/assets/aciwv_hero_1080p_loop.webm" type="video/webm">
         <source src="/assets/aciwv_hero_1080p_loop.mp4" type="video/mp4">
       </video>
-      <div class="hero-overlay"></div>
-    </div>
 
-    <div class="hero-text">
-      <img class="hero-logo" src="/assets/aci_wv_primary_logo_web_trans.png" alt="ACI West Virginia Interest Group logo" loading="eager" decoding="async" />
-      <h1>West Virginia Concrete Just Got Its Own Playbook</h1>
-      <p>Zero cost. Zero spam. Real events starting January 2026.</p>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-text">
+    <img
+      class="hero-logo"
+      src="/assets/aci_wv_primary_logo_web_trans.png"
+      alt="ACI West Virginia Interest Group"
+      loading="eager"
+      decoding="async"
+    />
+    <h1>West Virginia Concrete Just Got Its Own Playbook</h1>
+    <p>Zero cost. Zero spam. Real events starting Jan 2026.</p>
+  </div>
+</div>  </div>
+
+  <div class="intro">
+    <div class="container">
+      <section class="intro-card">
+        <h1>ACI West Virginia Interest Group</h1>
+        <p>Connecting inspectors, technicians, engineers, producers, contractors, educators, and students to advance concrete knowledge, quality, and certification across West Virginia.</p>
+        <div class="cta">
+          <a class="btn" href="https://forms.gle/oMRrHjgExBBw3dXk8" target="_blank" rel="noopener">Join FREE (2 min)</a>
+          <a class="btn primary" href="/wvdoh.html">WVDOH Info Corner</a>
+        </div>
+      </section>
     </div>
   </div>
 
-  <!-- The rest of your content (intro, sections, footer, scripts) stays the same -->
+  <main id="main" class="container">
+    <section class="section">
+      <div class="grid">
+        <article class="card kv">
+          <div class="emoji" aria-hidden="true"></div>
+          <div><h3>Connect Statewide</h3><p class="muted">One network for everyone in WV concrete.</p></div>
+        </article>
+        <article class="card kv">
+          <div class="emoji" aria-hidden="true"></div>
+          <div><h3>Instant Resources</h3><p class="muted">Verification, specs, calculators — no digging.</p></div>
+        </article>
+        <article class="card kv">
+          <div class="emoji" aria-hidden="true"></div>
+          <div><h3>Real Events</h3><p class="muted">Plant tours & demos starting Jan 2026.</p></div>
+        </article>
+      </div>
+    </section>
 
-  <!-- Only small script adjustment for better countdown feedback -->
+<section id="verify" class="section anchor-spacer">
+  <div class="grid">
+    <article class="card">
+      <h2>Verify ACI Certification</h2>
+      <div class="btn-row" style="margin-top:10px">
+        <a class="btn primary" href="https://www.concrete.org/certification/verifyacertification.aspx"
+           target="_blank" rel="noopener"
+           aria-label="Open ACI Verify (opens in new tab)">Open ACI Verify</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <h2>WVDOH TRET Directory</h2>
+      <div class="btn-row" style="margin-top:10px">
+        <a class="btn primary" href="https://webapps.transportation.wv.gov/TechnicianCertificationDirectory"
+           target="_blank" rel="noopener"
+           aria-label="Open WVDOH TRET Directory (opens in new tab)">Open TRET Directory</a>
+        <a class="btn primary" href="https://webapps.transportation.wv.gov/materialsdir/"
+           target="_blank" rel="noopener"
+           aria-label="WVDOH Certified Technicians and Inspectors (opens in new tab)">WVDOH Certified Technicians & Inspectors</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Who Should Join?</h2>
+  <div class="grid">
+    <article class="card"><h3>Contractors & Producers</h3><p class="muted">Host demos, find certified techs.</p><p><a class="btn" href="#join">Get Involved</a></p></article>
+    <article class="card"><h3>Field & Lab Techs</h3><p class="muted">Level-up skills, recert alerts.</p><p><a class="btn" href="#join">Add Your Name</a></p></article>
+    <article class="card"><h3>Engineers & Inspectors</h3><p class="muted">Stay ahead on specs.</p><p><a class="btn" href="#join">Join the List</a></p></article>
+    <article class="card"><h3>Students & Educators</h3><p class="muted">Mentorship, jobs, projects.</p><p><a class="btn" href="#join">Start Here</a></p></article>
+  </div>
+</section>
+
+<section class="section">
+  <h2>What’s Next (2025–2028)</h2>
+  <div class="card">
+    <div class="timeline">
+      <div class="titem">
+        <div class="tdate">Dec 2025</div>
+        <div class="tline"><strong>Statewide Outreach</strong><div class="muted">Collecting hosts for 2026 tours.</div></div>
+      </div>
+      <div class="titem">
+        <div class="tdate">Jan 2026</div>
+        <div class="tline"><strong>Kickoff Call</strong><div class="muted">Virtual meeting — agenda soon.</div></div>
+      </div>
+      <div class="titem">
+        <div class="tdate">2026–2027</div>
+        <div class="tline"><strong>Events Roll Out</strong><div class="muted">Tours, competitions, recert classes.</div></div>
+      </div>
+      <div class="titem">
+        <div class="tdate">2028 Goal</div>
+        <div class="tline"><strong>Official ACI WV Chapter</strong><div class="muted">Full charter, scholarships, conference.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="join" class="section anchor-spacer">
+  <article class="card" style="text-align:center">
+    <h2>Be Part of WV Concrete History</h2>
+    <p class="muted" style="font-size:1.1rem;max-width:600px;margin:20px auto">Zero cost. Zero spam. Just events, resources, and shaping the future.</p>
+    <p style="font-size:1.15rem;background:var(--orange);color:#000;padding:14px 24px;border-radius:12px;display:inline-block;max-width:90%;font-weight:950">
+      First 100 members get a FREE limited-edition ACI-WV hard-hat sticker (mailed Jan 2026)
+    </p>
+    <a class="btn" href="https://forms.gle/oMRrHjgExBBw3dXk8" target="_blank" rel="noopener"
+       style="font-size:1.3rem;padding:20px 48px;margin-top:16px;display:inline-block">
+      YES — Count Me In (2 min)
+    </a>
+  </article>
+</section>
+
+<section class="section">
+  <h2>Built With West Virginia’s Concrete Leaders</h2>
+  <div class="card">
+    <p class="muted" style="text-align:center">Early supporters (more joining weekly)</p>
+    <div class="strip" role="list">
+      <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true"></span><span>Producer</span></div>
+      <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true"></span><span>Contractor</span></div>
+      <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true"></span><span>Lab</span></div>
+      <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true"></span><span>Student</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="section anchor-spacer">
+  <article class="card">
+    <h2>Contact</h2>
+    <p class="muted">Questions? Ideas? Want to host?
+We answer every email in less than 24 hours.</p>
+    <p><a class="btn primary" href="mailto:info@concrete-wv.org">info@concrete-wv.org</a></p>
+  </article>
+</section>  </main>
+
+  <div id="calc-float" aria-label="Open calculator"></div>
+
+  <audio id="anthem" src="/assets/wv-song.mp3" preload="auto" loop></audio>
+  <button id="audio-toggle" aria-label="Toggle site audio" title="Toggle audio"></button>  <footer>
+    <p class="memorial"></p>
+    © <span id="y"></span> ACI West Virginia Interest Group ·
+    <a href="/">Home</a> · <a href="/topics/">Topics</a> · <a href="/wvdoh.html">WVDOH</a> · <a href="/calculators/">Calculators</a>
+  </footer>
+
   <script>
-    // ... your existing scripts ...
+    // Year + theme (persist)
+    document.getElementById('y').textContent = new Date().getFullYear();
+    const themeBtn = document.getElementById('theme-toggle');
 
-    // Improved countdown
+    const savedTheme = localStorage.getItem('aciTheme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light');
+      themeBtn.textContent = '';
+    }
+
+    themeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+      const isLight = document.body.classList.contains('light');
+      themeBtn.textContent = isLight ? '' : '';
+      localStorage.setItem('aciTheme', isLight ? 'light' : 'dark');
+    });
+
+    // Kickoff: Jan 23, 2026 @ 10:00 AM EST
+    const KICKOFF_MS = new Date('2026-01-23T10:00:00-05:00').getTime();
+
+    // Countdown badge
     (function(){
       const el = document.getElementById('countdown-badge');
       if(!el) return;
 
-      const KICKOFF = new Date('2026-01-23T10:00:00-05:00').getTime();
+      function render(){
+        const ms = KICKOFF_MS - Date.now();
+        if (ms <= 0) { el.textContent = 'LIVE'; el.setAttribute('aria-label','Kickoff is live'); return; }
 
-      function update() {
-        const diff = KICKOFF - Date.now();
-        if (diff <= 0) {
-          el.textContent = 'LIVE!';
-          el.setAttribute('aria-label', 'The kickoff event is happening now');
-          return;
-        }
+        const totalMin = Math.floor(ms / 60000);
+        const totalHrs = Math.floor(ms / 3600000);
+        const days = Math.floor(ms / 86400000);
+        const hrs  = totalHrs % 24;
+        const mins = totalMin % 60;
 
-        const d = Math.floor(diff / 86400000);
-        const h = Math.floor((diff % 86400000) / 3600000);
-
-        el.textContent = d >= 1 ? `${d}d` : `${h}h`;
-        el.setAttribute('aria-label', `${d} days ${h} hours until kickoff`);
+        el.textContent = (days >= 1) ? `${days}d` : `${totalHrs}h`;
+        el.setAttribute('aria-label', `${days} days, ${hrs} hours, ${mins} minutes until kickoff`);
       }
 
-      update();
-      setInterval(update, 60000);
+      render();
+      const startDelay = 60000 - (Date.now() % 60000);
+      setTimeout(()=>{ render(); setInterval(render, 60000); }, startDelay);
     })();
-  </script>
 
+    // Animate cards
+    const io = new IntersectionObserver(
+      es => es.forEach(e => e.isIntersecting && e.target.classList.add('visible')),
+      {threshold:.1}
+    );
+    document.querySelectorAll('.card').forEach(c => io.observe(c));
+
+    // Floaters appear after a bit of scroll
+    const calcBtn = document.getElementById('calc-float');
+    const audioBtn = document.getElementById('audio-toggle');
+
+    function revealFloaters(){
+      const show = window.scrollY > 160;
+      calcBtn.classList.toggle('show', show);
+      audioBtn.classList.toggle('show', show);
+    }
+    window.addEventListener('scroll', revealFloaters, {passive:true});
+    setTimeout(revealFloaters, 1200);
+
+    calcBtn.addEventListener('click', () => location.href = '/calculators/#volume');
+
+    // Service worker
+    if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{})}
+
+    // Audio (opt-in)
+    const audio = document.getElementById('anthem');
+    audio.volume = 0.35;
+
+    function setAudioBtn(on){
+      audioBtn.classList.toggle('on', on);
+      audioBtn.textContent = on ? '' : '';
+    }
+    setAudioBtn(false);
+
+    audioBtn.addEventListener('click', async () => {
+      if (audio.paused){
+        try { await audio.play(); setAudioBtn(true); } catch (_) {}
+      } else {
+        audio.pause(); setAudioBtn(false);
+      }
+    });
+
+    // Keep hero looping
+    const hv = document.getElementById('hero-video');
+    hv.addEventListener('ended', () => hv.play().catch(()=>{}));
+  </script>
 </body>
 </html>
+
+
 
 
 
