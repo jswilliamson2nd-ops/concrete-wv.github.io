@@ -42,6 +42,7 @@
       --orange:var(--aci-orange);
 
       --radius:20px;
+      --focus:0 0 0 4px rgba(0,123,193,.28);
     }
 
     .light{
@@ -81,15 +82,21 @@
     a:hover{color:var(--accent-2)}
     .container{width:min(1080px,92vw);margin:0 auto}
 
+    :focus-visible{
+      outline:none;
+      box-shadow:var(--focus);
+      border-radius:14px;
+    }
+
     /* Skip link */
     .skip{
       position:absolute;left:12px;top:-100px;z-index:60;
       background:var(--card);border:1px solid var(--border);color:var(--text);
       padding:8px 12px;border-radius:999px;box-shadow:var(--shadow);transition:top .2s
     }
-    .skip:focus-visible{top:12px;outline:3px solid var(--accent-2)}
+    .skip:focus-visible{top:12px}
 
-    /* Header (ACI-style stacked rhythm) */
+    /* Header */
     header{
       position:sticky;top:0;z-index:50;
       border-bottom:1px solid var(--border);
@@ -104,25 +111,15 @@
       grid-template-columns:auto 1fr auto;
       gap:14px;
       align-items:center;
-      padding:6px 0; /* tuned to ~56px header band */
+      padding:4px 0; /* slightly tighter since logo+countdown are removed */
     }
 
-    .brand{display:flex;align-items:center;min-width:0}
-    .brand-link{display:flex;align-items:center;min-width:0}
-
-    /* Logo: present, but doesn't drive header height */
-    .brand-logo{
-      height:44px;
-      width:auto;
-      display:block;
-      max-width:320px;
-      filter:none;
-    }
-    @media (min-width:900px){
-      .brand-logo{height:48px;max-width:360px}
-    }
-    @media (max-width:480px){
-      .brand-logo{height:38px;max-width:260px}
+    /* Brand placeholder (logo temporarily removed) */
+    .brand{
+      min-width:0;
+      width:1px;
+      height:1px;
+      overflow:hidden;
     }
 
     /* Nav: flush right like ACI */
@@ -162,52 +159,20 @@
       display:flex;align-items:center;gap:10px;justify-content:flex-end;
     }
 
-    /* Countdown badge */
-    .count-badge{
-      display:flex;align-items:center;gap:10px;
-      padding:8px 10px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.05);
-      box-shadow:0 6px 18px rgba(0,0,0,.16);
-      white-space:nowrap;
-      max-width:280px;
-    }
-    .count-badge .num{
-      font-weight:950;
-      color:var(--orange);
-      font-size:1.05rem;
-      min-width:3ch;
-      text-align:right;
-    }
-    .count-badge .meta{
-      display:flex;flex-direction:column;line-height:1.1;
-    }
-    .count-badge .meta .top{
-      font-weight:900;
-      font-size:.82rem;
-      color:var(--text);
-      letter-spacing:.2px;
-    }
-    .count-badge .meta .sub{
-      font-weight:800;
-      font-size:.78rem;
-      color:var(--text-dim);
-    }
-    @media (max-width:980px){
-      .count-badge{display:none;}
-    }
-
     #theme-toggle{
       background:rgba(255,255,255,.08);
       border:1px solid var(--border);
-      font-size:1.15rem;
+      font-size:1.1rem;
       cursor:pointer;
       padding:10px 12px;
       border-radius:14px;
       color:var(--text);
       box-shadow:0 6px 18px rgba(0,0,0,.18);
       transition:.15s;
+      min-width:44px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
     }
     #theme-toggle:hover{
       border-color:rgba(0,123,193,.45);
@@ -226,16 +191,16 @@
       .header-right{grid-column:2/3}
       nav{
         grid-column:1/3;
-        justify-content:flex-start; /* mobile: read left-to-right */
+        justify-content:flex-start;
         padding-top:4px;
       }
     }
 
-    /* ACI-style utility layer (stacked inside header) */
+    /* Utility layer INSIDE header (kept) */
     .next-event-bar{
       background:var(--orange);
       color:#000;
-      padding:6px 16px; /* tuned to ~36px band */
+      padding:6px 16px;
       display:flex;
       align-items:center;
       gap:12px;
@@ -266,7 +231,7 @@
       .next-event-bar a.btn{width:100%;text-align:center;justify-content:center}
     }
 
-    /* Intro card (page hero) */
+    /* Intro card */
     .intro{padding:26px 0 0}
     .intro-card{
       margin:0 auto;
@@ -323,13 +288,13 @@
       background:var(--card);
       padding:24px;
       box-shadow:var(--shadow);
-      transition:.4s;
+      transition:opacity .35s, transform .35s;
       opacity:0;
-      transform:translateY(30px);
+      transform:translateY(22px);
     }
     .card.visible{opacity:1;transform:none}
     .kv{display:grid;gap:12px;grid-template-columns:48px 1fr;align-items:start}
-    .kv .emoji{font-size:2.6rem;line-height:1}
+    .kv .emoji{font-size:2.2rem;line-height:1}
 
     .strip{display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center;padding:20px 0}
     .pbadge{
@@ -339,7 +304,7 @@
       font-weight:850;color:var(--text);box-shadow:var(--shadow);
       min-width:170px;justify-content:center;font-size:1.05rem
     }
-    .pbadge .emoji{font-size:1.6rem}
+    .pbadge .emoji{font-size:1.4rem}
 
     .muted{color:var(--text-dim)}
     .anchor-spacer{scroll-margin-top:110px}
@@ -355,7 +320,6 @@
 
     .btn-row{display:flex;flex-direction:column;gap:10px}
     .btn-row .btn{min-height:48px;padding:12px 18px;width:100%}
-    .btn-row .btn::after{content:"";font-weight:900}
     @media (min-width:720px){
       .btn-row{flex-direction:row}
       .btn-row .btn{flex:1 1 0}
@@ -367,11 +331,12 @@
       background:var(--orange);color:#000;
       width:64px;height:64px;border-radius:50%;
       display:flex;align-items:center;justify-content:center;
-      font-size:2rem;
+      font-size:1.8rem;
       box-shadow:0 8px 25px rgba(245,130,31,.26);
       cursor:pointer;transition:.25s;
       opacity:0;transform:translateY(10px) scale(.98);
       pointer-events:none;
+      user-select:none;
     }
     #calc-float.show{opacity:1;transform:none;pointer-events:auto}
     #calc-float:hover{transform:scale(1.08) rotate(10deg)}
@@ -382,9 +347,10 @@
       background:rgba(255,255,255,.14);backdrop-filter:blur(6px);
       border:1px solid var(--border);
       display:flex;align-items:center;justify-content:center;
-      font-size:1.2rem;cursor:pointer;color:var(--text);
+      font-size:1.15rem;cursor:pointer;color:var(--text);
       opacity:0;transform:translateY(10px);transition:.25s;
       pointer-events:none;
+      user-select:none;
     }
     #audio-toggle.show{opacity:1;transform:none;pointer-events:auto}
     #audio-toggle.on{
@@ -400,6 +366,13 @@
       padding:24px 0;
     }
     .memorial{color:var(--text-dim);font-style:italic;font-size:1.05rem;margin-bottom:8px}
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .card{transition:none;transform:none;opacity:1}
+      #calc-float, #audio-toggle, .btn{transition:none}
+      .btn:hover{transform:none}
+    }
   </style>
 </head>
 
@@ -408,17 +381,8 @@
 
   <header>
     <div class="container nav">
-      <div class="brand">
-        <a href="/" class="brand-link" aria-label="ACI West Virginia Interest Group home">
-          <img
-            src="/assets/Logo-white-ACI.png"
-            alt="ACI West Virginia Interest Group"
-            class="brand-logo"
-            loading="eager"
-            decoding="async"
-          />
-        </a>
-      </div>
+      <!-- Logo temporarily removed -->
+      <div class="brand" aria-hidden="true"></div>
 
       <nav aria-label="Primary">
         <a href="/" class="active">Home</a>
@@ -430,26 +394,18 @@
       </nav>
 
       <div class="header-right">
-        <div class="count-badge" title="Kickoff countdown">
-          <div class="num" id="countdown-badge">--</div>
-          <div class="meta">
-            <div class="top">Kickoff: Jan 23</div>
-            <div class="sub">10:00 AM EST</div>
-          </div>
-        </div>
-
-        <button id="theme-toggle" aria-label="Toggle light/dark mode"></button>
+        <button id="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle theme">🌙</button>
       </div>
     </div>
 
-    <!-- Utility layer INSIDE header (ACI rhythm) -->
+    <!-- Utility bar kept (can update copy later) -->
     <div class="next-event-bar">
-      <div class="text">Jan 23, 2026 @ 10:00 AM — Kickoff Zoom Call (agenda drops Dec 20)</div>
+      <div class="text">Updates & upcoming events will be posted here soon.</div>
       <a
-        href="https://calendar.google.com/calendar/u/0/r/eventedit?text=ACI+WV+Kickoff+Call&dates=20260123T150000Z/20260123T160000Z&details=First+official+ACI+West+Virginia+Interest+Group+meeting.+Zoom+link+in+email.&location=Zoom"
+        href="https://forms.gle/oMRrHjgExBBw3dXk8"
         target="_blank" rel="noopener"
         class="btn"
-      >Add to Calendar</a>
+      >Join FREE</a>
     </div>
   </header>
 
@@ -460,7 +416,7 @@
         <p class="brand-sub">ACI West Virginia Interest Group</p>
 
         <p>Connecting inspectors, technicians, engineers, producers, contractors, educators, and students to advance concrete knowledge, quality, and certification across West Virginia.</p>
-        <p class="muted"><strong>Zero cost.</strong> Zero spam. Real events starting Jan 2026.</p>
+        <p class="muted"><strong>Zero cost.</strong> Zero spam. Real events and resources.</p>
 
         <div class="cta">
           <a class="btn" href="https://forms.gle/oMRrHjgExBBw3dXk8" target="_blank" rel="noopener">Join FREE (2 min)</a>
@@ -474,16 +430,16 @@
     <section class="section">
       <div class="grid">
         <article class="card kv">
-          <div class="emoji" aria-hidden="true"></div>
+          <div class="emoji" aria-hidden="true">🤝</div>
           <div><h3>Connect Statewide</h3><p class="muted">One network for everyone in WV concrete.</p></div>
         </article>
         <article class="card kv">
-          <div class="emoji" aria-hidden="true"></div>
+          <div class="emoji" aria-hidden="true">🧰</div>
           <div><h3>Instant Resources</h3><p class="muted">Verification, specs, calculators — no digging.</p></div>
         </article>
         <article class="card kv">
-          <div class="emoji" aria-hidden="true"></div>
-          <div><h3>Real Events</h3><p class="muted">Plant tours & demos starting Jan 2026.</p></div>
+          <div class="emoji" aria-hidden="true">🗓️</div>
+          <div><h3>Real Events</h3><p class="muted">Tours, demos, and education.</p></div>
         </article>
       </div>
     </section>
@@ -528,16 +484,16 @@
       <div class="card">
         <div class="timeline">
           <div class="titem">
-            <div class="tdate">Dec 2025</div>
-            <div class="tline"><strong>Statewide Outreach</strong><div class="muted">Collecting hosts for 2026 tours.</div></div>
+            <div class="tdate">Now</div>
+            <div class="tline"><strong>Statewide Outreach</strong><div class="muted">Collecting hosts and topics for 2026 tours.</div></div>
           </div>
           <div class="titem">
-            <div class="tdate">Jan 2026</div>
-            <div class="tline"><strong>Kickoff Call</strong><div class="muted">Virtual meeting — agenda soon.</div></div>
+            <div class="tdate">2026</div>
+            <div class="tline"><strong>Events Roll Out</strong><div class="muted">Tours, demos, competitions, recert resources.</div></div>
           </div>
           <div class="titem">
-            <div class="tdate">2026–2027</div>
-            <div class="tline"><strong>Events Roll Out</strong><div class="muted">Tours, competitions, recert classes.</div></div>
+            <div class="tdate">2027</div>
+            <div class="tline"><strong>Build Momentum</strong><div class="muted">Scholarships, partnerships, expanded programming.</div></div>
           </div>
           <div class="titem">
             <div class="tdate">2028 Goal</div>
@@ -566,15 +522,14 @@
       <div class="card">
         <p class="muted" style="text-align:center">Early supporters (more joining weekly)</p>
         <div class="strip" role="list">
-          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true"></span><span>Producer</span></div>
-          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true"></span><span>Contractor</span></div>
-          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true"></span><span>Lab</span></div>
-          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true"></span><span>Student</span></div>
+          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true">🏗️</span><span>Producer</span></div>
+          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true">🦺</span><span>Contractor</span></div>
+          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true">🧪</span><span>Lab</span></div>
+          <div class="pbadge" role="listitem"><span class="emoji" aria-hidden="true">🎓</span><span>Student</span></div>
         </div>
       </div>
     </section>
 
-    <!-- Optional ACI membership link (NOT in hero; keeps "open to all" message intact) -->
     <section class="section">
       <article class="card">
         <h2>Do I need to be an ACI member to join?</h2>
@@ -599,17 +554,16 @@
     <section id="contact" class="section anchor-spacer">
       <article class="card">
         <h2>Contact</h2>
-        <p class="muted">Questions? Ideas? Want to host?
-We answer every email in less than 24 hours.</p>
+        <p class="muted">Questions? Ideas? Want to host? We answer every email in less than 24 hours.</p>
         <p><a class="btn primary" href="mailto:info@concrete-wv.org">info@concrete-wv.org</a></p>
       </article>
     </section>
   </main>
 
-  <div id="calc-float" aria-label="Open calculator"></div>
+  <div id="calc-float" aria-label="Open calculator" title="Open calculators" role="button" tabindex="0">🧮</div>
 
   <audio id="anthem" src="/assets/wv-song.mp3" preload="auto" loop></audio>
-  <button id="audio-toggle" aria-label="Toggle site audio" title="Toggle audio"></button>
+  <button id="audio-toggle" aria-label="Toggle site audio" title="Toggle audio">🔇</button>
 
   <footer>
     <p class="memorial"></p>
@@ -618,56 +572,31 @@ We answer every email in less than 24 hours.</p>
   </footer>
 
   <script>
-    // Year + theme (persist)
+    // Year
     document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Theme (persist)
     const themeBtn = document.getElementById('theme-toggle');
-
-    const savedTheme = localStorage.getItem('aciTheme');
-    if (savedTheme === 'light') {
-      document.body.classList.add('light');
-      themeBtn.textContent = '';
-    }
-
-    themeBtn.addEventListener('click', () => {
-      document.body.classList.toggle('light');
-      const isLight = document.body.classList.contains('light');
-      themeBtn.textContent = isLight ? '' : '';
+    function setTheme(isLight){
+      document.body.classList.toggle('light', isLight);
+      themeBtn.textContent = isLight ? '☀️' : '🌙';
       localStorage.setItem('aciTheme', isLight ? 'light' : 'dark');
-    });
+    }
+    const savedTheme = localStorage.getItem('aciTheme');
+    setTheme(savedTheme === 'light');
+    themeBtn.addEventListener('click', () => setTheme(!document.body.classList.contains('light')));
 
-    // Kickoff: Jan 23, 2026 @ 10:00 AM EST
-    const KICKOFF_MS = new Date('2026-01-23T10:00:00-05:00').getTime();
-
-    // Countdown badge
-    (function(){
-      const el = document.getElementById('countdown-badge');
-      if(!el) return;
-
-      function render(){
-        const ms = KICKOFF_MS - Date.now();
-        if (ms <= 0) { el.textContent = 'LIVE'; el.setAttribute('aria-label','Kickoff is live'); return; }
-
-        const totalMin = Math.floor(ms / 60000);
-        const totalHrs = Math.floor(ms / 3600000);
-        const days = Math.floor(ms / 86400000);
-        const hrs  = totalHrs % 24;
-        const mins = totalMin % 60;
-
-        el.textContent = (days >= 1) ? `${days}d` : `${totalHrs}h`;
-        el.setAttribute('aria-label', `${days} days, ${hrs} hours, ${mins} minutes until kickoff`);
-      }
-
-      render();
-      const startDelay = 60000 - (Date.now() % 60000);
-      setTimeout(()=>{ render(); setInterval(render, 60000); }, startDelay);
-    })();
-
-    // Animate cards
-    const io = new IntersectionObserver(
-      es => es.forEach(e => e.isIntersecting && e.target.classList.add('visible')),
-      {threshold:.1}
-    );
-    document.querySelectorAll('.card').forEach(c => io.observe(c));
+    // Animate cards (skips if reduced motion)
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(!reduce){
+      const io = new IntersectionObserver(
+        es => es.forEach(e => e.isIntersecting && e.target.classList.add('visible')),
+        {threshold:.1}
+      );
+      document.querySelectorAll('.card').forEach(c => io.observe(c));
+    } else {
+      document.querySelectorAll('.card').forEach(c => c.classList.add('visible'));
+    }
 
     // Floaters appear after a bit of scroll
     const calcBtn = document.getElementById('calc-float');
@@ -681,24 +610,48 @@ We answer every email in less than 24 hours.</p>
     window.addEventListener('scroll', revealFloaters, {passive:true});
     setTimeout(revealFloaters, 1200);
 
-    calcBtn.addEventListener('click', () => location.href = '/calculators/#volume');
+    // Calculator button
+    function goCalc(){ location.href = '/calculators/#volume'; }
+    calcBtn.addEventListener('click', goCalc);
+    calcBtn.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); goCalc(); }
+    });
 
     // Service worker
-    if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{})}
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.register('/sw.js').catch(()=>{});
+    }
 
-    // Audio (opt-in)
+    // Audio (opt-in, persisted)
     const audio = document.getElementById('anthem');
     audio.volume = 0.35;
 
+    const savedAudio = localStorage.getItem('aciAudio') === 'on';
     function setAudioBtn(on){
       audioBtn.classList.toggle('on', on);
-      audioBtn.textContent = on ? '' : '';
+      audioBtn.textContent = on ? '🔊' : '🔇';
+      audioBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      localStorage.setItem('aciAudio', on ? 'on' : 'off');
     }
     setAudioBtn(false);
 
+    // If user previously opted-in, try to start on first interaction
+    let pendingAutoPlay = savedAudio;
+    if(savedAudio){
+      setAudioBtn(true);
+      // Browser policies require a user gesture; we'll start on the first click/tap.
+      const startOnGesture = async () => {
+        if(!pendingAutoPlay) return;
+        pendingAutoPlay = false;
+        try { await audio.play(); setAudioBtn(true); } catch (_) { setAudioBtn(false); }
+        window.removeEventListener('pointerdown', startOnGesture);
+      };
+      window.addEventListener('pointerdown', startOnGesture, {once:false});
+    }
+
     audioBtn.addEventListener('click', async () => {
       if (audio.paused){
-        try { await audio.play(); setAudioBtn(true); } catch (_) {}
+        try { await audio.play(); setAudioBtn(true); } catch (_) { setAudioBtn(false); }
       } else {
         audio.pause(); setAudioBtn(false);
       }
@@ -706,6 +659,7 @@ We answer every email in less than 24 hours.</p>
   </script>
 </body>
 </html>
+
 
 
 
