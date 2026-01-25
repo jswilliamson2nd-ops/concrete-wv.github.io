@@ -16,68 +16,253 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
 
+  <!-- SEO -->
   <meta name="description" content="Field-ready concrete calculators: volume, trucks, yield, w/cm, moisture adjust, evaporation rate, fresh temp, cylinders, rebar, joints, slope, pump, cycle, coverage, insulation, strength, unit converter, and max temperature estimator." />
 
   <style>
     :root{
       --bg:#0b1220;--bg2:#0f172a;--border:#1f2a44;--text:#e6edf3;--dim:#b9c4d0;
-      --accent:#2aa198;--card:#101828;--shadow:0 8px 25px rgba(0,0,0,.3);
-      --orange:#ff9500;--green:#7bd389;--yellow:#ffd166;--red:#ff6b6b
+      --accent:#2aa198;--card:#101828;--shadow:0 10px 28px rgba(0,0,0,.32);
+      --orange:#ff9500;--green:#7bd389;--yellow:#ffd166;--red:#ff6b6b;
+
+      --radius:20px;
+      --radius2:14px;
+      --navH:84px;
     }
-    .light{
+    body.light{
       --bg:#f8fafc;--bg2:#f1f5f9;--text:#0f172a;--dim:#475569;--card:#ffffff;
-      --border:#e2e8f0;--accent:#0891b2
+      --border:#e2e8f0;--accent:#0891b2;
+      --shadow:0 10px 26px rgba(2,6,23,.10);
     }
-    .highvis{--bg:#000;--bg2:#111;--text:#ff0;--dim:#ff0;--accent:#ff0;--orange:#ff0;--card:#000;--border:#ff0}
+    body.highvis{
+      --bg:#000;--bg2:#111;--text:#ff0;--dim:#ff0;--accent:#ff0;--orange:#ff0;--card:#000;--border:#ff0;
+      --shadow:none;
+    }
 
     *{box-sizing:border-box}
     html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    body{background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--text);line-height:1.6;transition:background .4s,color .4s}
-    a{color:var(--text);text-decoration:none}
+    body{
+      background:linear-gradient(180deg,var(--bg),var(--bg2));
+      color:var(--text);
+      line-height:1.6;
+      transition:background .25s,color .25s;
+    }
+
+    a{color:inherit;text-decoration:none}
     a:hover{color:var(--accent)}
-    .muted{color:var(--dim);opacity:.9}
+    .muted{color:var(--dim);opacity:.95}
 
-    .container{width:min(1080px,92vw);margin:0 auto}
-    header{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);backdrop-filter:blur(12px);background:rgba(11,18,32,.95)}
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;flex-wrap:wrap}
-    .logo{height:56px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4))}
-    nav a{color:var(--dim);padding:8px 4px;font-weight:500;position:relative}
-    nav a.active{color:var(--accent);font-weight:700}
-    nav a.active::after{content:'';position:absolute;bottom:-13px;left:0;right:0;height:4px;background:var(--accent);border-radius:2px}
-    .modes button{background:none;border:none;font-size:1.5rem;cursor:pointer;opacity:.85}
-    .modes button:hover{opacity:1;transform:scale(1.1)}
-    :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+    .container{width:min(1100px,92vw);margin:0 auto}
 
-    h1{margin:24px 0 8px;font-size:2.4rem;font-weight:800}
-    .tagline{font-size:1.2rem;color:var(--dim);margin-bottom:32px}
+    /* Header (home-like, works in light/highvis) */
+    header{
+      position:sticky;top:0;z-index:100;
+      border-bottom:1px solid var(--border);
+      backdrop-filter:blur(12px);
+      background:color-mix(in oklab, var(--bg) 88%, transparent);
+    }
+    body.light header{background:color-mix(in oklab, #ffffff 85%, transparent)}
+    body.highvis header{background:#000}
 
-    .grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin:32px 0}
-    .card{border:1px solid var(--border);border-radius:20px;background:var(--card);padding:24px;box-shadow:var(--shadow);transition:transform .4s,opacity .4s;opacity:0;transform:translateY(30px)}
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+      padding:12px 0;flex-wrap:wrap;
+      min-height:var(--navH);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      height:54px;
+      filter:drop-shadow(0 4px 12px rgba(0,0,0,.35));
+    }
+    body.light .logo{filter:none}
+    body.highvis .logo{filter:none}
+
+    nav{display:flex;flex-wrap:wrap;gap:10px}
+    nav a{
+      color:var(--dim);
+      padding:8px 10px;
+      font-weight:700;
+      position:relative;
+      border-radius:12px;
+      transition:background .15s,color .15s;
+    }
+    nav a:hover{
+      color:var(--text);
+      background:color-mix(in oklab, var(--card) 65%, transparent);
+    }
+    body.highvis nav a:hover{background:#000}
+    nav a.active{color:var(--accent);font-weight:900}
+    nav a.active::after{
+      content:'';
+      position:absolute;
+      left:12px;right:12px;bottom:-10px;
+      height:4px;border-radius:99px;
+      background:var(--accent);
+    }
+
+    .modes{display:flex;align-items:center;gap:8px}
+    .mode-btn{
+      width:44px;height:44px;border-radius:999px;
+      border:1px solid var(--border);
+      background:color-mix(in oklab, var(--card) 85%, transparent);
+      color:var(--text);
+      cursor:pointer;
+      display:grid;place-items:center;
+      transition:transform .15s, background .15s, border-color .15s, opacity .15s;
+      opacity:.9;
+    }
+    .mode-btn:hover{opacity:1;transform:translateY(-1px)}
+    body.highvis .mode-btn{background:#000;border-color:var(--border)}
+
+    :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}
+
+    main{padding:22px 0 10px}
+    .hero{padding:18px 0 12px}
+    h1{margin:0 0 8px;font-size:2.35rem;line-height:1.15;font-weight:900;letter-spacing:-.02em}
+    .tagline{margin:0;color:var(--dim);font-size:1.15rem}
+
+    .micro{
+      margin:10px 0 0;
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:color-mix(in oklab, var(--card) 80%, transparent);
+      color:var(--dim);
+      font-weight:900;
+      letter-spacing:.02em;
+      font-size:.92rem;
+    }
+
+    .grid{
+      display:grid;
+      gap:18px;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      margin:22px 0 28px;
+    }
+    .card{
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:var(--card);
+      padding:20px;
+      box-shadow:var(--shadow);
+      transition:transform .25s, opacity .35s, border-color .15s;
+      opacity:0;
+      transform:translateY(16px);
+    }
     .card.visible{opacity:1;transform:none}
-    .card h2{margin:0 0 10px;font-size:1.4rem}
-    .badge{font-size:11px;padding:4px 10px;border-radius:99px;background:rgba(255,149,0,.15);color:var(--orange);border:1px solid var(--orange);font-weight:700}
-    .btn{display:inline-block;padding:14px 24px;border-radius:14px;background:var(--orange);color:#000;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(255,149,0,.4);transition:transform .2s, box-shadow .2s;font-size:1.05rem}
-    .btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(255,149,0,.5)}
+    .card:hover{transform:translateY(-2px)}
+    body.highvis .card:hover{transform:none}
 
-    .tool{margin:40px 0;padding:32px;border-radius:24px;background:var(--card);border:2px solid var(--border);box-shadow:0 20px 50px rgba(0,0,0,.4)}
-    .input-row{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));margin:16px 0}
-    label{display:block;font-size:14px;color:var(--dim);margin-bottom:6px}
-    input,select{width:100%;padding:14px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:16px}
-    .out{padding:16px;border-radius:12px;background:var(--card);border:1px dashed var(--border);font-family:ui-monospace,monospace;font-size:15px;white-space:pre-line;position:relative;margin-top:16px}
-    .copy-btn{position:absolute;top:8px;right:8px;padding:6px 12px;font-size:12px;background:var(--orange);color:#000;border:none;border-radius:8px;cursor:pointer}
-    .voice-btn{position:fixed;bottom:24px;right:24px;width:64px;height:64px;border-radius:50%;background:var(--orange);color:#000;font-size:2rem;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(255,149,0,.5);z-index:999;cursor:pointer}
+    .card h2{margin:0 0 8px;font-size:1.25rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .card p{margin:0 0 14px;color:var(--dim)}
+    .badge{
+      font-size:11px;
+      padding:4px 10px;
+      border-radius:999px;
+      background:color-mix(in oklab, var(--orange) 16%, transparent);
+      color:var(--orange);
+      border:1px solid color-mix(in oklab, var(--orange) 70%, transparent);
+      font-weight:900;
+      letter-spacing:.03em;
+    }
 
-    footer{border-top:1px solid var(--border);text-align:center;padding:32px 0;color:var(--dim);font-size:14px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:12px 18px;
+      border-radius:var(--radius2);
+      background:var(--orange);
+      color:#000;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 8px 22px rgba(255,149,0,.32);
+      transition:transform .15s, box-shadow .15s, filter .15s;
+      font-size:1rem;
+      border:0;
+      width:100%;
+    }
+    .btn:hover{transform:translateY(-2px);filter:saturate(1.05)}
+    body.highvis .btn{box-shadow:none}
+
+    .tool{
+      margin:0 0 42px;
+      padding:24px;
+      border-radius:24px;
+      background:var(--card);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+    }
+    .tool-head{
+      display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .tool h2{margin:0;font-size:1.4rem}
+    .tool .hint{margin:0;color:var(--dim)}
+    .tool-body{margin-top:14px}
+
+    .out{
+      padding:16px;
+      border-radius:14px;
+      background:color-mix(in oklab, var(--card) 92%, transparent);
+      border:1px dashed var(--border);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      font-size:14.5px;
+      white-space:pre-line;
+      position:relative;
+      margin-top:14px;
+    }
+    .copy-btn{
+      position:absolute;top:10px;right:10px;
+      padding:6px 10px;
+      font-size:12px;
+      background:var(--orange);
+      color:#000;
+      border:0;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:900;
+    }
+
+    .voice-btn{
+      position:fixed;bottom:22px;right:22px;
+      width:62px;height:62px;border-radius:999px;
+      background:var(--orange);
+      color:#000;
+      font-size:1.9rem;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 12px 30px rgba(255,149,0,.45);
+      z-index:999;
+      cursor:pointer;
+      border:0;
+    }
+    body.highvis .voice-btn{box-shadow:none}
+
+    footer{
+      border-top:1px solid var(--border);
+      text-align:center;
+      padding:26px 0 30px;
+      color:var(--dim);
+      font-size:14px;
+    }
 
     @media (prefers-reduced-motion: reduce){
       .card{transition:none;opacity:1;transform:none}
+      .btn,.mode-btn{transition:none}
     }
   </style>
 </head>
+
 <body>
   <header>
     <div class="container nav">
-      <a href="/" aria-label="Home"><img class="logo" src="/assets/aciwv_logo_body.png?v=5" alt="ACI WV" /></a>
+      <div class="brand">
+        <a href="/" aria-label="Home">
+          <img class="logo" src="/assets/aciwv_logo_body.png?v=5" alt="ACI West Virginia" />
+        </a>
+      </div>
+
       <nav aria-label="Primary">
         <a href="/">Home</a>
         <a href="/topics/">Topics</a>
@@ -86,46 +271,55 @@
         <a href="/#verify">Verify</a>
         <a href="/#contact">Contact</a>
       </nav>
-      <div class="modes">
-        <button id="theme-btn" aria-label="Toggle theme">🌙</button>
-        <button id="vis-btn" aria-label="High-vis mode">☀️</button>
+
+      <div class="modes" aria-label="Display controls">
+        <button id="theme-btn" class="mode-btn" aria-label="Toggle light/dark" title="Toggle light/dark">🌙</button>
+        <button id="vis-btn" class="mode-btn" aria-label="Toggle high-vis" title="Toggle high-vis">☀️</button>
       </div>
     </div>
   </header>
 
   <main class="container" id="main">
-    <h1>Concrete Calculators</h1>
-    <p class="tagline">Zero ads • Offline • Voice commands • Copy-to-clipboard • Built for hardhats</p>
+    <section class="hero" aria-label="Page intro">
+      <h1>Concrete Calculators</h1>
+      <p class="tagline">Zero ads • Offline • Voice commands • Copy-to-clipboard • Built for hardhats</p>
+      <p class="micro" aria-label="Design note">Field-ready • WVDOH-aligned • ACI-rooted</p>
+    </section>
 
-    <div class="grid">
-      <article class="card"><h2>Volume (yd³) <span class="badge">NEW</span></h2><p>Slab • Trench • Column + waste + trucks</p><a class="btn" href="#volume">Open</a></article>
-      <article class="card"><h2>Truck Loads</h2><p>9.0 / 9.5 / 10.0 comparison</p><a class="btn" href="#trucks">Open</a></article>
+    <section class="grid" aria-label="Calculator list">
+      <article class="card"><h2>Volume (yd³) <span class="badge">NEW</span></h2><p>Slab • Trench • Column + waste + trucks</p><a class="btn" href="#volume">Open →</a></article>
+      <article class="card"><h2>Truck Loads</h2><p>9.0 / 9.5 / 10.0 comparison</p><a class="btn" href="#trucks">Open →</a></article>
+      <article class="card"><h2>Yield &amp; Rel. Yield</h2><p>Bucket factor • batch totals • theoretical air</p><a class="btn" href="#yield">Open →</a></article>
+      <article class="card"><h2>w/c • w/cm</h2><p>With SCM</p><a class="btn" href="#wcm">Open →</a></article>
+      <article class="card"><h2>Moisture Adjust</h2><p>Water add/remove + new w/cm</p><a class="btn" href="#water">Open →</a></article>
+      <article class="card"><h2>Evaporation Rate</h2><p>≥ 0.20 caution (ACI 305)</p><a class="btn" href="#evap">Open →</a></article>
+      <article class="card"><h2>Fresh Temp</h2><p>Component estimate</p><a class="btn" href="#temp">Open →</a></article>
+      <article class="card"><h2>Cylinder Planner</h2><p>7/14/28 or custom</p><a class="btn" href="#cylinders">Open →</a></article>
+      <article class="card"><h2>Rebar Takeoff</h2><p>Count • length • weight</p><a class="btn" href="#rebar">Open →</a></article>
+      <article class="card"><h2>Joint Spacing</h2><p>2–3× thickness</p><a class="btn" href="#joints">Open →</a></article>
+      <article class="card"><h2>Slope / Grade</h2><p>Rise • run • %</p><a class="btn" href="#slope">Open →</a></article>
+      <article class="card"><h2>Pump Time</h2><p>yd³/hr pacing</p><a class="btn" href="#pump">Open →</a></article>
+      <article class="card"><h2>Truck Cycle</h2><p>Fleet supply check</p><a class="btn" href="#cycle">Open →</a></article>
+      <article class="card"><h2>Coverage</h2><p>ft² → gallons</p><a class="btn" href="#coverage">Open →</a></article>
+      <article class="card"><h2>Insulation</h2><p>Layers • wet penalty • heater • Required R</p><a class="btn" href="#insulation">Open →</a></article>
+      <article class="card"><h2>Strength Gain</h2><p>Heuristic curve</p><a class="btn" href="#strength">Open →</a></article>
+      <article class="card"><h2>Unit Converter</h2><p>psi • MPa • pcf • kg/m³ • °F • °C</p><a class="btn" href="#convert">Open →</a></article>
+      <article class="card"><h2>Max Temperature <span class="badge">NEW</span></h2><p>Mix heat + thickness/exposure (ΔT check)</p><a class="btn" href="#maxtemp">Open →</a></article>
+    </section>
 
-      <article class="card"><h2>Yield &amp; Rel. Yield</h2><p>Bucket factor • batch totals • theoretical air</p><a class="btn" href="#yield">Open</a></article>
-
-      <article class="card"><h2>w/c • w/cm</h2><p>With SCM</p><a class="btn" href="#wcm">Open</a></article>
-      <article class="card"><h2>Moisture Adjust</h2><p>Water add/remove + new w/cm</p><a class="btn" href="#water">Open</a></article>
-      <article class="card"><h2>Evaporation Rate</h2><p>≥ 0.20 caution (ACI 305)</p><a class="btn" href="#evap">Open</a></article>
-      <article class="card"><h2>Fresh Temp</h2><p>Component estimate</p><a class="btn" href="#temp">Open</a></article>
-      <article class="card"><h2>Cylinder Planner</h2><p>7/14/28 or custom</p><a class="btn" href="#cylinders">Open</a></article>
-      <article class="card"><h2>Rebar Takeoff</h2><p>Count • length • weight</p><a class="btn" href="#rebar">Open</a></article>
-      <article class="card"><h2>Joint Spacing</h2><p>2–3× thickness</p><a class="btn" href="#joints">Open</a></article>
-      <article class="card"><h2>Slope / Grade</h2><p>Rise • run • %</p><a class="btn" href="#slope">Open</a></article>
-      <article class="card"><h2>Pump Time</h2><p>yd³/hr pacing</p><a class="btn" href="#pump">Open</a></article>
-      <article class="card"><h2>Truck Cycle</h2><p>Fleet supply check</p><a class="btn" href="#cycle">Open</a></article>
-      <article class="card"><h2>Coverage</h2><p>ft² → gallons</p><a class="btn" href="#coverage">Open</a></article>
-
-      <article class="card"><h2>Insulation</h2><p>Layers • wet penalty • heater • Required R</p><a class="btn" href="#insulation">Open</a></article>
-
-      <article class="card"><h2>Strength Gain</h2><p>Heuristic curve</p><a class="btn" href="#strength">Open</a></article>
-      <article class="card"><h2>Unit Converter</h2><p>psi • MPa • pcf • kg/m³ • °F • °C</p><a class="btn" href="#convert">Open</a></article>
-
-      <article class="card"><h2>Max Temperature <span class="badge">NEW</span></h2><p>Mix heat + thickness/exposure (ΔT check)</p><a class="btn" href="#maxtemp">Open</a></article>
-    </div>
-
+    <!-- Tool host (calcs.js can render into #tool-body) -->
     <section id="tool" class="tool" aria-live="polite">
-      <h2 id="tool-title">Select a calculator above</h2>
-      <p class="muted">Tap a card or say: “40 by 80 slab 6 inches”</p>
+      <div class="tool-head">
+        <h2 id="tool-title">Select a calculator above</h2>
+        <p class="hint" id="tool-hint">Tap a card or say: “40 by 80 slab 6 inches”</p>
+      </div>
+
+      <div class="tool-body" id="tool-body">
+        <div class="out" id="tool-out" aria-label="Tool status">
+          Choose a calculator to load inputs here.
+          <button class="copy-btn" id="copy-btn" type="button" title="Copy">Copy</button>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -134,47 +328,168 @@
   <footer>© <span id="y"></span> ACI West Virginia Interest Group</footer>
 
   <script>
-    // Year stamp
+    // ---------------------------
+    // Basics
+    // ---------------------------
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Theme toggles
-    document.getElementById('theme-btn').addEventListener('click', () => document.body.classList.toggle('light'));
-    document.getElementById('vis-btn').addEventListener('click', () => document.body.classList.toggle('highvis'));
+    // Persisted display state (home-like)
+    const KEY_THEME = 'aciwv_theme';   // 'dark' | 'light'
+    const KEY_VIS   = 'aciwv_highvis'; // '0' | '1'
+
+    function applyPrefs(){
+      const theme = localStorage.getItem(KEY_THEME) || 'dark';
+      const hv    = localStorage.getItem(KEY_VIS) || '0';
+
+      document.body.classList.toggle('light', theme === 'light');
+      document.body.classList.toggle('highvis', hv === '1');
+
+      // icon hints
+      document.getElementById('theme-btn').textContent = (theme === 'light') ? '🌞' : '🌙';
+      document.getElementById('vis-btn').textContent   = (hv === '1') ? '🦺' : '☀️';
+    }
+
+    function toggleTheme(){
+      const isLight = document.body.classList.contains('light');
+      localStorage.setItem(KEY_THEME, isLight ? 'dark' : 'light');
+      applyPrefs();
+    }
+
+    function toggleHighVis(){
+      const isHV = document.body.classList.contains('highvis');
+      localStorage.setItem(KEY_VIS, isHV ? '0' : '1');
+      applyPrefs();
+    }
+
+    document.getElementById('theme-btn').addEventListener('click', toggleTheme);
+    document.getElementById('vis-btn').addEventListener('click', toggleHighVis);
+    applyPrefs();
 
     // Card fade-in
-    const observer = new IntersectionObserver((entries)=>entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('visible'); observer.unobserve(en.target); } }), {threshold:0.1});
+    const observer = new IntersectionObserver((entries)=>entries.forEach(en=>{
+      if(en.isIntersecting){ en.target.classList.add('visible'); observer.unobserve(en.target); }
+    }), {threshold:0.12});
     document.querySelectorAll('.card').forEach(c=>observer.observe(c));
 
+    // ---------------------------
+    // Hash-based tool selection (panel updates even before calcs.js renders)
+    // ---------------------------
+    const TITLE = {
+      volume:    'Volume (yd³)',
+      trucks:    'Truck Loads',
+      yield:     'Yield & Relative Yield',
+      wcm:       'w/c • w/cm',
+      water:     'Moisture Adjust',
+      evap:      'Evaporation Rate',
+      temp:      'Fresh Concrete Temperature',
+      cylinders: 'Cylinder Planner',
+      rebar:     'Rebar Takeoff',
+      joints:    'Joint Spacing',
+      slope:     'Slope / Grade',
+      pump:      'Pump Time',
+      cycle:     'Truck Cycle',
+      coverage:  'Coverage',
+      insulation:'Insulation',
+      strength:  'Strength Gain',
+      convert:   'Unit Converter',
+      maxtemp:   'Max Temperature Estimator'
+    };
+
+    function getHashKey(){
+      return (location.hash || '').replace('#','').split('?')[0].trim();
+    }
+
+    function updateToolPanel(){
+      const key = getHashKey();
+      const titleEl = document.getElementById('tool-title');
+      const hintEl  = document.getElementById('tool-hint');
+      const outEl   = document.getElementById('tool-out');
+
+      if(!key){
+        titleEl.textContent = 'Select a calculator above';
+        hintEl.textContent  = 'Tap a card or say: “40 by 80 slab 6 inches”';
+        outEl.firstChild.textContent = 'Choose a calculator to load inputs here.\n';
+        return;
+      }
+
+      const nice = TITLE[key] || ('Calculator: ' + key);
+      titleEl.textContent = nice;
+      hintEl.textContent  = 'Loading inputs… (calcs.js will render here)';
+      outEl.firstChild.textContent = `Selected: ${nice}\n\nIf the form doesn’t appear, confirm calcs.js is loading from this folder.\n`;
+    }
+
+    function scrollToolIntoView(){
+      const tool = document.getElementById('tool');
+      if(!tool) return;
+      tool.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Keep the copy button useful even for status text
+    document.getElementById('copy-btn').addEventListener('click', async () => {
+      const text = document.getElementById('tool-out').innerText.replace(/\s*Copy\s*$/,'').trim();
+      try{
+        await navigator.clipboard.writeText(text);
+        const btn = document.getElementById('copy-btn');
+        const prev = btn.textContent;
+        btn.textContent = 'Copied';
+        setTimeout(()=>btn.textContent = prev, 900);
+      }catch(e){}
+    });
+
+    // When hash changes (card tap), update panel + scroll to tool
+    window.addEventListener('hashchange', () => {
+      updateToolPanel();
+      scrollToolIntoView();
+    });
+
+    // On first load, if there is a hash, honor it
+    window.addEventListener('DOMContentLoaded', () => {
+      updateToolPanel();
+      if(location.hash) scrollToolIntoView();
+    });
+
+    // ---------------------------
     // Voice command (simple slab parser)
+    // ---------------------------
     (function(){
       const voiceBtn = document.getElementById('voice-btn');
       const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
       if(!SR){ voiceBtn.style.display='none'; return; }
       const rec = new SR();
       rec.lang = 'en-US';
+
       voiceBtn.addEventListener('click', ()=>{ voiceBtn.textContent='🎙️'; rec.start(); });
+
       rec.onresult = e => {
         const cmd = e.results[0][0].transcript.toLowerCase();
         voiceBtn.textContent='🎤';
+
+        // Example: "40 by 80 slab 6 inches"
         if(cmd.includes('slab')){
           const nums = cmd.match(/\d+(\.\d+)?/g);
           if(nums && nums.length >= 3){
             const len = nums[0], wid = nums[1], th = nums[2];
             location.hash = `#volume?shape=slab&len=${len}&wid=${wid}&th_in=${th}`;
+          }else{
+            location.hash = '#volume';
           }
         }
       };
+
       rec.onend = ()=> voiceBtn.textContent='🎤';
     })();
 
     // PWA
-    if('serviceWorker' in navigator){ navigator.serviceWorker.register('/sw.js').catch(()=>{}); }
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.register('/sw.js').catch(()=>{});
+    }
   </script>
 
   <!-- Pair with calculators/calcs.js in same folder -->
   <script src="./calcs.js" defer></script>
 </body>
 </html>
+
 
 
 
